@@ -2,6 +2,10 @@
 
 基于 Traefik v3.4 和 Docker Compose 的多网站反向代理解决方案，统一管理多个静态网站，提供自动 HTTPS、证书管理和 HTTP 重定向。
 
+<div align="center">
+  <img src="image.png" alt="Websites Logo" width="200">
+</div>
+
 ---
 
 ## ✨ 特性
