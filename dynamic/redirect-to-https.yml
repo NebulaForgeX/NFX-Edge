@@ -1,0 +1,24 @@
+http:
+  middlewares:
+    # HTTP 到 HTTPS 重定向中间件
+    redirect-to-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+  
+  routers:
+    # 全局 HTTP 到 HTTPS 重定向路由
+    # 匹配所有 HTTP 请求（除了 ACME 挑战路径），重定向到 HTTPS
+    # 规则：匹配所有主机，但排除 /.well-known/acme-challenge/ 路径
+    http-to-https:
+      rule: "HostRegexp(`{host:.+}`) && !PathPrefix(`/.well-known/acme-challenge/`)"
+      entryPoints:
+        - web
+      middlewares:
+        - redirect-to-https
+      # 对于仅重定向的路由，Traefik 仍然需要 service 字段
+      # 重定向会在中间件层面完成，服务不会被实际调用
+      # 使用与 Dashboard 相同的内部服务作为占位符
+      service: api@internal
+      priority: 1
+

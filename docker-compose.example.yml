@@ -1,0 +1,108 @@
+# Docker Compose 服务定义示例
+# 使用方法：复制此文件为 docker-compose.yml，然后根据实际情况修改配置
+services:
+  # === 🔰 Traefik Reverse Proxy ===
+  # Traefik 反向代理服务
+  reverse-proxy:
+    image: traefik:v3.4
+    container_name: Websites-Reverse-Proxy
+    restart: always
+
+    # Traefik 命令行参数
+    command:
+      # 启用 Dashboard + Docker Provider
+      - --api.dashboard=true
+      - --providers.docker
+      - --providers.docker.exposedByDefault=false
+
+      # 文件配置（动态规则目录）
+      - --providers.file.directory=/etc/traefik/dynamic
+      - --providers.file.watch=true
+
+      # EntryPoints
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+
+    # 端口映射
+    ports:
+      - "80:80"
+      - "443:443"
+
+    # 数据卷挂载
+    volumes:
+      # 挂载 Docker socket
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # 存放证书（acme.json）
+      - /volume1/Certs/Websites:/certs
+      # Traefik 主配置文件
+      - /volume1/Websites/traefik.yml:/etc/traefik/traefik.yml:ro
+      # 动态规则文件目录
+      - /volume1/Websites/dynamic:/etc/traefik/dynamic:ro
+
+    # Traefik 路由标签
+    labels:
+      - traefik.enable=true
+
+      # Traefik Dashboard（根据实际域名修改 traefik.example.com）
+      - traefik.http.routers.web-dashboard.rule=Host(`traefik.example.com`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+      - traefik.http.routers.web-dashboard.entrypoints=websecure
+      - traefik.http.routers.web-dashboard.tls.certresolver=letsencrypt
+      - traefik.http.routers.web-dashboard.service=api@internal
+      # BasicAuth 密码哈希（需要根据实际密码生成，使用 htpasswd 工具）
+      - traefik.http.middlewares.dashboard-auth.basicauth.users=admin:$$2y$$05$$KymEIDjaRPneTxHf1RCzruglmhsOdj2KQJhG6qKAUbtFkG0kCVJ/e$$
+      - traefik.http.routers.web-dashboard.middlewares=dashboard-auth
+
+  # === 🌿 示例网站服务 ===
+  # 网站服务模板（复制此服务并修改配置即可添加新网站）
+  www_example:
+    image: nginx:alpine
+    # 根据实际网站修改容器名称
+    container_name: Websites-WWW-EXAMPLE
+    restart: always
+
+    # 数据卷挂载
+    volumes:
+      # 修改为实际的网站文件目录
+      - ./www.example.com:/usr/share/nginx/html:ro
+      # Nginx 配置文件
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+    # Traefik 路由标签
+    labels:
+      - traefik.enable=true
+      # 修改为实际的域名
+      - traefik.http.routers.example.rule=Host(`example.com`) || Host(`www.example.com`)
+      - traefik.http.routers.example.entrypoints=websecure
+      - traefik.http.routers.example.tls.certresolver=letsencrypt
+
+    # 服务依赖
+    depends_on:
+      - reverse-proxy
+
+  # === ⚙️ 示例管理后台服务 ===
+  # 管理后台服务模板（复制此服务并修改配置即可添加新管理后台）
+  admin_example:
+    image: nginx:alpine
+    # 根据实际管理后台修改容器名称
+    container_name: Websites-Admin-EXAMPLE
+    restart: always
+
+    # 数据卷挂载
+    volumes:
+      # 修改为实际的管理后台文件目录
+      - ./admin.example.com:/usr/share/nginx/html:ro
+      # Nginx 配置文件
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+    # Traefik 路由标签
+    labels:
+      - traefik.enable=true
+      # 修改为实际的域名（通常使用 admin. 前缀）
+      - traefik.http.routers.admin-example.rule=Host(`admin.example.com`)
+      - traefik.http.routers.admin-example.entrypoints=websecure
+      - traefik.http.routers.admin-example.tls.certresolver=letsencrypt
+
+    # 服务依赖
+    depends_on:
+      - reverse-proxy
+
