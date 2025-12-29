@@ -15,10 +15,13 @@ providers:
     directory: /etc/traefik/dynamic
     watch: true
 
-certificatesResolvers:
-  letsencrypt:
-    acme:
-      email: lyuchongkai@gmail.com
-      storage: /certs/acme.json
-      httpChallenge:
-        entryPoint: web
+# ✅ 不再使用自动证书申请，改为使用文件证书
+# certificatesResolvers:
+#   letsencrypt:
+#     acme:
+#       email: lyuchongkai@gmail.com
+#       storage: /certs/acme.json
+#       httpChallenge:
+#         entryPoint: web
+# certificatesResolvers 配置已移除，因为现在使用 Certs 服务管理证书
+# 每个网站使用独立文件夹的证书文件（cert.pem 和 key.pem）

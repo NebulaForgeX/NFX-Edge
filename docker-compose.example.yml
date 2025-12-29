@@ -32,8 +32,10 @@ services:
     volumes:
       # 挂载 Docker socket
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      # 存放证书（acme.json）
-      - ${CERTS_DIR}:/certs
+      # ✅ 挂载每个网站的证书目录
+      # 挂载网站证书目录，每个网站使用独立文件夹的证书
+      # 不再使用 acme.json，改为使用文件证书（cert.crt 和 key.key）
+      - ${CERTS_DIR}:/certs/websites:ro
       # Traefik 主配置文件
       - ${TRAEFIK_CONFIG_FILE}:/etc/traefik/traefik.yml:ro
       # 动态规则文件目录
@@ -46,7 +48,10 @@ services:
       # Traefik Dashboard（根据实际域名修改 traefik.example.com）
       - traefik.http.routers.web-dashboard.rule=Host(`traefik.example.com`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       - traefik.http.routers.web-dashboard.entrypoints=websecure
-      - traefik.http.routers.web-dashboard.tls.certresolver=letsencrypt
+      # 使用文件证书（从 traefik_example 文件夹读取，需要根据实际域名修改文件夹名）
+      - traefik.http.routers.web-dashboard.tls=true
+      - traefik.http.routers.web-dashboard.tls.certificates[0].certFile=/certs/websites/traefik_example/cert.crt
+      - traefik.http.routers.web-dashboard.tls.certificates[0].keyFile=/certs/websites/traefik_example/key.key
       - traefik.http.routers.web-dashboard.service=api@internal
       # BasicAuth 密码哈希（需要根据实际密码生成，使用 htpasswd 工具）
       - traefik.http.middlewares.dashboard-auth.basicauth.users=admin:$$2y$$05$$KymEIDjaRPneTxHf1RCzruglmhsOdj2KQJhG6qKAUbtFkG0kCVJ/e$$
@@ -73,7 +78,10 @@ services:
       # 修改为实际的域名
       - traefik.http.routers.example.rule=Host(`example.com`) || Host(`www.example.com`)
       - traefik.http.routers.example.entrypoints=websecure
-      - traefik.http.routers.example.tls.certresolver=letsencrypt
+      # 使用文件证书（从 www_example 文件夹读取，需要根据实际网站名称修改文件夹名）
+      - traefik.http.routers.example.tls=true
+      - traefik.http.routers.example.tls.certificates[0].certFile=/certs/websites/www_example/cert.crt
+      - traefik.http.routers.example.tls.certificates[0].keyFile=/certs/websites/www_example/key.key
 
     # 服务依赖
     depends_on:
@@ -100,7 +108,10 @@ services:
       # 修改为实际的域名（通常使用 admin. 前缀）
       - traefik.http.routers.admin-example.rule=Host(`admin.example.com`)
       - traefik.http.routers.admin-example.entrypoints=websecure
-      - traefik.http.routers.admin-example.tls.certresolver=letsencrypt
+      # 使用文件证书（从 admin_example 文件夹读取，需要根据实际网站名称修改文件夹名）
+      - traefik.http.routers.admin-example.tls=true
+      - traefik.http.routers.admin-example.tls.certificates[0].certFile=/certs/websites/admin_example/cert.crt
+      - traefik.http.routers.admin-example.tls.certificates[0].keyFile=/certs/websites/admin_example/key.key
 
     # 服务依赖
     depends_on:
