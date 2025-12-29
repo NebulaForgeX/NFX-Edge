@@ -33,11 +33,11 @@ services:
       # 挂载 Docker socket
       - /var/run/docker.sock:/var/run/docker.sock:ro
       # 存放证书（acme.json）
-      - /volume1/Certs/Websites:/certs
+      - ${CERTS_DIR}:/certs
       # Traefik 主配置文件
-      - /volume1/Websites/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ${TRAEFIK_CONFIG_FILE}:/etc/traefik/traefik.yml:ro
       # 动态规则文件目录
-      - /volume1/Websites/dynamic:/etc/traefik/dynamic:ro
+      - ${TRAEFIK_DYNAMIC_DIR}:/etc/traefik/dynamic:ro
 
     # Traefik 路由标签
     labels:
@@ -65,7 +65,7 @@ services:
       # 修改为实际的网站文件目录
       - ./www.example.com:/usr/share/nginx/html:ro
       # Nginx 配置文件
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${NGINX_CONFIG_FILE}:/etc/nginx/conf.d/default.conf:ro
 
     # Traefik 路由标签
     labels:
@@ -92,7 +92,7 @@ services:
       # 修改为实际的管理后台文件目录
       - ./admin.example.com:/usr/share/nginx/html:ro
       # Nginx 配置文件
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${NGINX_CONFIG_FILE}:/etc/nginx/conf.d/default.conf:ro
 
     # Traefik 路由标签
     labels:
