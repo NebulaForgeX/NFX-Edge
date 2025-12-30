@@ -1,5 +1,6 @@
 # ACME HTTP-01 挑战转发配置
 # 将 ACME 挑战请求转发到 Certs 服务
+# 注意：此配置会匹配所有域名的 /.well-known/acme-challenge 路径
 
 http:
   routers:
@@ -9,10 +10,13 @@ http:
         - web
       service: acme-challenge-service
       priority: 1000  # 高优先级，确保先匹配
+      # 不设置 tls，因为这是 HTTP-01 挑战，必须使用 HTTP (80端口)
 
   services:
     acme-challenge-service:
       loadBalancer:
         servers:
-          - url: "http://192.168.1.64:10200"
+          # 使用容器名称，因为它在 websites_default 网络中
+          - url: "http://NFX-Vault-Backend-API:8000"
+        passHostHeader: true
 
