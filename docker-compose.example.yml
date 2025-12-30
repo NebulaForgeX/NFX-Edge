@@ -5,7 +5,7 @@ services:
   # Traefik 反向代理服务
   reverse-proxy:
     image: traefik:v3.4
-    container_name: Websites-Reverse-Proxy
+    container_name: NFX-Edge-Reverse-Proxy
     restart: always
 
     # Traefik 命令行参数
@@ -62,7 +62,7 @@ services:
   www_example:
     image: nginx:alpine
     # 根据实际网站修改容器名称
-    container_name: Websites-WWW-EXAMPLE
+    container_name: NFX-Edge-WWW-EXAMPLE
     restart: always
 
     # 数据卷挂载
@@ -92,7 +92,7 @@ services:
   admin_example:
     image: nginx:alpine
     # 根据实际管理后台修改容器名称
-    container_name: Websites-Admin-EXAMPLE
+    container_name: NFX-Edge-Admin-EXAMPLE
     restart: always
 
     # 数据卷挂载
