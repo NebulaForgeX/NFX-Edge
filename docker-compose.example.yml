@@ -57,6 +57,10 @@ services:
       - traefik.http.middlewares.dashboard-auth.basicauth.users=admin:$$2y$$05$$KymEIDjaRPneTxHf1RCzruglmhsOdj2KQJhG6qKAUbtFkG0kCVJ/e$$
       - traefik.http.routers.web-dashboard.middlewares=dashboard-auth
 
+    # 网络配置
+    networks:
+      - nfx-edge
+
   # === 🌿 示例网站服务 ===
   # 网站服务模板（复制此服务并修改配置即可添加新网站）
   www_example:
@@ -82,6 +86,10 @@ services:
       - traefik.http.routers.example.tls=true
       - traefik.http.routers.example.tls.certificates[0].certFile=/certs/websites/www_example/cert.crt
       - traefik.http.routers.example.tls.certificates[0].keyFile=/certs/websites/www_example/key.key
+
+    # 网络配置
+    networks:
+      - nfx-edge
 
     # 服务依赖
     depends_on:
@@ -113,7 +121,16 @@ services:
       - traefik.http.routers.admin-example.tls.certificates[0].certFile=/certs/websites/admin_example/cert.crt
       - traefik.http.routers.admin-example.tls.certificates[0].keyFile=/certs/websites/admin_example/key.key
 
+    # 网络配置
+    networks:
+      - nfx-edge
+
     # 服务依赖
     depends_on:
       - reverse-proxy
 
+# 网络定义
+networks:
+  nfx-edge:
+    name: nfx-edge
+    driver: bridge
