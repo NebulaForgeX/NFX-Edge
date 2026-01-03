@@ -1,5 +1,7 @@
 # NFX-Edge - Docker Compose 多网站集群
 
+> ⚠️ **重要提示**：使用本仓库前，请先阅读 [NFX-Policy](https://github.com/NebulaForgeX/NFX-Policy)，了解部署和配置的重要注意事项。
+
 基于 Traefik v3.4 和 Docker Compose 的多网站反向代理解决方案，统一管理多个静态网站，提供自动 HTTPS、证书管理和 HTTP 重定向。
 
 <div align="center">
