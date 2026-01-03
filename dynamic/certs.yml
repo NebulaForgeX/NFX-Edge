@@ -4,20 +4,20 @@
 tls:
   certificates:
     # Traefik Dashboard
-    - certFile: /certs/websites/traefik_lucaslyu/cert.crt
-      keyFile: /certs/websites/traefik_lucaslyu/key.key
+    - certFile: /certs/websites/lucaslyu/cert.crt
+      keyFile: /certs/websites/lucaslyu/key.key
       stores:
         - default
 
     # www.sjgztea.com
-    - certFile: /certs/websites/www_sjgztea/cert.crt
-      keyFile: /certs/websites/www_sjgztea/key.key
+    - certFile: /certs/websites/sjgztea/cert.crt
+      keyFile: /certs/websites/sjgztea/key.key
       stores:
         - default
 
     # admin.sjgztea.com
-    - certFile: /certs/websites/admin_sjgztea/cert.crt
-      keyFile: /certs/websites/admin_sjgztea/key.key
+    - certFile: /certs/websites/sjgztea/cert.crt
+      keyFile: /certs/websites/sjgztea/key.key
       stores:
         - default
 
@@ -28,8 +28,8 @@ tls:
         - default
 
     # www.lucaslyu.com
-    - certFile: /certs/websites/www_lucaslyu/cert.crt
-      keyFile: /certs/websites/www_lucaslyu/key.key
+    - certFile: /certs/websites/lucaslyu/cert.crt
+      keyFile: /certs/websites/lucaslyu/key.key
       stores:
         - default
 
