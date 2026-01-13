@@ -9,7 +9,7 @@
 ### 1. 创建配置文件
 
 ```bash
-cd /volume1/Websites
+cd /home/kali/repo
 
 # 复制 Docker Compose 配置模板
 cp docker-compose.example.yml docker-compose.yml
@@ -17,9 +17,9 @@ cp docker-compose.example.yml docker-compose.yml
 # 创建 .env 文件
 cat > .env << EOF
 CERTS_DIR=/path/to/certs/websites
-TRAEFIK_CONFIG_FILE=/volume1/Websites/traefik.yml
-TRAEFIK_DYNAMIC_DIR=/volume1/Websites/dynamic
-NGINX_CONFIG_FILE=/volume1/Websites/nginx.conf
+TRAEFIK_CONFIG_FILE=/home/kali/repo/traefik.yml
+TRAEFIK_DYNAMIC_DIR=/home/kali/repo/dynamic
+NGINX_CONFIG_FILE=/home/kali/repo/nginx.conf
 EOF
 ```
 
@@ -120,13 +120,13 @@ NFX-Vault 是一个基于 Web 的 SSL 证书管理和监控系统，可以自动
 CERTS_DIR=/path/to/certs/websites
 
 # Traefik 配置文件路径
-TRAEFIK_CONFIG_FILE=/volume1/Websites/traefik.yml
+TRAEFIK_CONFIG_FILE=/home/kali/repo/traefik.yml
 
 # Traefik 动态配置目录
-TRAEFIK_DYNAMIC_DIR=/volume1/Websites/dynamic
+TRAEFIK_DYNAMIC_DIR=/home/kali/repo/dynamic
 
 # Nginx 配置文件路径
-NGINX_CONFIG_FILE=/volume1/Websites/nginx.conf
+NGINX_CONFIG_FILE=/home/kali/repo/nginx.conf
 ```
 
 ### docker-compose.yml

@@ -23,9 +23,9 @@ cp docker-compose.example.yml docker-compose.yml
 # 创建 .env 文件
 cat > .env << EOF
 CERTS_DIR=/path/to/certs/websites
-TRAEFIK_CONFIG_FILE=/volume1/Websites/traefik.yml
-TRAEFIK_DYNAMIC_DIR=/volume1/Websites/dynamic
-NGINX_CONFIG_FILE=/volume1/Websites/nginx.conf
+TRAEFIK_CONFIG_FILE=/home/kali/repo/traefik.yml
+TRAEFIK_DYNAMIC_DIR=/home/kali/repo/dynamic
+NGINX_CONFIG_FILE=/home/kali/repo/nginx.conf
 EOF
 ```
 
@@ -49,7 +49,7 @@ CERTS_DIR=/path/to/certs/websites
 Traefik 静态配置文件路径。
 
 ```bash
-TRAEFIK_CONFIG_FILE=/volume1/Websites/traefik.yml
+TRAEFIK_CONFIG_FILE=/home/kali/repo/traefik.yml
 ```
 
 ### TRAEFIK_DYNAMIC_DIR
@@ -57,7 +57,7 @@ TRAEFIK_CONFIG_FILE=/volume1/Websites/traefik.yml
 Traefik 动态配置目录路径。
 
 ```bash
-TRAEFIK_DYNAMIC_DIR=/volume1/Websites/dynamic
+TRAEFIK_DYNAMIC_DIR=/home/kali/repo/dynamic
 ```
 
 **说明**：
@@ -69,7 +69,7 @@ TRAEFIK_DYNAMIC_DIR=/volume1/Websites/dynamic
 Nginx 配置文件路径。
 
 ```bash
-NGINX_CONFIG_FILE=/volume1/Websites/nginx.conf
+NGINX_CONFIG_FILE=/home/kali/repo/nginx.conf
 ```
 
 ## Docker Compose 配置

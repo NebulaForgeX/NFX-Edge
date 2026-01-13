@@ -61,7 +61,7 @@ docker compose version
 ### 1. 准备项目目录
 
 ```bash
-cd /volume1/Websites
+cd /home/kali/repo
 ```
 
 ### 2. 创建配置文件
@@ -73,9 +73,9 @@ cp docker-compose.example.yml docker-compose.yml
 # 创建 .env 文件
 cat > .env << EOF
 CERTS_DIR=/path/to/certs/websites
-TRAEFIK_CONFIG_FILE=/volume1/Websites/traefik.yml
-TRAEFIK_DYNAMIC_DIR=/volume1/Websites/dynamic
-NGINX_CONFIG_FILE=/volume1/Websites/nginx.conf
+TRAEFIK_CONFIG_FILE=/home/kali/repo/traefik.yml
+TRAEFIK_DYNAMIC_DIR=/home/kali/repo/dynamic
+NGINX_CONFIG_FILE=/home/kali/repo/nginx.conf
 EOF
 ```
 
@@ -214,7 +214,7 @@ services:
 
 ```bash
 # 进入项目目录
-cd /volume1/Websites
+cd /home/kali/repo
 
 # 停止所有服务（保留数据）
 sudo docker compose down
@@ -384,7 +384,7 @@ sudo docker compose restart reverse-proxy
 
 ```bash
 # 进入项目目录
-cd /volume1/Websites
+cd /home/kali/repo
 
 # 停止并删除所有容器和网络（保留数据）
 sudo docker compose down
