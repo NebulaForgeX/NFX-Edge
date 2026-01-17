@@ -41,7 +41,7 @@ Websites/
     ├── www.sjgztea.com/
     ├── admin.sjgztea.com/
     ├── www.pqttec.com/
-    └── www.lucaslyu.com/
+    └── www.example.com/
 ```
 
 ## 核心组件
@@ -85,7 +85,7 @@ NFX-Edge 通过 `docker-compose.yml` 定义以下服务：
 - `www_sjgztea` - SJGZTEA 主站
 - `admin_sjgztea` - SJGZTEA 管理后台
 - `www_pqttec` - PQTTEC 官网
-- `www_lucaslyu` - LucasLyu 个人站
+- `www_example` - example 个人站
 
 #### 3. GitLab 服务
 
@@ -245,7 +245,7 @@ HTTP 到 HTTPS 重定向规则：
 
 ```
 ${CERTS_DIR}/
-├── traefik_lucaslyu/
+├── traefik_example/
 │   ├── cert.crt
 │   └── key.key
 ├── www_sjgztea/
@@ -309,7 +309,7 @@ reverse-proxy (Traefik)
     ├── www_sjgztea (Nginx)
     ├── admin_sjgztea (Nginx)
     ├── www_pqttec (Nginx)
-    ├── www_lucaslyu (Nginx)
+    ├── www_example (Nginx)
     └── gitlab (GitLab)
         ↑
         └── gitlab-runner (GitLab Runner)

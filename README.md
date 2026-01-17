@@ -45,6 +45,12 @@
 - 自动证书文件加载
 - ACME HTTP-01 挑战自动转发
 
+### 🦊 Gitea 代码托管
+- 集成 Gitea 轻量级 Git 服务
+- 支持 Web 界面和 SSH 访问
+- 通过 Traefik 提供 HTTPS 访问
+- 轻量级、资源占用低
+
 ---
 
 ## 📁 项目结构
@@ -66,8 +72,12 @@ Websites/
 │   ├── STRUCTURE.md            # 项目结构文档
 │   ├── DEPLOYMENT.md           # 部署指南
 │   ├── CONFIGURATION.md        # 配置详解
+│   ├── GITEA.md                # Gitea 部署与配置指南
 │   ├── INDEX.md                # 文档索引
 │   └── en/                     # 英文文档目录
+├── Gitea/                      # Gitea 数据目录
+│   ├── data/                   # Gitea 数据文件（仓库、数据库等）
+│   └── config/                 # Gitea 配置文件
 └── www.*.com/                  # 网站静态文件目录
 ```
 
@@ -145,6 +155,7 @@ Websites/
 - **[项目结构](Docs/STRUCTURE.md)** - 详细的目录结构和服务说明
 - **[部署指南](Docs/DEPLOYMENT.md)** - 部署步骤和最佳实践
 - **[配置详解](Docs/CONFIGURATION.md)** - 所有配置选项的详细说明
+- **[Gitea 部署指南](Docs/GITEA.md)** - Gitea 代码托管服务部署与配置
 - **[文档索引](Docs/INDEX.md)** - 完整文档导航
 
 ---

@@ -39,10 +39,10 @@
    - Nginx 配置
    - 配置验证
 
-5. **[GITLAB.md](GITLAB.md)** - GitLab 部署与配置指南
+5. **[GITEA.md](GITEA.md)** - Gitea 部署与配置指南
    - 部署步骤
    - 配置应用
-   - 初始密码获取
+   - 初始设置
    - 常用命令
    - 故障排查
 
@@ -82,7 +82,7 @@
 
 1. 阅读 [DEPLOYMENT.md](DEPLOYMENT.md) 了解部署和维护
 2. 阅读 [CONFIGURATION.md](CONFIGURATION.md) 了解配置管理
-3. 阅读 [GITLAB.md](GITLAB.md) 了解 GitLab 部署和维护
+3. 阅读 [GITEA.md](GITEA.md) 了解 Gitea 部署和维护
 4. 阅读故障排查章节解决常见问题
 
 ## 获取帮助

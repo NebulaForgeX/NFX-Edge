@@ -4,7 +4,7 @@
 http:
   routers:
     web-dashboard:
-      rule: Host(`traefik.lucaslyu.com`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`)) # http://traefik.lucaslyu.com/dashboard/ last "/" is important!!!!
+      rule: Host(`traefik.lyulucas.com`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`)) # http://traefik.lyulucas.com/dashboard/ last "/" is important!!!!
       entryPoints:
         - websecure
       service: api@internal

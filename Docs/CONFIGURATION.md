@@ -137,7 +137,7 @@ GITLAB_DATA_VOLUME=/volume1/NebulaForgeX/NFX-Edge/GitLab/data
 GitLab Web 界面域名。
 
 ```bash
-GITLAB_DOMAIN=git.lucaslyu.com
+GITLAB_DOMAIN=git.example.com
 ```
 
 **说明**：
@@ -150,7 +150,7 @@ GITLAB_DOMAIN=git.lucaslyu.com
 GitLab Container Registry 域名。
 
 ```bash
-GITLAB_REGISTRY_DOMAIN=registry.lucaslyu.com
+GITLAB_REGISTRY_DOMAIN=registry.example.com
 ```
 
 **说明**：
@@ -500,8 +500,8 @@ vim GitLab/config/gitlab.rb
 
 1. **外部 URL 配置**
    ```ruby
-   external_url "https://git.lucaslyu.com"
-   registry_external_url "https://registry.lucaslyu.com"
+   external_url "https://git.example.com"
+   registry_external_url "https://registry.example.com"
    ```
 
 2. **SSH 端口配置**
@@ -557,7 +557,7 @@ sudo docker compose exec gitlab-runner bash
 gitlab-runner register
 
 # 按提示输入：
-# - GitLab URL: https://git.lucaslyu.com
+# - GitLab URL: https://git.example.com
 # - Registration token: 从 GitLab Web 界面获取（Settings > CI/CD > Runners）
 # - Description: 描述信息
 # - Tags: 标签（可选）
@@ -571,7 +571,7 @@ gitlab-runner register
 sudo docker compose exec gitlab-runner \
   gitlab-runner register \
   --non-interactive \
-  --url "https://git.lucaslyu.com" \
+  --url "https://git.example.com" \
   --registration-token "YOUR_REGISTRATION_TOKEN" \
   --executor "docker" \
   --docker-image "alpine:latest" \

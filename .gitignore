@@ -62,14 +62,11 @@ desktop.ini
 .cache/
 
 # ============================================
-# GitLab 数据目录（保留 config 目录）
+# Gitea 数据目录（保留 config 目录）
 # ============================================
-GitLab/*
-!GitLab/config/
-GitLab/config/*
-!GitLab/config/gitlab.rb.local.template
-!GitLab/config/gitlab.rb.template
+Gitea/data/
+Gitea/logs/
 
-# GitLab 配置文件（忽略用户自定义的配置）
-GitLab/config/gitlab.rb
+# Gitea 配置文件（忽略用户自定义的配置）
+Gitea/config/app.ini
 

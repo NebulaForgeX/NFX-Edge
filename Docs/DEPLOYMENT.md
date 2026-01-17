@@ -139,7 +139,7 @@ vim GitLab/config/gitlab.rb
 
 # 4. 准备 GitLab 和 Registry 的证书
 # 确保在 dynamic/certs.yml 中配置了对应的证书路径
-# 证书文件应放在 ${CERTS_DIR}/git_lucaslyu/ 和 ${CERTS_DIR}/registry_lucaslyu/ 目录下
+# 证书文件应放在 ${CERTS_DIR}/git_example/ 和 ${CERTS_DIR}/registry_example/ 目录下
 ```
 
 ### 6. 创建网站目录并添加静态文件
@@ -171,8 +171,8 @@ sudo docker compose ps
 - 主站：`https://www.example.com`
 - 管理后台：`https://admin.example.com`
 - Traefik Dashboard：`https://traefik.example.com/dashboard/`
-- GitLab（如果配置）：`https://git.lucaslyu.com`
-- GitLab Registry（如果配置）：`https://registry.lucaslyu.com`
+- GitLab（如果配置）：`https://git.example.com`
+- GitLab Registry（如果配置）：`https://registry.example.com`
 
 **GitLab 首次访问**：
 
@@ -191,7 +191,7 @@ sudo docker compose ps
 sudo docker compose exec gitlab-runner \
   gitlab-runner register \
   --non-interactive \
-  --url "https://git.lucaslyu.com" \
+  --url "https://git.example.com" \
   --registration-token "YOUR_TOKEN" \
   --executor "docker" \
   --docker-image "alpine:latest" \

@@ -4,8 +4,8 @@
 tls:
   certificates:
     # Traefik Dashboard
-    - certFile: /certs/websites/lucaslyu/cert.crt
-      keyFile: /certs/websites/lucaslyu/key.key
+    - certFile: /certs/websites/lyulucas/cert.crt
+      keyFile: /certs/websites/lyulucas/key.key
       stores:
         - default
 
@@ -27,9 +27,15 @@ tls:
       stores:
         - default
 
-    # www.lucaslyu.com
-    - certFile: /certs/websites/lucaslyu/cert.crt
-      keyFile: /certs/websites/lucaslyu/key.key
+    # www.lyulucas.com
+    - certFile: /certs/websites/lyulucas/cert.crt
+      keyFile: /certs/websites/lyulucas/key.key
+      stores:
+        - default
+
+    # Gitea (git.lyulucas.com)
+    - certFile: /certs/websites/lyulucas/cert.crt
+      keyFile: /certs/websites/lyulucas/key.key
       stores:
         - default
 
