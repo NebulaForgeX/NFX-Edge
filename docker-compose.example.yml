@@ -4,7 +4,7 @@ services:
   # === 🔰 Traefik Reverse Proxy ===
   # Traefik 反向代理服务
   reverse-proxy:
-    image: traefik:v3.4
+    image: traefik:latest
     container_name: NFX-Edge-Reverse-Proxy
     restart: always
 
