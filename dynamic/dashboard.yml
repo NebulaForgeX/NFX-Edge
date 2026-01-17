@@ -1,0 +1,20 @@
+# Traefik Dashboard 配置
+# 使用文件 provider 配置，不受 Docker provider constraints 影响
+
+http:
+  routers:
+    web-dashboard:
+      rule: Host(`traefik.lucaslyu.com`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`)) # http://traefik.lucaslyu.com/dashboard/ last "/" is important!!!!
+      entryPoints:
+        - websecure
+      service: api@internal
+      tls: {}
+      middlewares:
+        - dashboard-auth
+      priority: 1000
+
+  middlewares:
+    dashboard-auth:
+      basicAuth:
+        users:
+          - "admin:$2y$05$KymEIDjaRPneTxHf1RCzruglmhsOdj2KQJhG6qKAUbtFkG0kCVJ/e"
