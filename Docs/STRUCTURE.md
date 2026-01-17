@@ -20,6 +20,11 @@ Websites/
 │   ├── acme-challenge.yml      # ACME HTTP-01 挑战转发配置
 │   ├── certs.yml              # TLS 证书文件路径配置
 │   └── redirect-to-https.yml  # HTTP → HTTPS 重定向规则
+├── GitLab/                     # GitLab 数据目录
+│   └── config/                 # GitLab 配置目录
+│       ├── gitlab.rb           # GitLab 配置文件（用户自定义，被忽略）
+│       ├── gitlab.rb.local.template  # 本地配置模板
+│       └── gitlab.rb.template  # 官方配置模板
 ├── Docs/                       # 文档目录
 │   ├── README.md               # 配置文档使用说明
 │   ├── STRUCTURE.md            # 项目结构文档（本文档）
@@ -82,6 +87,40 @@ NFX-Edge 通过 `docker-compose.yml` 定义以下服务：
 - `www_pqttec` - PQTTEC 官网
 - `www_lucaslyu` - LucasLyu 个人站
 
+#### 3. GitLab 服务
+
+GitLab 代码托管和 CI/CD 平台：
+
+- **容器名**：`NFX-Edge-GitLab`
+- **镜像**：`gitlab/gitlab-ce:latest`
+- **端口**：2224 (SSH, 宿主机端口)
+- **功能**：
+  - Git 代码仓库托管
+  - Container Registry（Docker 镜像仓库）
+  - CI/CD Pipeline
+  - Issue 和 Wiki
+- **数据卷**：
+  - 配置文件：`${GITLAB_CONFIG_VOLUME}:/etc/gitlab`
+  - 日志文件：`${GITLAB_LOGS_VOLUME}:/var/log/gitlab`
+  - 数据文件：`${GITLAB_DATA_VOLUME}:/var/opt/gitlab`
+- **网络访问**：
+  - Web 界面：通过 Traefik 路由到 `${GITLAB_DOMAIN}`
+  - Registry：通过 Traefik 路由到 `${GITLAB_REGISTRY_DOMAIN}`
+  - SSH：直接通过宿主机端口 `${GITLAB_SSH_PORT}` 访问
+
+#### 4. GitLab Runner 服务
+
+GitLab CI/CD Runner：
+
+- **容器名**：`NFX-Edge-GitLab-Runner`
+- **镜像**：`gitlab/gitlab-runner:alpine`
+- **功能**：
+  - 执行 GitLab CI/CD Pipeline
+  - 支持 Docker executor
+- **数据卷**：
+  - Runner 配置：`${GITLAB_RUNNER_VOLUME}:/etc/gitlab-runner`
+  - Docker socket：`/var/run/docker.sock`（用于执行 Docker 任务）
+
 ## 网络架构
 
 ### Docker 网络
@@ -93,9 +132,11 @@ NFX-Edge 通过 `docker-compose.yml` 定义以下服务：
 ### 服务间通信
 
 - **Traefik → Nginx**：通过 Docker 网络直接访问容器 80 端口
+- **Traefik → GitLab**：通过 Docker 网络访问容器 80 端口（Web）和 5050 端口（Registry）
 - **Traefik → NFX-Vault**：通过容器名 `NFX-Vault-Backend-API:8000` 访问（如果使用 NFX-Vault）
   - NFX-Vault 项目地址: https://github.com/NebulaForgeX/NFX-Vault
   - 需要确保 NFX-Vault 的 `backend-api` 服务加入 `nfx-edge` 网络
+- **GitLab Runner → GitLab**：通过 Docker 网络访问 GitLab 服务
 
 ### 外部访问
 
@@ -121,6 +162,15 @@ Docker Compose 主配置文件，定义：
 - `TRAEFIK_CONFIG_FILE` - Traefik 配置文件路径
 - `TRAEFIK_DYNAMIC_DIR` - Traefik 动态配置目录
 - `NGINX_CONFIG_FILE` - Nginx 配置文件路径
+- `GITLAB_SSH_BIND_HOST` - GitLab SSH 绑定地址
+- `GITLAB_SSH_PORT` - GitLab SSH 端口
+- `GITLAB_TZ` - GitLab 时区
+- `GITLAB_CONFIG_VOLUME` - GitLab 配置目录
+- `GITLAB_LOGS_VOLUME` - GitLab 日志目录
+- `GITLAB_DATA_VOLUME` - GitLab 数据目录
+- `GITLAB_DOMAIN` - GitLab Web 域名
+- `GITLAB_REGISTRY_DOMAIN` - GitLab Registry 域名
+- `GITLAB_RUNNER_VOLUME` - GitLab Runner 配置目录
 
 ### traefik.yml
 
@@ -225,6 +275,32 @@ Websites/
 
 **注意**：这些目录通过 volumes 挂载到容器中，修改后立即生效。
 
+### GitLab 数据
+
+GitLab 数据存储在 `${GITLAB_DATA_VOLUME}` 目录下：
+
+```
+GitLab/
+├── config/                    # GitLab 配置文件
+│   ├── gitlab.rb             # 主配置文件（用户自定义，被 .gitignore 忽略）
+│   ├── gitlab.rb.local.template  # 配置模板（被 Git 追踪）
+│   └── gitlab.rb.template    # 官方配置模板（被 Git 追踪）
+├── logs/                      # GitLab 日志文件
+├── data/                      # GitLab 数据文件
+│   ├── git-data/             # Git 仓库
+│   ├── postgresql/           # PostgreSQL 数据库
+│   ├── redis/                # Redis 数据
+│   ├── uploads/              # 上传的文件
+│   └── backups/              # 备份文件
+└── runner/                    # GitLab Runner 配置
+    └── config.toml           # Runner 配置文件
+```
+
+**重要**：
+- `config/gitlab.rb` 是用户自定义配置文件，不会被 Git 追踪
+- `config/gitlab.rb.local.template` 是配置模板，会被 Git 追踪
+- `data/` 目录包含所有重要数据，需要定期备份
+
 ## 服务依赖关系
 
 ```
@@ -233,10 +309,15 @@ reverse-proxy (Traefik)
     ├── www_sjgztea (Nginx)
     ├── admin_sjgztea (Nginx)
     ├── www_pqttec (Nginx)
-    └── www_lucaslyu (Nginx)
+    ├── www_lucaslyu (Nginx)
+    └── gitlab (GitLab)
+        ↑
+        └── gitlab-runner (GitLab Runner)
 ```
 
-所有网站服务都依赖于 `reverse-proxy` 服务。
+- 所有网站服务都依赖于 `reverse-proxy` 服务
+- `gitlab` 服务通过 Traefik 提供 Web 和 Registry 访问
+- `gitlab-runner` 服务依赖于 `gitlab` 服务
 
 ## 扩展性
 
@@ -269,6 +350,8 @@ reverse-proxy (Traefik)
 | `dynamic/acme-challenge.yml` | ACME HTTP-01 挑战转发配置（需要 NFX-Vault） |
 | `dynamic/certs.yml` | TLS 证书文件路径配置 |
 | `dynamic/redirect-to-https.yml` | HTTP → HTTPS 重定向规则 |
+| `GitLab/config/gitlab.rb` | GitLab 主配置文件（用户自定义，被 .gitignore 忽略） |
+| `GitLab/config/gitlab.rb.local.template` | GitLab 配置模板（被 Git 追踪） |
 
 ## 相关文档
 

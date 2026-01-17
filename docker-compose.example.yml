@@ -122,6 +122,69 @@ services:
     depends_on:
       - reverse-proxy
 
+  # === 🦊 GitLab (Web + SSH + Registry, behind Traefik) ===
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: NFX-Edge-GitLab
+    hostname: gitlab
+    restart: always
+    shm_size: "1g"
+    # SSH 不能用 22（宿主机一般被 NAS 占用），所以映射到 2224
+    ports:
+      - "${GITLAB_SSH_BIND_HOST:-0.0.0.0}:${GITLAB_SSH_PORT:-2224}:22"
+
+    # Web/Registry 不直接暴露宿主机端口，交给 Traefik 通过同网络访问
+    expose:
+      - "80"
+      - "5050"
+
+    environment:
+      TZ: ${GITLAB_TZ:-America/Vancouver}
+
+    volumes:
+      - ${GITLAB_CONFIG_VOLUME}:/etc/gitlab
+      - ${GITLAB_LOGS_VOLUME}:/var/log/gitlab
+      - ${GITLAB_DATA_VOLUME}:/var/opt/gitlab
+
+    labels:
+      - traefik.enable=true
+      - traefik.project=nfx-edge
+
+      # -------- GitLab Web --------
+      - traefik.http.routers.gitlab.rule=Host(`${GITLAB_DOMAIN}`)
+      - traefik.http.routers.gitlab.entrypoints=websecure
+      - traefik.http.routers.gitlab.tls=true
+      - traefik.http.services.gitlab.loadbalancer.server.port=80
+
+      # （推荐）安全头：HSTS 等（你已全站走 https 的情况下很合适）
+      - traefik.http.middlewares.gitlab-sec.headers.stsSeconds=31536000
+      - traefik.http.middlewares.gitlab-sec.headers.stsIncludeSubdomains=true
+      - traefik.http.middlewares.gitlab-sec.headers.stsPreload=true
+      - traefik.http.routers.gitlab.middlewares=gitlab-sec@docker
+
+      # -------- GitLab Registry --------
+      - traefik.http.routers.registry.rule=Host(`${GITLAB_REGISTRY_DOMAIN}`)
+      - traefik.http.routers.registry.entrypoints=websecure
+      - traefik.http.routers.registry.tls=true
+      - traefik.http.services.registry.loadbalancer.server.port=5050
+
+    networks:
+      - nfx-edge
+
+  # === 🏃 GitLab Runner (optional but recommended for CI) ===
+  gitlab-runner:
+    image: gitlab/gitlab-runner:alpine
+    container_name: NFX-Edge-GitLab-Runner
+    restart: always
+    depends_on:
+      - gitlab
+    volumes:
+      - ${GITLAB_RUNNER_VOLUME}:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - nfx-edge
+
+
 # 网络定义
 networks:
   nfx-edge:

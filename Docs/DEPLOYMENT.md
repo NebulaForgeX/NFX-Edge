@@ -123,20 +123,41 @@ docker compose up -d
 # 证书会自动存储在配置的证书目录下（如 ${CERTS_DIR}/{folder_name}/）
 ```
 
-### 5. 创建网站目录并添加静态文件
+### 5. 配置 GitLab（如果使用）
+
+如果使用 GitLab 服务：
+
+```bash
+# 1. 创建 GitLab 数据目录
+mkdir -p GitLab/{config,logs,data,runner}
+
+# 2. 从模板创建 GitLab 配置文件
+cp GitLab/config/gitlab.rb.local.template GitLab/config/gitlab.rb
+
+# 3. 编辑配置文件，修改域名、端口等
+vim GitLab/config/gitlab.rb
+
+# 4. 准备 GitLab 和 Registry 的证书
+# 确保在 dynamic/certs.yml 中配置了对应的证书路径
+# 证书文件应放在 ${CERTS_DIR}/git_lucaslyu/ 和 ${CERTS_DIR}/registry_lucaslyu/ 目录下
+```
+
+### 6. 创建网站目录并添加静态文件
 
 ```bash
 mkdir -p www.example.com
 # 将网站静态文件放入对应目录
 ```
 
-### 6. 启动服务
+### 7. 启动服务
 
 ```bash
 sudo docker compose up -d
 ```
 
-### 7. 验证部署
+**注意**：GitLab 首次启动需要较长时间（5-10 分钟），请耐心等待。
+
+### 8. 验证部署
 
 ```bash
 # 检查所有容器是否运行
@@ -150,6 +171,32 @@ sudo docker compose ps
 - 主站：`https://www.example.com`
 - 管理后台：`https://admin.example.com`
 - Traefik Dashboard：`https://traefik.example.com/dashboard/`
+- GitLab（如果配置）：`https://git.lucaslyu.com`
+- GitLab Registry（如果配置）：`https://registry.lucaslyu.com`
+
+**GitLab 首次访问**：
+
+1. 等待 GitLab 完全启动（检查日志：`sudo docker compose logs gitlab`）
+2. 访问 GitLab Web 界面
+3. 首次访问会要求设置 root 用户密码
+4. 登录后可以开始使用 GitLab
+
+**GitLab Runner 注册**（可选）：
+
+```bash
+# 从 GitLab Web 界面获取注册 Token
+# Settings > CI/CD > Runners > Expand
+
+# 注册 Runner
+sudo docker compose exec gitlab-runner \
+  gitlab-runner register \
+  --non-interactive \
+  --url "https://git.lucaslyu.com" \
+  --registration-token "YOUR_TOKEN" \
+  --executor "docker" \
+  --docker-image "alpine:latest" \
+  --description "NFX-Edge Runner"
+```
 
 ## 生产环境部署
 
@@ -294,6 +341,56 @@ sudo docker compose restart www_example admin_example
 
 # 2. 重启 Traefik（重新加载证书）
 sudo docker compose restart reverse-proxy
+```
+
+### GitLab 维护操作
+
+#### 更新 GitLab 配置
+
+```bash
+# 1. 修改 gitlab.rb
+vim GitLab/config/gitlab.rb
+
+# 2. 重新配置 GitLab（推荐）
+sudo docker compose exec gitlab gitlab-ctl reconfigure
+
+# 或重启容器
+sudo docker compose restart gitlab
+```
+
+#### 备份 GitLab 数据
+
+```bash
+# 进入 GitLab 容器执行备份
+sudo docker compose exec gitlab gitlab-backup create
+
+# 备份文件存储在 ${GITLAB_DATA_VOLUME}/backups/ 目录
+```
+
+#### 恢复 GitLab 数据
+
+```bash
+# 1. 停止 GitLab 服务
+sudo docker compose stop gitlab
+
+# 2. 恢复备份
+sudo docker compose run --rm gitlab gitlab-backup restore BACKUP=备份文件名
+
+# 3. 重启 GitLab
+sudo docker compose start gitlab
+```
+
+#### 查看 GitLab 状态
+
+```bash
+# 查看 GitLab 服务状态
+sudo docker compose exec gitlab gitlab-ctl status
+
+# 查看 GitLab 日志
+sudo docker compose logs gitlab
+
+# 查看 Runner 状态
+sudo docker compose exec gitlab-runner gitlab-runner list
 ```
 
 ## 故障排查
