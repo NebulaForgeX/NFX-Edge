@@ -1,8 +1,8 @@
-# NFX-Edge 配置详解
+# NFX-Edge Configuration Details
 
-[English Version](en/CONFIGURATION.md)
+[中文版本](../CONFIGURATION.md)
 
-## 配置文件
+## Config Files
 
 - `.env`
 - `docker-compose.yml`
@@ -12,7 +12,7 @@
 - `dynamic/acme-challenge.yml`
 - `public/nginx.conf`
 
-## `.env` 示例（推荐通用命名）
+## Recommended `.env` Template
 
 ```bash
 CERTS_DIR=/absolute/path/to/certs
@@ -22,16 +22,16 @@ SITE2_WWW_DIR=./site2-www
 NGINX_CONFIG_FILE=./public/nginx.conf
 ```
 
-## Traefik 关键项
+## Key Traefik Settings
 
-### HTTP -> HTTPS 重定向
+### HTTP -> HTTPS redirection
 
 - `--entrypoints.web.http.redirections.entrypoint.to=websecure`
 - `--entrypoints.web.http.redirections.entrypoint.scheme=https`
 - `--entrypoints.web.http.redirections.entrypoint.permanent=true`
 - `--entrypoints.web.http.redirections.entrypoint.priority=1`
 
-### Provider 与隔离约束
+### Provider and isolation constraint
 
 - `--providers.file.directory=/dynamic`
 - `--providers.file.watch=true`
@@ -39,7 +39,7 @@ NGINX_CONFIG_FILE=./public/nginx.conf
 - `--providers.docker.exposedbydefault=false`
 - `--providers.docker.constraints=Label(\`nfx.project\`,\`nfx-edge\`)`
 
-## 动态文件规范
+## Dynamic File Conventions
 
 ### `dynamic/tls.yaml`
 
@@ -65,7 +65,7 @@ http:
       priority: 100
 ```
 
-## 站点标签模板
+## Site Label Template
 
 ```yaml
 labels:
@@ -76,11 +76,10 @@ labels:
   - traefik.http.routers.site1.tls=true
 ```
 
-## 验证命令
+## Validation Commands
 
 ```bash
 sudo docker compose config
 sudo docker compose ps
 sudo docker compose logs --tail 200 NFX-Edge-Reverse-Proxy
 ```
-

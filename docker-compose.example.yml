@@ -1,128 +1,99 @@
-# Docker Compose 服务定义示例
-# 使用方法：复制此文件为 docker-compose.yml，然后根据实际情况修改配置
+# Docker Compose 服务定义示例（与当前可用配置保持一致）
+# 使用方法：复制此文件为 docker-compose.yml，然后按实际路径/域名调整
 services:
-  # === 🔰 Traefik Reverse Proxy ===
-  # Traefik 反向代理服务
-  reverse-proxy:
-    image: traefik:latest
+  traefik:
+    image: traefik:v3.6
     container_name: NFX-Edge-Reverse-Proxy
-    restart: always
-
-    # Traefik 命令行参数
-    command:
-      # 启用 Dashboard + Docker Provider
-      - --api.dashboard=true
-      - --providers.docker
-      - --providers.docker.exposedByDefault=false
-
-      # 文件配置（动态规则目录）
-      - --providers.file.directory=/etc/traefik/dynamic
-      - --providers.file.watch=true
-
-      # EntryPoints
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-
-    # 端口映射
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - nfx-edge
     ports:
       - "80:80"
       - "443:443"
-
-    # 数据卷挂载
     volumes:
-      # 挂载 Docker socket
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      # ✅ 挂载每个网站的证书目录
-      # 挂载网站证书目录，每个网站使用独立文件夹的证书
-      # 不再使用 acme.json，改为使用文件证书（cert.crt 和 key.key）
       - ${CERTS_DIR}:/certs/websites:ro
-      # Traefik 主配置文件
-      - ${TRAEFIK_CONFIG_FILE}:/etc/traefik/traefik.yml:ro
-      # 动态规则文件目录
-      - ${TRAEFIK_DYNAMIC_DIR}:/etc/traefik/dynamic:ro
-
-    # Traefik 路由标签
+      - ./dynamic:/dynamic:ro
+    command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --entrypoints.web.http.redirections.entrypoint.permanent=true
+      - --entrypoints.web.http.redirections.entrypoint.priority=1
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.http.tls=true
+      - --providers.file.directory=/dynamic
+      - --providers.file.watch=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.constraints=Label(`nfx.project`,`nfx-edge`)
+      - --providers.docker.network=nfx-edge
+      - --api.dashboard=true
+      - --api.insecure=false
+      - --log.level=INFO
+      - --accesslog=true
+      - --accesslog.format=json
+      - --metrics.prometheus=true
     labels:
       - traefik.enable=true
-      # Traefik Dashboard（根据实际域名修改 traefik.example.com）
-      # 证书配置在 dynamic/certs.yml 中统一管理
-      - traefik.http.routers.web-dashboard.rule=Host(`traefik.example.com`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
-      - traefik.http.routers.web-dashboard.entrypoints=websecure
-      - traefik.http.routers.web-dashboard.tls=true
-      - traefik.http.routers.web-dashboard.service=api@internal
-      # BasicAuth 密码哈希（需要根据实际密码生成，使用 htpasswd 工具）
-      - traefik.http.middlewares.dashboard-auth.basicauth.users=admin:$$2y$$05$$KymEIDjaRPneTxHf1RCzruglmhsOdj2KQJhG6qKAUbtFkG0kCVJ/e$$
-      - traefik.http.routers.web-dashboard.middlewares=dashboard-auth
+      - nfx.project=nfx-edge
+      - traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_HOST}`)
+      - traefik.http.routers.dashboard.entrypoints=websecure
+      - traefik.http.routers.dashboard.service=api@internal
+      - traefik.http.routers.dashboard.tls=true
+      - traefik.http.middlewares.dashboard-auth.basicauth.users=admin:$$2y$$05$$KymEIDjaRPneTxHf1RCzruglmhsOdj2KQJhG6qKAUbtFkG0kCVJ/e
+      - traefik.http.routers.dashboard.middlewares=dashboard-auth@docker
 
-    # 网络配置
-    networks:
-      - nfx-edge
-
-  # === 🌿 示例网站服务 ===
-  # 网站服务模板（复制此服务并修改配置即可添加新网站）
-  www_example:
+  site1_www:
     image: nginx:alpine
-    # 根据实际网站修改容器名称
-    container_name: NFX-Edge-WWW-EXAMPLE
-    restart: always
-
-    # 数据卷挂载
-    volumes:
-      # 修改为实际的网站文件目录
-      - ./www.example.com:/usr/share/nginx/html:ro
-      # Nginx 配置文件
-      - ${NGINX_CONFIG_FILE}:/etc/nginx/conf.d/default.conf:ro
-
-    # Traefik 路由标签
-    labels:
-      - traefik.enable=true
-      # 修改为实际的域名
-      # 证书配置在 dynamic/certs.yml 中统一管理
-      - traefik.http.routers.example.rule=Host(`example.com`) || Host(`www.example.com`)
-      - traefik.http.routers.example.entrypoints=websecure
-      - traefik.http.routers.example.tls=true
-
-    # 网络配置
+    container_name: NFX-Edge-WWW-SITE1
+    restart: unless-stopped
     networks:
       - nfx-edge
+    volumes:
+      - ${SITE1_WWW_DIR}:/usr/share/nginx/html:ro
+      - ${NGINX_CONFIG_FILE}:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      - traefik.enable=true
+      - nfx.project=nfx-edge
+      - traefik.http.routers.site1-www.rule=Host(`${SITE1_DOMAIN}`) || Host(`www.${SITE1_DOMAIN}`)
+      - traefik.http.routers.site1-www.entrypoints=websecure
+      - traefik.http.routers.site1-www.tls=true
 
-    # 服务依赖
-    depends_on:
-      - reverse-proxy
-
-  # === ⚙️ 示例管理后台服务 ===
-  # 管理后台服务模板（复制此服务并修改配置即可添加新管理后台）
-  admin_example:
+  site1_admin:
     image: nginx:alpine
-    # 根据实际管理后台修改容器名称
-    container_name: NFX-Edge-Admin-EXAMPLE
-    restart: always
-
-    # 数据卷挂载
-    volumes:
-      # 修改为实际的管理后台文件目录
-      - ./admin.example.com:/usr/share/nginx/html:ro
-      # Nginx 配置文件
-      - ${NGINX_CONFIG_FILE}:/etc/nginx/conf.d/default.conf:ro
-
-    # Traefik 路由标签
-    labels:
-      - traefik.enable=true
-      # 修改为实际的域名（通常使用 admin. 前缀）
-      # 证书配置在 dynamic/certs.yml 中统一管理
-      - traefik.http.routers.admin-example.rule=Host(`admin.example.com`)
-      - traefik.http.routers.admin-example.entrypoints=websecure
-      - traefik.http.routers.admin-example.tls=true
-
-    # 网络配置
+    container_name: NFX-Edge-ADMIN-SITE1
+    restart: unless-stopped
     networks:
       - nfx-edge
+    volumes:
+      - ${SITE1_ADMIN_DIR}:/usr/share/nginx/html:ro
+      - ${NGINX_CONFIG_FILE}:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      - traefik.enable=true
+      - nfx.project=nfx-edge
+      - traefik.http.routers.site1-admin.rule=Host(`admin.${SITE1_DOMAIN}`)
+      - traefik.http.routers.site1-admin.entrypoints=websecure
+      - traefik.http.routers.site1-admin.tls=true
 
-    # 服务依赖
-    depends_on:
-      - reverse-proxy
+  site2_www:
+    image: nginx:alpine
+    container_name: NFX-Edge-WWW-SITE2
+    restart: unless-stopped
+    networks:
+      - nfx-edge
+    volumes:
+      - ${SITE2_WWW_DIR}:/usr/share/nginx/html:ro
+      - ${NGINX_CONFIG_FILE}:/etc/nginx/conf.d/default.conf:ro
+    labels:
+      - traefik.enable=true
+      - nfx.project=nfx-edge
+      - traefik.http.routers.site2-www.rule=Host(`${SITE2_DOMAIN}`) || Host(`www.${SITE2_DOMAIN}`)
+      - traefik.http.routers.site2-www.entrypoints=websecure
+      - traefik.http.routers.site2-www.tls=true
 
-# 网络定义
 networks:
   nfx-edge:
     name: nfx-edge

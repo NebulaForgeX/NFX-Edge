@@ -5,12 +5,19 @@ api:
 entryPoints:
   web:
     address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
   websecure:
     address: ":443"
 
 providers:
   docker:
     exposedByDefault: false
+    constraints: "Label(`nfx.project`,`nfx-edge`)"
   file:
     directory: /etc/traefik/dynamic
     watch: true
