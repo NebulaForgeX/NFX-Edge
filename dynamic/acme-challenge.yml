@@ -5,18 +5,19 @@
 http:
   routers:
     acme-challenge:
-      rule: "PathPrefix(`/.well-known/acme-challenge`)"
-      entrypoints:
+      # 挑战只看路径即可，避免 Host 规则引入额外变量
+      rule: "PathPrefix(`/.well-known/acme-challenge/`)"
+      entryPoints:
         - web
       service: acme-challenge-service
-      priority: 1000  # 高优先级，确保先匹配
+      priority: 100  # 高于普通业务路由即可，无需极端值
       # 不设置 tls，因为这是 HTTP-01 挑战，必须使用 HTTP (80端口)
 
   services:
     acme-challenge-service:
       loadBalancer:
         servers:
-          # 使用容器名称，因为它在 websites_default 网络中
+          # 确保该地址从 NFX-Edge-Reverse-Proxy 所在网络可达
           - url: "http://NFX-Vault-Backend-API:8000"
         passHostHeader: true
 

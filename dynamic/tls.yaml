@@ -1,0 +1,8 @@
+tls:
+  certificates:
+    - certFile: /certs/websites/lyulucas/cert.crt
+      keyFile: /certs/websites/lyulucas/key.key
+    - certFile: /certs/websites/sjgztea/cert.crt
+      keyFile: /certs/websites/sjgztea/key.key
+    - certFile: /certs/websites/pqttec/cert.crt
+      keyFile: /certs/websites/pqttec/key.key
