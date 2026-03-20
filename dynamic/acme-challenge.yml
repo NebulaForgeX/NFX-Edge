@@ -10,14 +10,13 @@ http:
       entryPoints:
         - web
       service: acme-challenge-service
-      priority: 100  # 高于普通业务路由即可，无需极端值
+      priority: 100 # 高于普通业务路由即可，无需极端值
       # 不设置 tls，因为这是 HTTP-01 挑战，必须使用 HTTP (80端口)
 
   services:
     acme-challenge-service:
       loadBalancer:
         servers:
-          # 确保该地址从 NFX-Edge-Reverse-Proxy 所在网络可达
-          - url: "http://NFX-Vault-Backend-API:8000"
+          # 与 NFX-Vault docker-compose 中服务名 backend-api 一致（同 nfx-edge 网络可解析）
+          - url: "http://backend-api:8000"
         passHostHeader: true
-
