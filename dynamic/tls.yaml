@@ -6,3 +6,5 @@ tls:
       keyFile: /certs/websites/sjgztea/key.key
     - certFile: /certs/websites/pqttec/cert.crt
       keyFile: /certs/websites/pqttec/key.key
+    - certFile: /certs/websites/nebulaforgex/cert.crt
+      keyFile: /certs/websites/nebulaforgex/key.key
