@@ -1,0 +1,18 @@
+# docs.nebulaforgex.com -> 局域网文档容器（上游仅 HTTP）
+# 确保 CERTS_DIR/nebulaforgex/ 下有 cert.crt、key.key，且证书包含此主机名（或通配符 *.nebulaforgex.com）
+# 若 NAS 或文档端口变更，请改写下方 url
+
+http:
+  routers:
+    docs-nebulaforgex:
+      rule: Host(`docs.nebulaforgex.com`)
+      entryPoints:
+        - websecure
+      service: docs-nebulaforgex-svc
+      tls: {}
+
+  services:
+    docs-nebulaforgex-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10154"
