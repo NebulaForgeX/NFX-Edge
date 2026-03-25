@@ -1,0 +1,18 @@
+# vault.nebulaforgex.com -> NFX-Vault 前端（上游仅 HTTP）
+# 证书沿用 dynamic/tls.yaml 中 nebulaforgex；须覆盖 vault 子域或通配符
+# 端口与 NFX-Vault frontend 一致，变更时改下方 url
+
+http:
+  routers:
+    vault-nebulaforgex:
+      rule: Host(`vault.nebulaforgex.com`)
+      entryPoints:
+        - websecure
+      service: vault-nebulaforgex-svc
+      tls: {}
+
+  services:
+    vault-nebulaforgex-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10152"
