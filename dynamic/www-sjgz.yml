@@ -1,0 +1,18 @@
+# sjgztea.com / www.sjgztea.com -> Sjgz-Web 静态站点（本机 start.sh 默认 10002）
+# 证书：dynamic/tls.yaml 中 sjgztea；须覆盖根域与 www（或通配符 *.sjgztea.com）
+# 若宿主机 IP 或端口变更，修改下方 url
+
+http:
+  routers:
+    www-sjgz:
+      rule: Host(`sjgztea.com`) || Host(`www.sjgztea.com`)
+      entryPoints:
+        - websecure
+      service: www-sjgz-svc
+      tls: {}
+
+  services:
+    www-sjgz-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10002"
