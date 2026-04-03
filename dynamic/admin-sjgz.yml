@@ -1,17 +1,33 @@
 # admin.sjgztea.com -> Sjgz-Admin 静态站点（本机 start.sh 映射口，默认 10001）
 # 证书：dynamic/tls.yaml 中 sjgztea；须覆盖 admin.sjgztea.com（或通配符 *.sjgztea.com）
 # 若宿主机 IP 或端口变更，修改下方 url
+#
+# 同源 API：Admin 前台请求 /catalog、/auth、/analytics、/image → 优先走 admin-sjgz-api -> 后端 10021
 
 http:
   routers:
+    admin-sjgz-api:
+      rule: Host(`admin.sjgztea.com`) && (PathPrefix(`/catalog`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))
+      entryPoints:
+        - websecure
+      service: sjgz-admin-api-svc
+      tls: {}
+      priority: 100
+
     admin-sjgz:
       rule: Host(`admin.sjgztea.com`)
       entryPoints:
         - websecure
       service: admin-sjgz-svc
       tls: {}
+      priority: 1
 
   services:
+    sjgz-admin-api-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10021"
+
     admin-sjgz-svc:
       loadBalancer:
         servers:
