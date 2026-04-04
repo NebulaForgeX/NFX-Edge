@@ -1,0 +1,35 @@
+# pqttec.com / www.pqttec.com -> Pqttec-Web 静态站点（本机 start.sh 默认 10004）
+# 证书：dynamic/tls.yaml 中 pqttec；须覆盖根域与 www（或通配符 *.pqttec.com）
+# 若宿主机 IP 或端口变更，修改下方 url
+#
+# 与 SJGZ / NFX-Vault 同源模式一致：前端 VITE_* 为空时请求 /catalog、/content、/auth、/analytics、/image，
+# 优先匹配 www-pqttec-api -> Pqttec 后端网关（TRAEFIK_HTTP_PORT，默认 10031）；其余走静态站。
+
+http:
+  routers:
+    www-pqttec-api:
+      rule: (Host(`pqttec.com`) || Host(`www.pqttec.com`)) && (PathPrefix(`/catalog`) || PathPrefix(`/content`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))
+      entryPoints:
+        - websecure
+      service: pqttec-www-api-svc
+      tls: {}
+      priority: 100
+
+    www-pqttec:
+      rule: Host(`pqttec.com`) || Host(`www.pqttec.com`)
+      entryPoints:
+        - websecure
+      service: www-pqttec-svc
+      tls: {}
+      priority: 1
+
+  services:
+    pqttec-www-api-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10031"
+
+    www-pqttec-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10004"
