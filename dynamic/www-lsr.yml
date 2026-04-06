@@ -1,0 +1,35 @@
+# lyulucas.com / www.lyulucas.com / lucaslyu.com / www.lucaslyu.com -> Lsr-Web 静态站点（本机 start.sh 默认 10006）
+# 证书：dynamic/tls.yaml 中 lyulucas（或单独 lucaslyu）；须 SAN 覆盖上述四主机名（或通配符）
+# 若宿主机 IP 或端口变更，修改下方 url
+#
+# 与 pqttec / SJGZ 同源模式一致：VITE_* 为空时经站点同源请求 /catalog、/content、/auth、/analytics、/image，
+# 优先匹配 www-lsr-api -> Lsr 后端网关（TRAEFIK_HTTP_PORT，默认 10041）；其余走静态站。
+
+http:
+  routers:
+    www-lsr-api:
+      rule: (Host(`lyulucas.com`) || Host(`www.lyulucas.com`) || Host(`lucaslyu.com`) || Host(`www.lucaslyu.com`)) && PathPrefix(`/content`) || PathPrefix(`/auth`) || PathPrefix(`/image`))
+      entryPoints:
+        - websecure
+      service: lsr-www-api-svc
+      tls: {}
+      priority: 100
+
+    www-lsr:
+      rule: Host(`lyulucas.com`) || Host(`www.lyulucas.com`) || Host(`lucaslyu.com`) || Host(`www.lucaslyu.com`)
+      entryPoints:
+        - websecure
+      service: www-lsr-svc
+      tls: {}
+      priority: 1
+
+  services:
+    lsr-www-api-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10041"
+
+    www-lsr-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10006"

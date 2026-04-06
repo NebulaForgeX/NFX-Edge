@@ -2,6 +2,8 @@ tls:
   certificates:
     - certFile: /certs/websites/lyulucas/cert.crt
       keyFile: /certs/websites/lyulucas/key.key
+    - certFile: /certs/websites/lucaslyu/cert.crt
+      keyFile: /certs/websites/lucaslyu/key.key
     - certFile: /certs/websites/sjgztea/cert.crt
       keyFile: /certs/websites/sjgztea/key.key
     - certFile: /certs/websites/pqttec/cert.crt
