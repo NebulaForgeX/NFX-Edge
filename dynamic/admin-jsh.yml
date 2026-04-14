@@ -1,0 +1,34 @@
+# admin.jshtrade.com / admin.jshcommerce.com -> Pqttec-Admin 静态（与 admin.pqttec.com 相同，start.sh 默认 10003）
+# 证书：dynamic/tls.yaml 中 jshtrade、jshcommerce；须覆盖对应 admin 子域（或通配符）
+# 若宿主机 IP 或端口变更，与 admin-pqttec.yml 一并修改下方 url
+#
+# 同源 API：Admin 请求 /catalog、/content、/auth、/analytics、/image -> admin-jsh-api -> 后端 10031
+
+http:
+  routers:
+    admin-jsh-api:
+      rule: (Host(`admin.jshtrade.com`) || Host(`admin.jshcommerce.com`)) && (PathPrefix(`/catalog`) || PathPrefix(`/content`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))
+      entryPoints:
+        - websecure
+      service: jsh-admin-api-svc
+      tls: {}
+      priority: 100
+
+    admin-jsh:
+      rule: Host(`admin.jshtrade.com`) || Host(`admin.jshcommerce.com`)
+      entryPoints:
+        - websecure
+      service: admin-jsh-svc
+      tls: {}
+      priority: 1
+
+  services:
+    jsh-admin-api-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10031"
+
+    admin-jsh-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10003"
