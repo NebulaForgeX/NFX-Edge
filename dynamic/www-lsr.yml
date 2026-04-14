@@ -8,7 +8,7 @@
 http:
   routers:
     www-lsr-api:
-      rule: (Host(`lyulucas.com`) || Host(`www.lyulucas.com`) || Host(`lucaslyu.com`) || Host(`www.lucaslyu.com`)) && PathPrefix(`/content`) || PathPrefix(`/auth`) || PathPrefix(`/image`))
+      rule: (Host(`lyulucas.com`) || Host(`www.lyulucas.com`) || Host(`lucaslyu.com`) || Host(`www.lucaslyu.com`)) && (PathPrefix(`/catalog`) || PathPrefix(`/content`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`)))
       entryPoints:
         - websecure
       service: lsr-www-api-svc

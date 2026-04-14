@@ -1,0 +1,34 @@
+# jshtrade.com / www.jshtrade.com / jshcommerce.com / www.jshcommerce.com
+# -> 与 pqttec 同一站点：Pqttec-Web 静态（start.sh 默认 10004）+ Pqttec 后端网关（默认 10031）
+# Admin 子域见 dynamic/admin-jsh.yml（与 admin-pqttec.yml 同源模式）
+# 证书：dynamic/tls.yaml 中 jshtrade、jshcommerce；须覆盖根域与 www（admin 见 admin-jsh 注释）
+# 若宿主机 IP 或端口变更，与 www-pqttec.yml 一并修改下方 url
+
+http:
+  routers:
+    www-jsh-api:
+      rule: (Host(`jshtrade.com`) || Host(`www.jshtrade.com`) || Host(`jshcommerce.com`) || Host(`www.jshcommerce.com`)) && (PathPrefix(`/catalog`) || PathPrefix(`/content`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))
+      entryPoints:
+        - websecure
+      service: jsh-www-api-svc
+      tls: {}
+      priority: 100
+
+    www-jsh:
+      rule: Host(`jshtrade.com`) || Host(`www.jshtrade.com`) || Host(`jshcommerce.com`) || Host(`www.jshcommerce.com`)
+      entryPoints:
+        - websecure
+      service: www-jsh-svc
+      tls: {}
+      priority: 1
+
+  services:
+    jsh-www-api-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10031"
+
+    www-jsh-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10004"

@@ -1,0 +1,34 @@
+# admin.lyulucas.com / admin.lucaslyu.com -> Lsr-Admin 静态（本机 start.sh / .env.prod.local 默认 10005）
+# 证书：dynamic/tls.yaml 中 lyulucas、lucaslyu；须覆盖对应 admin 子域（或通配符）
+# 若宿主机 IP 或端口变更，修改下方 url
+#
+# 同源 API：Admin 请求 /catalog、/content、/auth、/analytics、/image -> admin-lsr-api -> 后端网关 10041
+
+http:
+  routers:
+    admin-lsr-api:
+      rule: (Host(`admin.lyulucas.com`) || Host(`admin.lucaslyu.com`)) && (PathPrefix(`/catalog`) || PathPrefix(`/content`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))
+      entryPoints:
+        - websecure
+      service: lsr-admin-api-svc
+      tls: {}
+      priority: 100
+
+    admin-lsr:
+      rule: Host(`admin.lyulucas.com`) || Host(`admin.lucaslyu.com`)
+      entryPoints:
+        - websecure
+      service: admin-lsr-svc
+      tls: {}
+      priority: 1
+
+  services:
+    lsr-admin-api-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10041"
+
+    admin-lsr-svc:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.64:10005"

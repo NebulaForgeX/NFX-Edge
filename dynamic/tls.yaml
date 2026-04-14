@@ -8,5 +8,9 @@ tls:
       keyFile: /certs/websites/sjgztea/key.key
     - certFile: /certs/websites/pqttec/cert.crt
       keyFile: /certs/websites/pqttec/key.key
+    - certFile: /certs/websites/jshtrade/cert.crt
+      keyFile: /certs/websites/jshtrade/key.key
+    - certFile: /certs/websites/jshcommerce/cert.crt
+      keyFile: /certs/websites/jshcommerce/key.key
     - certFile: /certs/websites/nebulaforgex/cert.crt
       keyFile: /certs/websites/nebulaforgex/key.key
