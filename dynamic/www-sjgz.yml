@@ -27,9 +27,9 @@ http:
     sjgz-www-api-svc:
       loadBalancer:
         servers:
-          - url: "http://192.168.1.64:10021"
+          - url: "http://host.docker.internal:10021"
 
     www-sjgz-svc:
       loadBalancer:
         servers:
-          - url: "http://192.168.1.64:10002"
+          - url: "http://host.docker.internal:10002"
