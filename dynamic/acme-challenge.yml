@@ -18,5 +18,5 @@ http:
       loadBalancer:
         servers:
           # 与 NFX-Vault docker-compose 中服务名 backend-api 一致（同 nfx-edge 网络可解析）
-          - url: "http://backend-api:8000"
+          - url: "http://host.docker.internal:10151"
         passHostHeader: true
