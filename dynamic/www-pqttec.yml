@@ -27,9 +27,9 @@ http:
     pqttec-www-api-svc:
       loadBalancer:
         servers:
-          - url: "http://127.0.0.1:10031"
+          - url: "http://host.docker.internal:10031"
 
     www-pqttec-svc:
       loadBalancer:
         servers:
-          - url: "http://127.0.0.1:10004"
+          - url: "http://host.docker.internal:10004"
