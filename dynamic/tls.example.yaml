@@ -1,0 +1,12 @@
+# 复制为 tls.yaml 并按实际站点修改证书路径
+# cp dynamic/tls.example.yaml dynamic/tls.yaml
+#
+# certFile / keyFile 路径相对于容器内挂载：${CERTS_DIR} -> /certs/websites
+# 目录名通常与 NFX-Vault Websites/<name> 一致
+
+tls:
+  certificates:
+    - certFile: /certs/websites/<site1>/cert.crt
+      keyFile: /certs/websites/<site1>/key.key
+    - certFile: /certs/websites/<site2>/cert.crt
+      keyFile: /certs/websites/<site2>/key.key

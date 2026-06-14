@@ -5,6 +5,11 @@
 # 环境配置文件（包含实际配置信息）
 .env
 
+# Traefik 动态配置（站点/证书为本地实际值，不入库）
+dynamic/www-*.yml
+dynamic/admin-*.yml
+dynamic/tls.yaml
+
 # 网站内容目录（包含实际网站文件）
 www.*.com/
 admin.*.com/
