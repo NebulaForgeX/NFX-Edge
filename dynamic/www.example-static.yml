@@ -1,0 +1,21 @@
+# 复制为 www-<sitename>.yml（纯静态站，无后端 API 路由）
+# cp dynamic/www.example-static.yml dynamic/www-<sitename>.yml
+#
+# 证书：dynamic/tls.yaml 中对应站点；须覆盖根域与 www
+# 若宿主机 IP 或端口变更，修改下方 url
+
+http:
+  routers:
+    www-example-static:
+      rule: Host(`example.com`) || Host(`www.example.com`)
+      entryPoints:
+        - websecure
+      service: www-example-static-svc
+      tls: {}
+      priority: 1
+
+  services:
+    www-example-static-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:<www-static-port>"
