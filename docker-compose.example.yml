@@ -9,6 +9,8 @@ services:
       - no-new-privileges:true
     networks:
       - nfx-edge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "80:80"
       - "443:443"
