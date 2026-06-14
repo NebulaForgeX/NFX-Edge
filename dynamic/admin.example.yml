@@ -1,0 +1,36 @@
+# 复制为 admin-<sitename>.yml（例如 admin-sjgz.yml）并按实际域名/端口修改
+# cp dynamic/admin.example.yml dynamic/admin-<sitename>.yml
+#
+# 证书：dynamic/tls.yaml 中对应站点；须覆盖 admin.<domain>（或通配符 *.<domain>）
+# 若宿主机 IP 或端口变更，修改下方 url
+#
+# 同源 API：Admin 请求 /catalog、/auth、/analytics、/image 等 → 优先走 admin-<sitename>-api -> 后端网关
+
+http:
+  routers:
+    admin-example-api:
+      rule: Host(`admin.example.com`) && (PathPrefix(`/catalog`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))
+      entryPoints:
+        - websecure
+      service: example-admin-api-svc
+      tls: {}
+      priority: 100
+
+    admin-example:
+      rule: Host(`admin.example.com`)
+      entryPoints:
+        - websecure
+      service: admin-example-svc
+      tls: {}
+      priority: 1
+
+  services:
+    example-admin-api-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:<backend-port>"
+
+    admin-example-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:<admin-static-port>"
