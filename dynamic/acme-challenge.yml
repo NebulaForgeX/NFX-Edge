@@ -1,6 +1,11 @@
 # ACME HTTP-01 挑战转发配置
-# 将 ACME 挑战请求转发到 Certs 服务
-# 注意：此配置会匹配所有域名的 /.well-known/acme-challenge 路径
+# 将 ACME 挑战请求转发到 NFX-Vault 后端（固定宿主机端口，与部署方式无关）
+#
+# 约定：Vault 无论 dev-api.sh 还是 Docker，都占用宿主机 BACKEND_PORT（默认 10151）
+#   - dev-api.sh：uvicorn --host 0.0.0.0 --port 10151
+#   - Docker：compose 映射 ${BACKEND_HOST}:${BACKEND_PORT}:8000 → 宿主机 10151
+# NFX-Edge 只认 host.docker.internal:10151，切换 Vault 部署方式时无需改本文件。
+# docker-compose.yml 须含 extra_hosts: host.docker.internal:host-gateway（Linux/NAS）
 
 http:
   routers:
@@ -17,6 +22,6 @@ http:
     acme-challenge-service:
       loadBalancer:
         servers:
-          # 与 NFX-Vault docker-compose 中服务名 backend-api 一致（同 nfx-edge 网络可解析）
+          # 固定宿主机端口；dev-api.sh 与 Docker 后端均映射到此口，勿改为容器名
           - url: "http://host.docker.internal:10151"
         passHostHeader: true
