@@ -46,9 +46,10 @@ NFX-Edge/
 
 ## Network Topology
 
-- all services run in `nfx-edge` network
-- Traefik discovers business containers through Docker provider
-- external cert API must be reachable for challenge forwarding
+- Traefik creates and listens on `nfx-edge` (ports 80/443)
+- Product HTTP services dual-home: product network + external `nfx-edge`
+- Traefik Docker provider discovers containers via `traefik.project` LabelRegex
+- ACME HTTP-01 is served by NFX-Vault `tls-api` labels, not a per-app Traefik port
 
 ## Example vs Runtime Files
 

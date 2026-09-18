@@ -32,7 +32,7 @@ Notes:
 1. External cert service issues and renews certificates
 2. Certificates are written to subfolders under `CERTS_DIR`
 3. `dynamic/tls.yaml` maps cert files for Traefik
-4. `dynamic/acme-challenge.yml` forwards HTTP-01 challenge requests
+4. `dynamic/acme-challenge.yml` documents ACME via Vault `tls-api` labels (do not proxy to a per-app Traefik)
 
 ## Add a New Site (Template Style)
 
@@ -46,4 +46,4 @@ Notes:
 
 - HTTP does not redirect to HTTPS: check Traefik entrypoint redirection flags
 - Certificate not applied: check file paths in `dynamic/tls.yaml`
-- ACME challenge fails: check target service and network reachability in `dynamic/acme-challenge.yml`
+- ACME challenge fails: check that NFX-Vault `tls-api` is on `nfx-edge` and `vault-tls-acme` labels are present

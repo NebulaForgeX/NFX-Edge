@@ -17,7 +17,7 @@ entryPoints:
 providers:
   docker:
     exposedByDefault: false
-    constraints: "Label(`nfx.project`,`nfx-edge`)"
+    constraints: "LabelRegex(`traefik.project`, `^(nfx-edge|nfx-identity|nfx-vault|nfx-news|nfx-storages|nfx-documentation)$`)"
   file:
     directory: /etc/traefik/dynamic
     watch: true

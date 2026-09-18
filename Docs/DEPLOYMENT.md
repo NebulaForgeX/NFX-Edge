@@ -54,6 +54,6 @@ sudo docker compose restart NFX-Edge-Reverse-Proxy
 ## 常见故障排查
 
 - 外网不通但内网可通：检查端口转发、NAT loopback、双重 NAT
-- challenge 失败：检查 `dynamic/acme-challenge.yml` 目标地址与网络连通
+- challenge 失败：检查 NFX-Vault `tls-api` 是否已加入 `nfx-edge`
 - 路由错乱：检查 Host 规则是否重叠，以及标签约束是否一致
 

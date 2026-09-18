@@ -46,9 +46,10 @@ NFX-Edge/
 
 ## 网络关系
 
-- 所有服务位于 `nfx-edge` 网络
-- Traefik 通过 Docker provider 发现业务容器
-- 外部证书服务 API 需要与该网络互通（用于 challenge）
+- Traefik 创建并监听 `nfx-edge` 网络（80/443）
+- 产品 HTTP 服务双挂：产品内网 + `nfx-edge`（external）
+- Traefik Docker provider 用 `traefik.project` LabelRegex 发现业务容器
+- ACME HTTP-01 由 NFX-Vault `tls-api` 标签承接，不再转发到产品 Traefik 端口
 
 ## 示例文件与生产文件
 

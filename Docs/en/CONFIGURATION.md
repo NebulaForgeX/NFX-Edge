@@ -37,7 +37,7 @@ NGINX_CONFIG_FILE=./public/nginx.conf
 - `--providers.file.watch=true`
 - `--providers.docker=true`
 - `--providers.docker.exposedbydefault=false`
-- `--providers.docker.constraints=Label(\`nfx.project\`,\`nfx-edge\`)`
+- `--providers.docker.constraints=LabelRegex(\`traefik.project\`, \`^(nfx-edge|nfx-identity|nfx-vault|nfx-news|nfx-storages|nfx-documentation)$\`)`
 
 ## Dynamic File Conventions
 
@@ -70,11 +70,13 @@ http:
 ```yaml
 labels:
   - traefik.enable=true
-  - nfx.project=nfx-edge
+  - traefik.project=nfx-edge
   - traefik.http.routers.site1.rule=Host(`site1.example.com`) || Host(`www.site1.example.com`)
   - traefik.http.routers.site1.entrypoints=websecure
   - traefik.http.routers.site1.tls=true
 ```
+
+Product stacks (Identity / Vault / News / Storages / Documentation) use the same `traefik.enable` + `traefik.project=<product>` labels and join the external `nfx-edge` network. **Do not** run Traefik in those repos.
 
 ## Validation Commands
 

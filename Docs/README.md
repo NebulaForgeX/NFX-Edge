@@ -32,7 +32,7 @@ NGINX_CONFIG_FILE=./public/nginx.conf
 1. 外部证书服务负责申请和续签证书  
 2. 证书写入 `CERTS_DIR` 子目录（如 `site1/`、`site2/`）  
 3. `dynamic/tls.yaml` 声明证书文件映射  
-4. `dynamic/acme-challenge.yml` 处理 HTTP-01 challenge 转发
+4. `dynamic/acme-challenge.yml` 说明 ACME 由 Vault `tls-api` 标签处理（不要转发到产品 Traefik 端口）
 
 ## 添加站点（模板方式）
 
@@ -46,5 +46,5 @@ NGINX_CONFIG_FILE=./public/nginx.conf
 
 - HTTP 不跳转 HTTPS：检查 Traefik entrypoint redirection 参数
 - 证书不生效：检查 `dynamic/tls.yaml` 路径是否与容器挂载一致
-- ACME challenge 失败：检查 `dynamic/acme-challenge.yml` 目标服务是否可达
+- ACME challenge 失败：检查 NFX-Vault `tls-api` 是否已加入 `nfx-edge`，以及 `vault-tls-acme` 标签
 
