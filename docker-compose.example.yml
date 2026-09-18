@@ -2,7 +2,7 @@
 # 使用方法：复制此文件为 docker-compose.yml，然后按实际路径/域名调整
 services:
   traefik:
-    image: traefik:v3.6
+    image: traefik:v3.7.13
     container_name: NFX-Edge-Reverse-Proxy
     restart: unless-stopped
     security_opt:
@@ -30,7 +30,9 @@ services:
       - --providers.file.watch=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
-      - --providers.docker.constraints=Label(`nfx.project`,`nfx-edge`)
+      # Sole reverse proxy for the NFX fleet. Product stacks attach to nfx-edge
+      # with traefik.project labels; they must not run Traefik themselves.
+      - --providers.docker.constraints=LabelRegex(`traefik.project`, `^(nfx-edge|nfx-identity|nfx-vault|nfx-news|nfx-storages|nfx-documentation)$`)
       - --providers.docker.network=nfx-edge
       - --api.dashboard=true
       - --api.insecure=false
@@ -40,7 +42,7 @@ services:
       - --metrics.prometheus=true
     labels:
       - traefik.enable=true
-      - nfx.project=nfx-edge
+      - traefik.project=nfx-edge
       - traefik.http.routers.dashboard.rule=Host(`${DASHBOARD_HOST}`)
       - traefik.http.routers.dashboard.entrypoints=websecure
       - traefik.http.routers.dashboard.service=api@internal
@@ -59,7 +61,7 @@ services:
       - ${NGINX_CONFIG_FILE}:/etc/nginx/conf.d/default.conf:ro
     labels:
       - traefik.enable=true
-      - nfx.project=nfx-edge
+      - traefik.project=nfx-edge
       - traefik.http.routers.site1-www.rule=Host(`${SITE1_DOMAIN}`) || Host(`www.${SITE1_DOMAIN}`)
       - traefik.http.routers.site1-www.entrypoints=websecure
       - traefik.http.routers.site1-www.tls=true
@@ -75,7 +77,7 @@ services:
       - ${NGINX_CONFIG_FILE}:/etc/nginx/conf.d/default.conf:ro
     labels:
       - traefik.enable=true
-      - nfx.project=nfx-edge
+      - traefik.project=nfx-edge
       - traefik.http.routers.site1-admin.rule=Host(`admin.${SITE1_DOMAIN}`)
       - traefik.http.routers.site1-admin.entrypoints=websecure
       - traefik.http.routers.site1-admin.tls=true
@@ -91,7 +93,7 @@ services:
       - ${NGINX_CONFIG_FILE}:/etc/nginx/conf.d/default.conf:ro
     labels:
       - traefik.enable=true
-      - nfx.project=nfx-edge
+      - traefik.project=nfx-edge
       - traefik.http.routers.site2-www.rule=Host(`${SITE2_DOMAIN}`) || Host(`www.${SITE2_DOMAIN}`)
       - traefik.http.routers.site2-www.entrypoints=websecure
       - traefik.http.routers.site2-www.tls=true

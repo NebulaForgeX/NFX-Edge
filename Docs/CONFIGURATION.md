@@ -37,7 +37,7 @@ NGINX_CONFIG_FILE=./public/nginx.conf
 - `--providers.file.watch=true`
 - `--providers.docker=true`
 - `--providers.docker.exposedbydefault=false`
-- `--providers.docker.constraints=Label(\`nfx.project\`,\`nfx-edge\`)`
+- `--providers.docker.constraints=LabelRegex(\`traefik.project\`, \`^(nfx-edge|nfx-identity|nfx-vault|nfx-news|nfx-storages|nfx-documentation)$\`)`
 
 ## 动态文件规范
 
@@ -70,11 +70,13 @@ http:
 ```yaml
 labels:
   - traefik.enable=true
-  - nfx.project=nfx-edge
+  - traefik.project=nfx-edge
   - traefik.http.routers.site1.rule=Host(`site1.example.com`) || Host(`www.site1.example.com`)
   - traefik.http.routers.site1.entrypoints=websecure
   - traefik.http.routers.site1.tls=true
 ```
+
+产品服务（Identity / Vault / News / Storages / Documentation）在各自 compose 里同样打 `traefik.enable` + `traefik.project=<产品>`，并加入外部网络 `nfx-edge`。**不要**在产品仓再起 Traefik。
 
 ## 验证命令
 

@@ -1,27 +1,8 @@
-# ACME HTTP-01 挑战转发配置
-# 将 ACME 挑战请求转发到 NFX-Vault 后端（固定宿主机端口，与部署方式无关）
+# ACME HTTP-01 由 NFX-Vault tls-api 的 Docker labels 承接（共享 nfx-edge）。
+# PathPrefix `/.well-known/acme-challenge` → vault-tls-acme → vault-tls-api。
+# 不要再转发到各产品自己的 Traefik 端口。
 #
-# 约定：Vault 无论 dev-api.sh 还是 Docker，都占用宿主机 BACKEND_PORT（默认 10151）
-#   - dev-api.sh：uvicorn --host 0.0.0.0 --port 10151
-#   - Docker：compose 映射 ${BACKEND_HOST}:${BACKEND_PORT}:8000 → 宿主机 10151
-# NFX-Edge 只认 host.docker.internal:10151，切换 Vault 部署方式时无需改本文件。
-# docker-compose.yml 须含 extra_hosts: host.docker.internal:host-gateway（Linux/NAS）
+# ACME HTTP-01 is served by NFX-Vault tls-api Docker labels on nfx-edge.
+# Do not proxy to a per-app Traefik port.
 
-http:
-  routers:
-    acme-challenge:
-      # 挑战只看路径即可，避免 Host 规则引入额外变量
-      rule: "PathPrefix(`/.well-known/acme-challenge/`)"
-      entryPoints:
-        - web
-      service: acme-challenge-service
-      priority: 100 # 高于普通业务路由即可，无需极端值
-      # 不设置 tls，因为这是 HTTP-01 挑战，必须使用 HTTP (80端口)
-
-  services:
-    acme-challenge-service:
-      loadBalancer:
-        servers:
-          # 固定宿主机端口；dev-api.sh 与 Docker 后端均映射到此口，勿改为容器名
-          - url: "http://host.docker.internal:10151"
-        passHostHeader: true
+http: {}

@@ -54,5 +54,5 @@ sudo docker compose restart NFX-Edge-Reverse-Proxy
 ## Troubleshooting Focus
 
 - External access fails but local works: check port forwarding, NAT loopback, and double NAT
-- ACME challenge fails: check target URL and network reachability in `dynamic/acme-challenge.yml`
+- challenge fails: check that NFX-Vault `tls-api` is on `nfx-edge`
 - Misrouting: check overlapping `Host(...)` rules and label constraints
