@@ -1,9 +1,10 @@
 # NFX-Edge
 
-[English Version](Docs/en/README.md)
+> 部署、网络、配置与安全的详细说明见 [NFX-Documentation](https://github.com/NebulaForgeX/NFX-Documentation)（[第四章：NFX-Edge](https://github.com/NebulaForgeX/NFX-Documentation/blob/New-Arch/books/zh/chapter-04-nfx-edge-deployment.md)）。
+> Deploy, network, config, and security: [NFX-Documentation](https://github.com/NebulaForgeX/NFX-Documentation) ([Chapter 4: NFX-Edge](https://github.com/NebulaForgeX/NFX-Documentation/blob/New-Arch/books/en/chapter-04-nfx-edge-deployment.md)).
 
 <div align="center">
-  <img src="./Docs/image.png" alt="NFX-Edge Logo" width="200">
+  <img src="./image.png" alt="NFX-Edge Logo" width="200">
 </div>
 
 NFX-Edge 是 NebulaForgeX **唯一**的 HTTP 反向代理（Traefik v3 + Docker Compose），对齐 CityPulso：产品服务自己不跑 Traefik，只挂 `nfx-edge` 网络并打 `traefik.project` 标签。  
@@ -26,36 +27,4 @@ cp .env.example .env
 sudo docker compose ps
 ```
 
-## 文档导航
-
-- 使用说明：`Docs/README.md`
-- 部署指南：`Docs/DEPLOYMENT.md`
-- 配置详解：`Docs/CONFIGURATION.md`
-- 项目结构：`Docs/STRUCTURE.md`
-- 文档索引：`Docs/INDEX.md`
-
-## NAS 网络注意事项
-
-本项目主要面向 NAS 场景，请在部署前先完成以下检查：
-
-1. **避免端口冲突（重点）**
-   - 若 NAS 自带 Web 服务占用 `80/443`，请先关闭或改端口。
-   - 例如将 NAS 管理入口改为 `5000/5001` 或其他自定义端口，确保 Traefik 可以独占 `80/443`。
-
-2. **固定 NAS 局域网地址**
-   - 在路由器为 NAS 绑定静态 DHCP（固定内网 IP）。
-   - 端口转发必须指向这个固定 IP，避免重启后 IP 变化导致转发失效。
-
-3. **路由器与光猫配置**
-   - 优先使用“单层 NAT”架构（光猫桥接 + 路由器拨号），减少转发问题。
-   - 若无法桥接，需在光猫和路由器两层都正确配置转发（双重 NAT）。
-   - 将公网 `80/443` 转发到 NAS 的 `80/443`。
-
-4. **内外网验证方式**
-   - 先在 NAS 本机验证容器和路由是否正常，再做外网验证。
-   - 如内网设备访问公网域名异常，可能是 NAT Loopback（Hairpin NAT）限制，不代表公网一定不可用。
-
-5. **防火墙与安全建议**
-   - 放行 `80/443` 入站。
-   - 建议关闭路由器 UPnP，采用手动端口转发。
-   - Dashboard 必须启用认证，不要裸露管理入口。
+NAS / 路由器 / 80·443 占用等细节见 Documentation 第一至四章。
