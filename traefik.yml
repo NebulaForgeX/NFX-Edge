@@ -5,12 +5,8 @@ api:
 entryPoints:
   web:
     address: ":80"
-    http:
-      redirections:
-        entryPoint:
-          to: websecure
-          scheme: https
-          permanent: true
+    # Entrypoint-wide 80→443 is NOT used at runtime (see docker-compose.yml +
+    # dynamic/http-to-https.yml). That redirect ignores NFX PathPrefix routers.
   websecure:
     address: ":443"
 
