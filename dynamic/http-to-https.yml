@@ -1,5 +1,5 @@
-# Site HTTP → HTTPS. Do not use entrypoint-wide redirection: Traefik v3 still
-# 301s /nfx-* and /console even with priority=1, which breaks LAN HTTP consoles.
+# Public Hosts only: HTTP → HTTPS. LAN IP (192.168.1.64) and PathPrefix
+# /nfx-* /console must stay HTTP — entrypoint-wide redirect 301/308s them.
 http:
   middlewares:
     nfx-redirect-https:
@@ -8,7 +8,7 @@ http:
         permanent: true
   routers:
     nfx-http-to-https:
-      rule: "!PathPrefix(`/nfx-identity`) && !PathPrefix(`/nfx-news`) && !PathPrefix(`/nfx-vault`) && !PathPrefix(`/nfx-storages`) && !PathPrefix(`/console`) && !PathPrefix(`/.well-known/acme-challenge`)"
+      rule: Host(`lucaslyu.com`) || Host(`www.lucaslyu.com`) || Host(`admin.lucaslyu.com`) || Host(`timetablecraft.com`) || Host(`www.timetablecraft.com`) || Host(`aquawork.ca`) || Host(`www.aquawork.ca`) || Host(`traefik.lyulucas.com`)
       entryPoints:
         - web
       middlewares:
