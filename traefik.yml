@@ -20,7 +20,7 @@ providers:
     watch: true
 
 # Runtime ACME flags live in docker-compose.yml (this file is not mounted).
-# HTTP-01 (/.well-known/acme-challenge) is NFX-Vault tls-base, not Traefik.
+# HTTP-01 (/.well-known/acme-challenge) is NFX-Vault sites-base, not Traefik.
 # Temporary certResolver sites use TLS-ALPN-01 until Vault writes /certs/websites/<site>/.
 # certificatesResolvers:
 #   letsencrypt:
