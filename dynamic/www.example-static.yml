@@ -7,7 +7,7 @@
 http:
   routers:
     www-example-static:
-      rule: Host(`example.com`) || Host(`www.example.com`)
+      rule: "Host(`example.com`) || Host(`www.example.com`)"
       entryPoints:
         - websecure
       service: www-example-static-svc

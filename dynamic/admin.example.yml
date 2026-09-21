@@ -9,7 +9,7 @@
 http:
   routers:
     admin-example-api:
-      rule: Host(`admin.example.com`) && (PathPrefix(`/catalog`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))
+      rule: "Host(`admin.example.com`) && (PathPrefix(`/catalog`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))"
       entryPoints:
         - websecure
       service: example-admin-api-svc
@@ -17,7 +17,7 @@ http:
       priority: 100
 
     admin-example:
-      rule: Host(`admin.example.com`)
+      rule: "Host(`admin.example.com`)"
       entryPoints:
         - websecure
       service: admin-example-svc
