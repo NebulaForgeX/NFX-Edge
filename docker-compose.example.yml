@@ -18,12 +18,21 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${CERTS_DIR}:/certs/websites:ro
       - ./dynamic:/dynamic:ro
+      # Temporary Let's Encrypt storage until NFX-Vault writes site cert files
+      - ./acme:/acme
     command:
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
       - --entrypoints.websecure.http.tls=true
       - --providers.file.directory=/dynamic
       - --providers.file.watch=true
+      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:-lyuchongkai@gmail.com}
+      - --certificatesresolvers.letsencrypt.acme.storage=/acme/acme.json
+      # Official TLS-ALPN-01 (Traefik v3.7 CLI): tlschallenge=true
+      # https://doc.traefik.io/traefik/v3.7/reference/install-configuration/tls/certificate-resolvers/acme/
+      # Do not set acme.httpchallenge — Traefik would intercept /.well-known/acme-challenge
+      # (internal MaxInt priority) and Vault certbot HTTP-01 would never see Let's Encrypt.
+      - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       # Sole reverse proxy for the NFX fleet. Product stacks attach to nfx-edge

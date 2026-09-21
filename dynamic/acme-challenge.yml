@@ -1,8 +1,0 @@
-# ACME HTTP-01 由 NFX-Vault tls-api 的 Docker labels 承接（共享 nfx-edge）。
-# PathPrefix `/.well-known/acme-challenge` → vault-tls-acme → vault-tls-api。
-# 不要再转发到各产品自己的 Traefik 端口。
-#
-# ACME HTTP-01 is served by NFX-Vault tls-api Docker labels on nfx-edge.
-# Do not proxy to a per-app Traefik port.
-
-http: {}

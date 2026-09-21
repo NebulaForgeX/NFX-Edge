@@ -1,5 +1,10 @@
 # Public Hosts only: HTTP → HTTPS. LAN IP (192.168.1.64) and PathPrefix
 # /nfx-* /console must stay HTTP — entrypoint-wide redirect 301/308s them.
+#
+# Rule syntax: Traefik v3.7 — backticks, && ||, NOT (!).
+# https://doc.traefik.io/traefik/v3.7/reference/routing-configuration/http/routing/rules-and-priority/
+# RedirectScheme: https://doc.traefik.io/traefik/v3.7/reference/routing-configuration/http/middlewares/redirectscheme/
+# Router.service is required; redirect-only uses built-in noop@internal (not a dummy URL).
 http:
   middlewares:
     nfx-redirect-https:
@@ -8,15 +13,10 @@ http:
         permanent: true
   routers:
     nfx-http-to-https:
-      rule: Host(`lucaslyu.com`) || Host(`www.lucaslyu.com`) || Host(`admin.lucaslyu.com`) || Host(`timetablecraft.com`) || Host(`www.timetablecraft.com`) || Host(`aquawork.ca`) || Host(`www.aquawork.ca`) || Host(`traefik.lyulucas.com`)
+      rule: "(Host(`lucaslyu.com`) || Host(`www.lucaslyu.com`) || Host(`admin.lucaslyu.com`) || Host(`timetablecraft.com`) || Host(`www.timetablecraft.com`) || Host(`aquawork.ca`) || Host(`www.aquawork.ca`) || Host(`traefik.lyulucas.com`)) && !PathPrefix(`/.well-known/acme-challenge`)"
       entryPoints:
         - web
       middlewares:
         - nfx-redirect-https
-      service: nfx-redirect-noop
+      service: noop@internal
       priority: 1
-  services:
-    nfx-redirect-noop:
-      loadBalancer:
-        servers:
-          - url: "http://127.0.0.1"

@@ -10,7 +10,7 @@
 http:
   routers:
     www-example-api:
-      rule: (Host(`example.com`) || Host(`www.example.com`)) && (PathPrefix(`/catalog`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))
+      rule: "(Host(`example.com`) || Host(`www.example.com`)) && (PathPrefix(`/catalog`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))"
       entryPoints:
         - websecure
       service: example-www-api-svc
@@ -18,7 +18,7 @@ http:
       priority: 100
 
     www-example:
-      rule: Host(`example.com`) || Host(`www.example.com`)
+      rule: "Host(`example.com`) || Host(`www.example.com`)"
       entryPoints:
         - websecure
       service: www-example-svc
