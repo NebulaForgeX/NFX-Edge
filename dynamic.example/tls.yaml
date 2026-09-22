@@ -1,10 +1,12 @@
-# Copy to tls.yaml and set real site folders:
-#   cp dynamic/tls.example.yaml dynamic/tls.yaml
+# Copy to dynamic/ and set real site folders:
+#   cp dynamic.example/tls.yaml dynamic/tls.yaml
+#
+# Do not leave this file in dynamic/ — Traefik loads every *.yaml there.
+# Placeholder cert paths fail PEM parse and can take down the file provider.
 #
 # certFile / keyFile are inside the container: ./websites -> /certs/websites
 # Folder names match websites/<name> written by sites-base (console export / ACME apply).
-# Do not list a path until the files exist — Traefik fails the whole file provider.
-# Keep this example file's certificates list empty so Traefik can watch /dynamic.
+# Do not list a path until the files exist.
 
 tls:
   certificates:

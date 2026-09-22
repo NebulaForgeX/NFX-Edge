@@ -3,13 +3,15 @@ package certbot
 import (
 	"context"
 	"fmt"
-	"nfxedge/pkgs/logx"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
+
+	pemx "nfxedge/modules/sites/infrastructure/pem"
+	"nfxedge/pkgs/logx"
 )
 
 type Client struct {
@@ -69,9 +71,13 @@ func (c *Client) Issue(ctx context.Context, domain, email string, sans []string,
 		folderName = strings.ReplaceAll(domain, ".", "_")
 	}
 	c.EnsureWebroot()
+	requested := append([]string{domain}, sans...)
 	if !force {
 		if cert, key, valid, ok := c.existingPEM(folderName); ok && valid {
-			return &IssueResult{CertPEM: cert, KeyPEM: key, Message: "Using existing certificate"}, nil
+			if info, err := pemx.Parse(cert); err == nil && pemx.NamesEqual(requested, info.AllDomains) {
+				return &IssueResult{CertPEM: cert, KeyPEM: key, Message: "Using existing certificate"}, nil
+			}
+			force = true
 		}
 	}
 	configDir := filepath.Join(c.CertsDir, ".certbot", "config")
@@ -116,7 +122,9 @@ func (c *Client) Issue(ctx context.Context, domain, email string, sans []string,
 		isRL, retry := rateLimit(msg)
 		if isRL && !force {
 			if cert, key, _, ok := c.existingPEM(folderName); ok {
-				return &IssueResult{CertPEM: cert, KeyPEM: key, Message: "rate limit, using existing", RateLimit: true, RetryAfter: retry}, nil
+				if info, err := pemx.Parse(cert); err == nil && pemx.NamesEqual(requested, info.AllDomains) {
+					return &IssueResult{CertPEM: cert, KeyPEM: key, Message: "rate limit, using existing", RateLimit: true, RetryAfter: retry}, nil
+				}
 			}
 		}
 		if isRL {

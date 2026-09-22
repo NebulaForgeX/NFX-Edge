@@ -38,7 +38,7 @@ export default function useOperationCertificate(certificateId: string) {
       cancelText: t("delete.confirm.cancel"),
       forceRenewalOption: {
         label: t("reapply.forceRenewal"),
-        defaultChecked: false,
+        defaultChecked: Boolean(certificate.sansChanged),
       },
       onConfirm: (opts) => {
         const forceRenewal = opts?.forceRenewal ?? false;

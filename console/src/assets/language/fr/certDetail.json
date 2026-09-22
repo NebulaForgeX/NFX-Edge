@@ -49,7 +49,7 @@
   "reapply": {
     "title": "Redemander le certificat",
     "confirm": "Redemander le certificat pour \"{{domain}}\" ?",
-    "confirmDetail": "Le serveur lit le domaine, l’e-mail et les SAN dans la base. Seul le choix « forcer » ci-dessous décide d’ignorer le cache et de redemander à l’AC.",
+    "confirmDetail": "Si les SAN diffèrent du certificat émis, l’AC est forcée et le cache est ignoré. S’ils sont identiques, cochez le renouvellement forcé ci-dessous pour ignorer le cache.",
     "confirmSubmit": "Demander",
     "forceRenewal": "Forcer la redemande (ignorer le cache ; réémettre même si non expiré — risque de limites CA)",
     "emailRequired": "Aucun e-mail de contact. Ajoutez-le sur la page d'édition ou utilisez Ajouter un certificat.",

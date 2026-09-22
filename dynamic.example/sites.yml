@@ -1,5 +1,8 @@
-# Copy to sites.yml and edit domains / ports:
-#   cp dynamic/sites.example.yml dynamic/sites.yml
+# Copy to dynamic/ and edit domains / ports:
+#   cp dynamic.example/sites.yml dynamic/sites.yml
+#
+# Do not leave this file in dynamic/ — Traefik loads every *.yml there.
+# Placeholder ports (<backend-port>) make these routers fail.
 #
 # TLS: dynamic/tls.yaml — sites-base writes ./websites/<site>/cert.crt + key.key.
 # Traefik does not issue certificates (no certResolver).

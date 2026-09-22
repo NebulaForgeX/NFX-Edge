@@ -1,0 +1,36 @@
+# Copy to dynamic/ and set Host / LAN IP / bucket / port:
+#   cp dynamic.example/minio.yml dynamic/minio.yml
+#
+# Do not leave this file in dynamic/ — Traefik loads every *.yml there.
+# Placeholder ports (<minio-api-port>) make minio-s3 / minio-s3-lan fail.
+#
+# Stack MinIO S3 API for Identity presigned GET/PUT.
+# Does not belong in sites.yml. Not NFX-Storages TRAEFIK_S3_HOST.
+# Remote: Host(`minio.example.com`) = Identity MINIO_PUBLIC_URL.
+# LAN IP: PathPrefix(`/nfx-identity-images`) = Identity MINIO_LAN_URL (https://<lan-ip>).
+
+http:
+  routers:
+    minio-s3:
+      rule: "Host(`minio.example.com`)"
+      entryPoints:
+        - websecure
+      service: minio-s3-svc
+      tls: {}
+      priority: 200
+
+    minio-s3-lan:
+      rule: "PathPrefix(`/nfx-identity-images`)"
+      entryPoints:
+        - websecure
+      service: minio-s3-svc
+      tls: {}
+      priority: 40
+
+  services:
+    minio-s3-svc:
+      loadBalancer:
+        servers:
+          # Must be the host publish address (MINIO_API_HOST:MINIO_API_PORT).
+          # If the port is bound to a LAN IP (not 0.0.0.0), do not use host.docker.internal.
+          - url: "http://<minio-api-host>:<minio-api-port>"
