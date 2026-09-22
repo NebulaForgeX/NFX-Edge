@@ -1,3 +1,5 @@
+# Reference static config (compose command is what Traefik actually loads).
+# https://doc.traefik.io/traefik/v3.7/reference/install-configuration/entrypoints/
 api:
   dashboard: true
   insecure: false
@@ -5,26 +7,26 @@ api:
 entryPoints:
   web:
     address: ":80"
-    # Do not put entrypoint-wide 80→443 here. Runtime redirect is
-    # dynamic/http-to-https.yml (public Hosts only). A global redirect
-    # 301/308s /nfx-* and /console on 192.168.1.64.
+    allowACMEByPass: true
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
   websecure:
     address: ":443"
+    http:
+      tls: {}
 
 providers:
   docker:
     exposedByDefault: false
-    constraints: "LabelRegex(`traefik.project`, `^(nfx-edge|nfx-identity|nfx-vault|nfx-news|nfx-storages|nfx-documentation)$`)"
+    constraints: "LabelRegex(`traefik.project`, `^(nfx-edge|nfx-identity|nfx-news|nfx-storages|nfx-documentation)$`)"
   file:
-    directory: /etc/traefik/dynamic
+    directory: /dynamic
     watch: true
 
-# Runtime ACME flags live in docker-compose.yml (this file is not mounted).
-# HTTP-01 (/.well-known/acme-challenge) is NFX-Vault sites-base, not Traefik.
-# Temporary certResolver sites use TLS-ALPN-01 until Vault writes /certs/websites/<site>/.
-# certificatesResolvers:
-#   letsencrypt:
-#     acme:
-#       email: lyuchongkai@gmail.com
-#       storage: /acme/acme.json
-#       tlsChallenge: {}
+# TLS files: ./websites/<site>/ → /certs/websites, listed in dynamic/tls.yaml.
+# HTTP-01 is sites-base (no certificatesresolvers / certResolver).
+# allowACMEByPass + entryPoint redirect: all :80 → :443 except /.well-known/acme-challenge/.

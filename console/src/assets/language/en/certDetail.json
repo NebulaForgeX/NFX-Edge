@@ -1,0 +1,88 @@
+{
+  "back": "Back",
+  "certificate.source": "Source",
+  "certificate.source.auto": "Auto",
+  "certificate.source.manual_apply": "Manual Apply",
+  "certificate.source.manual_add": "Manual Add",
+  "certificate": {
+    "info": "Certificate Information",
+    "domain": "Domain",
+    "folderName": "Folder name",
+    "status": "Status",
+    "issuer": "Issuer",
+    "unknown": "Unknown",
+    "email": "Contact email",
+    "validFrom": "Valid From",
+    "expiryDate": "Expiry Date",
+    "sans": "Subject Alternative Names (SANs)",
+    "sansSectionSubtitle": "Every hostname this certificate is valid for in TLS (primary name and aliases).",
+    "sansCountTitle": "{{count}} SAN(s) total",
+    "content": "Certificate Content",
+    "privateKey": "Private Key",
+    "lastError": "Latest Error",
+    "errorTime": "Error Time"
+  },
+  "actions": {
+    "operations": "Operations",
+    "update": "Update",
+    "delete": "Delete",
+    "reapply": "Re-apply"
+  },
+  "delete": {
+    "confirm": {
+      "title": "Delete Certificate",
+      "message": "Are you sure you want to delete the certificate for domain \"{{domain}}\"? This will only delete the database record and will not affect the acme.json file.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "success": "Certificate deleted successfully",
+    "error": "Failed to delete certificate",
+    "deleting": "Deleting..."
+  },
+  "update": {
+    "notImplemented": "Update functionality coming soon",
+    "autoNotEditable": "Auto source certificates cannot be manually updated. Please re-apply instead."
+  },
+  "sansChanged": {
+    "banner": "SAN list was edited: the PEM on file may still match the old hostname set. Use Re-apply so the CA issues against the current record; saving SANs alone does not change the issued certificate."
+  },
+  "reapply": {
+    "title": "Re-apply Certificate",
+    "confirm": "Re-apply certificate for \"{{domain}}\"?",
+    "confirmDetail": "The server loads domain, contact email, and SANs from the database. Only “force renewal” below controls whether cached certs are skipped and the CA is asked to re-issue.",
+    "confirmSubmit": "Apply",
+    "forceRenewal": "Force renewal (ignore cache; re-issue even if not expired — may hit CA rate limits)",
+    "emailRequired": "This certificate has no contact email. Add one on the edit page or use Add Certificate.",
+    "notLoaded": "Certificate is still loading. Please try again.",
+    "applying": "Re-applying..."
+  },
+  "loading": "Loading...",
+  "error": {
+    "loadFailed": "Failed to load certificate"
+  },
+  "copy": {
+    "success": "Copied to clipboard",
+    "certificate": "Copy Certificate",
+    "privateKey": "Copy Private Key"
+  },
+  "download": {
+    "success": "Downloaded",
+    "certificate": "Download Certificate",
+    "privateKey": "Download Private Key",
+    "both": "Download Both"
+  },
+  "export": {
+    "title": "Export Certificate",
+    "toApiFolder": "Export to APIs Folder",
+    "toWebsitesFolder": "Export to Websites Folder",
+    "success": {
+      "apiFolder": "Certificate exported to APIs folder",
+      "websitesFolder": "Certificate exported to Websites folder"
+    },
+    "error": {
+      "noCertificateId": "Certificate ID is required",
+      "failed": "Failed to export certificate"
+    }
+  },
+  "index": "02 — Certificates"
+}

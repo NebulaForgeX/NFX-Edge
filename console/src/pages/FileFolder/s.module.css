@@ -1,0 +1,106 @@
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.2rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.crumb {
+  display: inline-flex;
+  align-items: center;
+}
+
+.sep {
+  margin: 0 0.35rem;
+  color: var(--gray-9);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding-inline: 0.65rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.row:hover {
+  background: color-mix(in oklab, var(--color-primary) 5%, transparent);
+}
+
+.open {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr) 4.5rem 5.5rem minmax(8rem, auto);
+  gap: 0.65rem;
+  align-items: center;
+  min-width: 0;
+  padding-block: 0.85rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mark {
+  display: flex;
+  color: var(--color-primary);
+}
+
+.name {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 550;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kind,
+.size,
+.date {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: var(--gray-10);
+  white-space: nowrap;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 12rem;
+  border: 1px dashed var(--color-border);
+  color: var(--gray-10);
+  background: var(--color-bg-2);
+}
+
+.ops {
+  flex-shrink: 0;
+}
+
+@media (max-width: 800px) {
+  .open {
+    grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+  }
+
+  .kind,
+  .size,
+  .date {
+    display: none;
+  }
+}

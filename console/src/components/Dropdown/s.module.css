@@ -1,0 +1,13 @@
+.trigger {
+  width: 100%;
+}
+
+.triggerLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu {
+  min-width: var(--radix-dropdown-menu-trigger-width);
+}

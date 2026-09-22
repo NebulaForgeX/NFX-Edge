@@ -1,0 +1,361 @@
+.page {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  background: var(--color-bg);
+  color: var(--gray-12);
+}
+
+.railHairline {
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.railPx {
+  padding-inline: var(--space-6);
+}
+
+.railPy {
+  padding-block: var(--space-3);
+}
+
+.product {
+  font-family: var(--heading-font-family), sans-serif;
+  font-size: var(--font-size-2);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.bodyFill {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(36rem, 44%) minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+
+.protocolRule {
+  min-width: 0;
+  min-height: 0;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-bg-2);
+}
+
+.protocolClip {
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+}
+
+.protocolPx {
+  padding-inline: clamp(2.25rem, 4.2vw, 4rem);
+}
+
+.protocolPy {
+  padding-block: clamp(2rem, 6vh, 4.5rem);
+}
+
+.index {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--heading-font-family), sans-serif;
+  font-size: clamp(2.35rem, 3.1vw, 3.15rem);
+  font-weight: 650;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  color: var(--gray-12);
+}
+
+.lede {
+  margin: 0;
+  max-width: 38ch;
+  font-size: var(--font-size-2);
+  line-height: 1.5;
+  color: var(--gray-11);
+}
+
+.fieldsPt {
+  padding-top: var(--space-5);
+}
+
+.stepNumPad {
+  padding-top: 1.45rem;
+}
+
+.stepNum {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  font-family: var(--heading-font-family), sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+  border: 1px solid color-mix(in oklab, var(--color-primary) 55%, var(--color-border));
+  background: var(--color-bg);
+}
+
+.submit {
+  width: 100%;
+}
+
+.stage {
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(90% 70% at 78% 18%, color-mix(in oklab, var(--color-primary) 14%, transparent), transparent 58%),
+    var(--gray-2);
+}
+
+.stagePx {
+  padding-inline: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+.stagePy {
+  padding-block: clamp(1.5rem, 3.2vh, 2.5rem);
+}
+
+.stageFill {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+}
+
+.sheet {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.sheetPx {
+  padding-inline: clamp(1.25rem, 2.4vw, 2.25rem);
+}
+
+.sheetPy {
+  padding-block: clamp(1.25rem, 2.6vh, 2rem);
+}
+
+.sheetGrid {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+}
+
+.corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: var(--color-primary);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.cornerTl {
+  top: 8px;
+  left: 8px;
+  border-width: 2px 0 0 2px;
+}
+
+.cornerTr {
+  top: 8px;
+  right: 8px;
+  border-width: 2px 2px 0 0;
+}
+
+.cornerBl {
+  bottom: 8px;
+  left: 8px;
+  border-width: 0 0 2px 2px;
+}
+
+.cornerBr {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 2px 2px 0;
+}
+
+.sheetTopRule {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sheetTopPy {
+  padding-bottom: var(--space-3);
+}
+
+.sheetKind {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.sheetTopMeta {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gray-11);
+}
+
+.sheetMeta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3) var(--space-6);
+}
+
+.sheetMetaPy {
+  padding-block: var(--space-4);
+}
+
+.metaItem {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pemKey {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray-10);
+}
+
+.pemVal {
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--gray-12);
+}
+
+.pemBody {
+  min-height: 0;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.72;
+  color: var(--gray-11);
+  word-break: break-all;
+  white-space: pre-wrap;
+  column-count: 2;
+  column-gap: 2.25rem;
+  mask-image: linear-gradient(180deg, var(--gray-12) 72%, transparent);
+}
+
+.sheetFootRule {
+  border-top: 1px dashed var(--color-border);
+}
+
+.sheetFootPy {
+  padding-top: var(--space-3);
+}
+
+.sheetFoot {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--gray-11);
+}
+
+.pemBegin {
+  color: var(--color-primary);
+}
+
+.watermark {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 3.2rem;
+  z-index: 1;
+  font-family: var(--heading-font-family), sans-serif;
+  font-size: clamp(4.5rem, 11vw, 9.5rem);
+  font-weight: 700;
+  line-height: 0.78;
+  letter-spacing: -0.07em;
+  color: color-mix(in oklab, var(--color-primary) 16%, transparent);
+  pointer-events: none;
+  user-select: none;
+}
+
+.pemSummaryRule {
+  display: none;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-2);
+}
+
+.pemSummary {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gray-11);
+}
+
+.pemSummaryPx {
+  padding-inline: var(--space-5);
+}
+
+.pemSummaryPy {
+  padding-block: var(--space-3);
+}
+
+.profileRow {
+  cursor: pointer;
+}
+
+.profileId {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: var(--gray-11);
+}
+
+@media (max-width: 960px) {
+  .body {
+    grid-template-columns: 1fr;
+    overflow: auto;
+  }
+
+  .protocolRule {
+    border-right: 0;
+  }
+
+  .stage {
+    display: none;
+  }
+
+  .pemSummaryRule {
+    display: block;
+  }
+}
+
+@media (min-width: 1400px) {
+  .pemBody {
+    column-count: 3;
+  }
+}

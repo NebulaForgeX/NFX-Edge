@@ -1,0 +1,9 @@
+{
+  "title": "创建新证书",
+  "loading": "加载中…",
+  "mode": {
+    "acme": "Let's Encrypt",
+    "pem": "导入 PEM"
+  },
+  "index": "02 — 证书"
+}

@@ -1,0 +1,15 @@
+{
+  "ok": "OK",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "noMessage": "No message",
+  "loading": {
+    "shortTitle": "Please wait",
+    "defaultMessage": "Working on it…",
+    "hint": "Keep this page open"
+  },
+  "search": {
+    "noResults": "No results found for \"{{query}}\""
+  }
+}
+

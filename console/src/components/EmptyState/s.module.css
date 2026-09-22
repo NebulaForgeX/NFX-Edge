@@ -1,0 +1,23 @@
+.frame {
+  min-height: 14rem;
+  border: 1px dashed var(--color-border);
+  background: var(--color-bg-2);
+}
+
+.stamp {
+  width: 40px;
+  height: 40px;
+  border: 1px solid color-mix(in oklab, var(--color-primary) 45%, var(--color-border));
+  color: var(--color-primary);
+}
+
+.title {
+  max-width: 28ch;
+  font-family: var(--heading-font-family), sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.lede {
+  max-width: 72ch;
+  overflow-wrap: anywhere;
+}

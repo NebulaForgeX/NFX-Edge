@@ -1,0 +1,63 @@
+.stamps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.stamp {
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+.stampPx {
+  padding-inline: 1.1rem;
+}
+.stampPy {
+  padding-block: 1rem 0.9rem;
+}
+.stampStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.stampKey {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray-10);
+}
+
+.stampVal {
+  font-family: var(--heading-font-family), sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 650;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: var(--gray-12);
+}
+
+.stampWarn {
+  color: var(--color-primary);
+}
+
+.ledgerBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ledgerTitle {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray-10);
+}
+
+@media (max-width: 800px) {
+  .stamps {
+    grid-template-columns: 1fr;
+  }
+}

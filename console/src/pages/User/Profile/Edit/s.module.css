@@ -1,0 +1,69 @@
+.hairline {
+  width: 100%;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.hairline:last-of-type {
+  border-bottom: 0;
+}
+
+.kicker {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.lede {
+  max-width: 52ch;
+  color: var(--gray-11);
+}
+
+.portrait {
+  width: 88px;
+  height: 88px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-2);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.portrait :global(.rt-AvatarRoot) {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem 1.5rem;
+}
+
+.fields :global(textarea) {
+  min-height: 7.5rem;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  border: 1px solid var(--color-border);
+  font-size: 14px;
+}
+
+.span2 {
+  grid-column: 1 / -1;
+}
+
+.hidden {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .fields {
+    grid-template-columns: 1fr;
+  }
+}

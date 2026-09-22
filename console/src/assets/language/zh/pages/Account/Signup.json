@@ -1,0 +1,49 @@
+{
+  "title": "签发",
+  "rail": {
+    "product": "Edge"
+  },
+  "ledger": {
+    "kicker": "证书签发申请",
+    "title": "签发一份 Account",
+    "subtitle": "验证邮箱、设置口令，然后签发控制台通行。"
+  },
+  "steps": {
+    "aria": "签发步骤",
+    "verifyNum": "01",
+    "verify": "验证",
+    "verifyHint": "邮箱 + 验证码",
+    "passphraseNum": "02",
+    "passphrase": "口令",
+    "passphraseHint": "设置并确认",
+    "issueNum": "03",
+    "issue": "签发",
+    "issueHint": "打开凭证柜"
+  },
+  "emailLabel": "邮箱",
+  "emailPlaceholder": "you@example.com",
+  "emailHint": "我们会向此地址发送 6 位验证码。",
+  "codeLabel": "验证码",
+  "codePlaceholder": "6 位验证码",
+  "sendCode": "发送验证码",
+  "passwordLabel": "口令",
+  "passwordPlaceholder": "设置口令",
+  "confirmLabel": "确认口令",
+  "confirmPlaceholder": "再次输入口令",
+  "showPassword": "显示口令",
+  "hidePassword": "隐藏口令",
+  "rememberMe": "保持此会话",
+  "submit": "签发",
+  "hasAccount": "已经签发过？",
+  "signIn": "解锁",
+  "validation": {
+    "emailRequired": "请输入邮箱",
+    "emailInvalid": "邮箱格式不正确",
+    "codeRequired": "请输入验证码",
+    "codeInvalid": "请输入 6 位验证码",
+    "passwordRequired": "请输入密码",
+    "passwordMin": "密码至少 8 位",
+    "confirmRequired": "请确认密码",
+    "passwordMismatch": "两次密码不一致"
+  }
+}

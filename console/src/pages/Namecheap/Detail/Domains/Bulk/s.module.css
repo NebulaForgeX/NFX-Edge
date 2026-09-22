@@ -1,0 +1,82 @@
+.stage {
+  overflow: hidden;
+  width: 100%;
+}
+
+.track {
+  display: flex;
+  width: 200%;
+  will-change: transform;
+}
+
+.board {
+  flex: 0 0 50%;
+  width: 50%;
+  min-width: 0;
+}
+
+.pane {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.listFrame {
+  border: 1px solid var(--gray-a5);
+}
+
+.listScroll {
+  max-height: min(40rem, 56vh);
+  overflow: auto;
+}
+
+.item {
+  border-bottom: 1px solid var(--gray-a4);
+}
+
+.item:last-child {
+  border-bottom: 0;
+}
+
+.pick {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pick:hover {
+  background: color-mix(in oklab, var(--color-primary) 5%, transparent);
+}
+
+.actionRule {
+  border-top: 1px solid var(--gray-a5);
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: var(--gray-11);
+}
+
+.field {
+  flex: 1 1 11rem;
+  min-width: 9rem;
+}
+
+.grow {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.hostLine {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+.changed {
+  color: var(--color-primary);
+}

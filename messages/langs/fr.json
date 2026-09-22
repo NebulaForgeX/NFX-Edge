@@ -1,0 +1,78 @@
+{
+  "CACHE_INVALIDATED": {
+    "title": "Cache actualisé",
+    "body": "Le cache des certificats a été vidé"
+  },
+  "CERTIFICATES_EXPORTED": {
+    "title": "Certificats exportés",
+    "body": "Les certificats ont été exportés"
+  },
+  "CERTIFICATES_IMPORTED": {
+    "title": "Certificats importés",
+    "body": "Les certificats ont été importés depuis le disque"
+  },
+  "CERTIFICATE_ANALYZED": {
+    "title": "Certificat analysé",
+    "body": "Analyse du certificat terminée"
+  },
+  "CERTIFICATE_CREATED": {
+    "title": "Certificat créé",
+    "body": "Le certificat a été créé"
+  },
+  "CERTIFICATE_DELETED": {
+    "title": "Certificat supprimé",
+    "body": "Le certificat a été supprimé"
+  },
+  "CERTIFICATE_EXPORTED": {
+    "title": "Certificat exporté",
+    "body": "Le certificat a été exporté vers le dossier websites"
+  },
+  "CERTIFICATE_ISSUED": {
+    "title": "Certificat émis",
+    "body": "Le certificat a été émis"
+  },
+  "CERTIFICATE_PARSED": {
+    "title": "Certificat analysé",
+    "body": "Les champs du certificat ont été remplis depuis le PEM"
+  },
+  "CERTIFICATE_UPDATED": {
+    "title": "Certificat mis à jour",
+    "body": "Le certificat a été mis à jour"
+  },
+  "DIRECTORY_LISTED": {
+    "title": "Répertoire listé",
+    "body": "Liste du répertoire chargée"
+  },
+  "FILE_DELETED": {
+    "title": "Supprimé",
+    "body": "L'élément a été supprimé"
+  },
+  "FILE_READ": {
+    "title": "Fichier lu",
+    "body": "Contenu du fichier chargé"
+  },
+  "NAMECHEAP_CONNECTED": {
+    "title": "Namecheap connecté",
+    "body": "Identifiants API Namecheap vérifiés"
+  },
+  "NAMECHEAP_CREDENTIAL_DELETED": {
+    "title": "Identifiant supprimé",
+    "body": "L'identifiant API Namecheap a été supprimé"
+  },
+  "NAMECHEAP_CREDENTIAL_SAVED": {
+    "title": "Identifiant enregistré",
+    "body": "L'identifiant API Namecheap a été enregistré"
+  },
+  "NAMECHEAP_HOST_ADDED": {
+    "title": "Hôte ajouté",
+    "body": "L'enregistrement d'hôte a été ajouté"
+  },
+  "NAMECHEAP_HOST_DELETED": {
+    "title": "Hôte supprimé",
+    "body": "L'enregistrement d'hôte a été supprimé"
+  },
+  "NAMECHEAP_HOST_UPDATED": {
+    "title": "Hôte mis à jour",
+    "body": "L'enregistrement d'hôte a été mis à jour"
+  }
+}

@@ -1,0 +1,66 @@
+.label {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gray-10);
+}
+
+.control {
+  width: 100%;
+}
+
+.compact {
+  width: 11rem;
+}
+
+.control,
+.compact {
+  align-items: center;
+}
+
+.control :global(input.rt-TextFieldInput),
+.compact :global(input.rt-TextFieldInput) {
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  outline: none;
+  box-shadow: none;
+  line-height: normal;
+}
+
+.control :global(input.rt-TextFieldInput:hover),
+.control :global(input.rt-TextFieldInput:focus),
+.compact :global(input.rt-TextFieldInput:hover),
+.compact :global(input.rt-TextFieldInput:focus) {
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+
+.control :global(input:-webkit-autofill),
+.control :global(input:-webkit-autofill:hover),
+.control :global(input:-webkit-autofill:focus),
+.compact :global(input:-webkit-autofill),
+.compact :global(input:-webkit-autofill:hover),
+.compact :global(input:-webkit-autofill:focus) {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-background) inset;
+  -webkit-text-fill-color: var(--gray-12);
+  caret-color: var(--gray-12);
+  transition: background-color 99999s ease-out;
+}
+
+.error {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: var(--red-11);
+}
+
+.helper {
+  font-size: 12px;
+  color: var(--gray-10);
+}

@@ -1,0 +1,12 @@
+.pemPair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+@media (max-width: 960px) {
+  .pemPair {
+    grid-template-columns: 1fr;
+  }
+}

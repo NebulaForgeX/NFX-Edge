@@ -1,0 +1,9 @@
+{
+  "title": "Créer un nouveau certificat",
+  "loading": "Chargement…",
+  "mode": {
+    "acme": "Let's Encrypt",
+    "pem": "Importer PEM"
+  },
+  "index": "02 — Certificats"
+}

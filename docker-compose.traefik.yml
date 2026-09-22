@@ -1,0 +1,60 @@
+name: nfx-edge-traefik
+
+# Reverse proxy only. Owns host 80/443. Network nfx-edge is created by `task traefik`.
+# TLS files come from sites-base (./websites + dynamic/tls.yaml). Traefik does not issue certs.
+# :80 → :443 is the entryPoint redirect. allowACMEByPass leaves HTTP-01 on sites-base.
+# Start: task traefik    Stop: task traefik:down
+
+services:
+  traefik:
+    image: traefik:v3.7.13
+    container_name: NFX-Edge-Reverse-Proxy
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - nfx-edge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./websites:/certs/websites:ro
+      - ./dynamic:/dynamic:ro
+    command:
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.allowACMEByPass=true
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --entrypoints.web.http.redirections.entryPoint.permanent=true
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.http.tls=true
+      - --providers.file.directory=/dynamic
+      - --providers.file.watch=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.constraints=LabelRegex(`traefik.project`, `^(nfx-edge|nfx-identity|nfx-news|nfx-storages|nfx-documentation)$`)
+      - --providers.docker.network=nfx-edge
+      - --api.dashboard=true
+      - --api.insecure=false
+      - --log.level=INFO
+      - --accesslog=true
+      - --accesslog.format=json
+      - --metrics.prometheus=true
+    labels:
+      - traefik.enable=true
+      - traefik.project=nfx-edge
+      - traefik.http.routers.dashboard.rule=PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+      - traefik.http.routers.dashboard.entrypoints=websecure
+      - traefik.http.routers.dashboard.service=api@internal
+      - traefik.http.routers.dashboard.tls=true
+      - traefik.http.routers.dashboard.priority=50
+      - traefik.http.middlewares.dashboard-auth.basicauth.users=admin:$$2y$$05$$KymEIDjaRPneTxHf1RCzruglmhsOdj2KQJhG6qKAUbtFkG0kCVJ/e
+      - traefik.http.routers.dashboard.middlewares=dashboard-auth@docker
+
+networks:
+  nfx-edge:
+    external: true
+    name: nfx-edge

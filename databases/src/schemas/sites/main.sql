@@ -1,0 +1,5 @@
+-- atlas:import schema.sql
+-- atlas:import tables/tls_certificates.sql
+-- atlas:import tables/namecheap_credentials.sql
+-- atlas:import views/tls_certificates_active_view.sql
+-- atlas:import views/namecheap_credentials_active_view.sql

@@ -1,0 +1,78 @@
+{
+  "CACHE_INVALIDATED": {
+    "title": "Cache refreshed",
+    "body": "Certificate cache has been cleared"
+  },
+  "CERTIFICATES_EXPORTED": {
+    "title": "Certificates exported",
+    "body": "Certificates have been exported"
+  },
+  "CERTIFICATES_IMPORTED": {
+    "title": "Certificates imported",
+    "body": "Certificates have been imported from disk"
+  },
+  "CERTIFICATE_ANALYZED": {
+    "title": "Certificate analyzed",
+    "body": "Certificate analysis completed"
+  },
+  "CERTIFICATE_CREATED": {
+    "title": "Certificate created",
+    "body": "The certificate has been created"
+  },
+  "CERTIFICATE_DELETED": {
+    "title": "Certificate deleted",
+    "body": "The certificate has been deleted"
+  },
+  "CERTIFICATE_EXPORTED": {
+    "title": "Certificate exported",
+    "body": "The certificate has been exported to the websites folder"
+  },
+  "CERTIFICATE_ISSUED": {
+    "title": "Certificate issued",
+    "body": "The certificate has been issued"
+  },
+  "CERTIFICATE_PARSED": {
+    "title": "Certificate parsed",
+    "body": "Certificate fields have been filled from the PEM"
+  },
+  "CERTIFICATE_UPDATED": {
+    "title": "Certificate updated",
+    "body": "The certificate has been updated"
+  },
+  "DIRECTORY_LISTED": {
+    "title": "Directory listed",
+    "body": "Directory listing loaded"
+  },
+  "FILE_DELETED": {
+    "title": "Deleted",
+    "body": "The item has been deleted"
+  },
+  "FILE_READ": {
+    "title": "File read",
+    "body": "File content loaded"
+  },
+  "NAMECHEAP_CONNECTED": {
+    "title": "Namecheap connected",
+    "body": "Namecheap API credentials verified"
+  },
+  "NAMECHEAP_CREDENTIAL_DELETED": {
+    "title": "Credential deleted",
+    "body": "Namecheap API credential has been deleted"
+  },
+  "NAMECHEAP_CREDENTIAL_SAVED": {
+    "title": "Credential saved",
+    "body": "Namecheap API credential has been saved"
+  },
+  "NAMECHEAP_HOST_ADDED": {
+    "title": "Host added",
+    "body": "Host record has been added"
+  },
+  "NAMECHEAP_HOST_DELETED": {
+    "title": "Host deleted",
+    "body": "Host record has been deleted"
+  },
+  "NAMECHEAP_HOST_UPDATED": {
+    "title": "Host updated",
+    "body": "Host record has been updated"
+  }
+}

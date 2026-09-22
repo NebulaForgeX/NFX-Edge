@@ -1,0 +1,78 @@
+{
+  "back": "Retour",
+  "certificate.source": "Source",
+  "certificate.source.auto": "Auto",
+  "certificate.source.manual_apply": "Demande manuelle",
+  "certificate.source.manual_add": "Ajout manuel",
+  "certificate": {
+    "info": "Informations sur le certificat",
+    "domain": "Domaine",
+    "folderName": "Dossier",
+    "status": "Statut",
+    "issuer": "Émetteur",
+    "unknown": "Inconnu",
+    "email": "E-mail de contact",
+    "validFrom": "Valide à partir du",
+    "expiryDate": "Date d'expiration",
+    "sans": "Noms alternatifs du sujet (SANs)",
+    "sansSectionSubtitle": "Tous les noms d'hôte valides pour ce certificat en TLS (nom principal et alias).",
+    "sansCountTitle": "{{count}} SAN au total",
+    "content": "Contenu du certificat",
+    "privateKey": "Clé privée",
+    "lastError": "Dernière erreur",
+    "errorTime": "Heure de l'erreur"
+  },
+  "actions": {
+    "operations": "Opérations",
+    "update": "Mettre à jour",
+    "delete": "Supprimer",
+    "reapply": "Redemander"
+  },
+  "delete": {
+    "confirm": {
+      "title": "Supprimer le certificat",
+      "message": "Êtes-vous sûr de vouloir supprimer le certificat pour le domaine \"{{domain}}\" ? Cela ne supprimera que l'enregistrement de la base de données et n'affectera pas le fichier acme.json.",
+      "confirm": "Supprimer",
+      "cancel": "Annuler"
+    },
+    "success": "Certificat supprimé avec succès",
+    "error": "Échec de la suppression du certificat",
+    "deleting": "Suppression..."
+  },
+  "update": {
+    "notImplemented": "Fonctionnalité de mise à jour à venir",
+    "autoNotEditable": "Les certificats de source automatique ne peuvent pas être modifiés manuellement. Veuillez les redemander à la place."
+  },
+  "sansChanged": {
+    "banner": "La liste SAN a été modifiée : le PEM peut encore correspondre à l’ancien ensemble de noms. Utilisez « Redemander » pour que l’AC émette selon l’enregistrement actuel ; enregistrer les SAN seuls ne change pas le certificat émis."
+  },
+  "reapply": {
+    "title": "Redemander le certificat",
+    "confirm": "Redemander le certificat pour \"{{domain}}\" ?",
+    "confirmDetail": "Le serveur lit le domaine, l’e-mail et les SAN dans la base. Seul le choix « forcer » ci-dessous décide d’ignorer le cache et de redemander à l’AC.",
+    "confirmSubmit": "Demander",
+    "forceRenewal": "Forcer la redemande (ignorer le cache ; réémettre même si non expiré — risque de limites CA)",
+    "emailRequired": "Aucun e-mail de contact. Ajoutez-le sur la page d'édition ou utilisez Ajouter un certificat.",
+    "notLoaded": "Certificat en cours de chargement. Réessayez.",
+    "applying": "Redemande en cours..."
+  },
+  "loading": "Chargement...",
+  "error": {
+    "loadFailed": "Échec du chargement du certificat"
+  },
+  "copy": {
+    "success": "Copié dans le presse-papiers",
+    "certificate": "Copier le certificat",
+    "privateKey": "Copier la clé privée"
+  },
+  "download": {
+    "success": "Téléchargé",
+    "certificate": "Télécharger le certificat",
+    "privateKey": "Télécharger la clé privée",
+    "both": "Télécharger les deux"
+  },
+  "export": {
+    "title": "Exporter le certificat"
+  },
+  "index": "02 — Certificats"
+}

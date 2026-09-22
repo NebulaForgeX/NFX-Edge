@@ -1,0 +1,134 @@
+.sheet {
+  position: relative;
+  min-height: 0;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+.sheetPx {
+  padding-inline: 1rem;
+}
+.sheetPy {
+  padding-block: 0.9rem 0.75rem;
+  height: 100%;
+  min-height: 0;
+}
+.sheetGrid {
+  display: grid;
+  grid-template-rows: auto minmax(10rem, 1fr) auto;
+  min-height: 0;
+  height: 100%;
+}
+
+
+.dragging {
+  border-color: var(--color-primary);
+  background: color-mix(in oklab, var(--color-primary) 6%, var(--color-bg));
+}
+
+.invalid {
+  border-color: var(--red-8);
+}
+
+.corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--color-primary);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.cornerTl {
+  top: 6px;
+  left: 6px;
+  border-width: 1px 0 0 1px;
+}
+
+.cornerTr {
+  top: 6px;
+  right: 6px;
+  border-width: 1px 1px 0 0;
+}
+
+.cornerBl {
+  bottom: 6px;
+  left: 6px;
+  border-width: 0 0 1px 1px;
+}
+
+.cornerBr {
+  bottom: 6px;
+  right: 6px;
+  border-width: 0 1px 1px 0;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: 0.55rem;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gray-12);
+}
+
+.optional {
+  margin-left: 0.5rem;
+  letter-spacing: 0.08em;
+  color: var(--gray-10);
+  font-weight: 500;
+}
+
+.kind {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.body {
+  width: 100%;
+  min-height: 10rem;
+  resize: none;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+  font-size: 11px !important;
+  line-height: 1.65 !important;
+  color: var(--gray-12);
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: 0.65rem;
+  padding-top: 0.55rem;
+  border-top: 1px dashed var(--color-border);
+}
+
+.file {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.meta {
+  min-width: 0;
+  overflow: hidden;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--gray-10);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

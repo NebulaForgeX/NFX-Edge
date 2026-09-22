@@ -1,0 +1,96 @@
+.section {
+  position: relative;
+  
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+.sectionPx {
+  padding-inline: 1.2rem;
+}
+.sectionPy {
+  padding-block: 1.15rem 1rem;
+}
+
+
+.sectionTitle {
+  margin: 0 0 1rem;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray-10);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem 1.5rem;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.infoItem label {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gray-10);
+}
+
+.infoItem span {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  color: var(--gray-12);
+  overflow-wrap: anywhere;
+}
+
+.errorSection {
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+  
+  border: 1px solid var(--red-8);
+}
+.errorSectionPx {
+  padding-inline: 1rem;
+}
+.errorSectionPy {
+  padding-block: 0.9rem;
+}
+
+
+.errorHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.errorHeader label {
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red-11);
+}
+
+.errorIcon {
+  color: var(--red-11);
+  flex-shrink: 0;
+}
+
+.errorMessage,
+.errorTime {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.errorTime {
+  margin-top: 0.35rem;
+  color: var(--gray-10);
+}

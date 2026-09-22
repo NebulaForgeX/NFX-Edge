@@ -1,0 +1,126 @@
+.intake {
+  width: 26rem;
+  max-width: 100%;
+  flex-shrink: 0;
+}
+
+.stage {
+  min-width: 0;
+}
+
+.sheet {
+  position: relative;
+  border: 1px solid var(--color-border);
+}
+
+.sheetPx {
+  padding-inline: 1.35rem;
+}
+
+.sheetPy {
+  padding-block: 1.25rem 1.1rem;
+}
+
+.hairline {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.kicker {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray-11);
+}
+
+.corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--color-primary);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.cornerTl {
+  top: 8px;
+  left: 8px;
+  border-width: 1px 0 0 1px;
+}
+
+.cornerTr {
+  top: 8px;
+  right: 8px;
+  border-width: 1px 1px 0 0;
+}
+
+.cornerBl {
+  bottom: 8px;
+  left: 8px;
+  border-width: 0 0 1px 1px;
+}
+
+.cornerBr {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 1px 1px 0;
+}
+
+.subject {
+  margin: 0;
+  font-family: var(--heading-font-family), sans-serif;
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.5rem;
+  margin: 0;
+}
+
+.metaItem dt {
+  margin-bottom: 0.2rem;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gray-10);
+}
+
+.metaItem dd {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  color: var(--gray-12);
+  overflow-wrap: anywhere;
+}
+
+.sansHairline {
+  border-top: 1px dashed var(--color-border);
+}
+
+.vacant {
+  position: relative;
+  min-height: 16rem;
+}
+
+.watermark {
+  position: absolute;
+  top: 1.5rem;
+  right: 0;
+  font-family: var(--heading-font-family), sans-serif;
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  font-weight: 700;
+  line-height: 0.78;
+  letter-spacing: -0.07em;
+  color: color-mix(in oklab, var(--color-primary) 16%, transparent);
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 960px) {
+  .intake {
+    width: 100%;
+  }
+}

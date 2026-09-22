@@ -1,0 +1,98 @@
+# Copy to sites.yml and edit domains / ports:
+#   cp dynamic/sites.example.yml dynamic/sites.yml
+#
+# TLS: dynamic/tls.yaml — sites-base writes ./websites/<site>/cert.crt + key.key.
+# Traefik does not issue certificates (no certResolver).
+#
+# Priority: customer Host() catch-all must beat product PathPrefix (20–50),
+# otherwise example.com/console/nfx-identity serves the NFX console.
+# Host+PathPrefix site APIs must beat that catch-all.
+#
+# Active block: www + admin + same-origin API (lucaslyu-style).
+# Commented block: static-only + www → apex (aquawork / timetablecraft-style).
+
+http:
+  routers:
+    www-example-api:
+      rule: "(Host(`example.com`) || Host(`www.example.com`)) && (PathPrefix(`/catalog`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))"
+      entryPoints:
+        - websecure
+      service: example-www-api-svc
+      tls: {}
+      priority: 300
+
+    www-example:
+      rule: "Host(`example.com`) || Host(`www.example.com`)"
+      entryPoints:
+        - websecure
+      service: www-example-svc
+      tls: {}
+      priority: 200
+
+    admin-example-api:
+      rule: "Host(`admin.example.com`) && (PathPrefix(`/catalog`) || PathPrefix(`/auth`) || PathPrefix(`/analytics`) || PathPrefix(`/image`))"
+      entryPoints:
+        - websecure
+      service: example-admin-api-svc
+      tls: {}
+      priority: 300
+
+    admin-example:
+      rule: "Host(`admin.example.com`)"
+      entryPoints:
+        - websecure
+      service: admin-example-svc
+      tls: {}
+      priority: 200
+
+  services:
+    example-www-api-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:<backend-port>"
+
+    www-example-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:<www-static-port>"
+
+    example-admin-api-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:<backend-port>"
+
+    admin-example-svc:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:<admin-static-port>"
+
+# --- static-only + www → apex (uncomment and drop the www/admin block above) ---
+# http:
+#   middlewares:
+#     example-www-to-apex:
+#       redirectRegex:
+#         regex: "^https://www\\.example\\.com/(.*)"
+#         replacement: "https://example.com/${1}"
+#         permanent: true
+#   routers:
+#     www-example-www:
+#       rule: "Host(`www.example.com`)"
+#       entryPoints:
+#         - websecure
+#       middlewares:
+#         - example-www-to-apex
+#       service: www-example-static-svc
+#       tls: {}
+#       priority: 200
+#     www-example:
+#       rule: "Host(`example.com`)"
+#       entryPoints:
+#         - websecure
+#       service: www-example-static-svc
+#       tls: {}
+#       priority: 200
+#   services:
+#     www-example-static-svc:
+#       loadBalancer:
+#         servers:
+#           - url: "http://host.docker.internal:<www-static-port>"
