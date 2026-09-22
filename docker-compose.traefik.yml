@@ -46,13 +46,19 @@ services:
     labels:
       - traefik.enable=true
       - traefik.project=nfx-edge
-      - traefik.http.routers.dashboard.rule=PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+      - traefik.http.middlewares.dashboard-auth.basicauth.users=admin:$$2y$$05$$KymEIDjaRPneTxHf1RCzruglmhsOdj2KQJhG6qKAUbtFkG0kCVJ/e
+      - traefik.http.routers.dashboard.rule=Host(`${TRAEFIK_DASHBOARD_HOST:-traefik.nebulaforgex.com}`)
       - traefik.http.routers.dashboard.entrypoints=websecure
       - traefik.http.routers.dashboard.service=api@internal
       - traefik.http.routers.dashboard.tls=true
-      - traefik.http.routers.dashboard.priority=50
-      - traefik.http.middlewares.dashboard-auth.basicauth.users=admin:$$2y$$05$$KymEIDjaRPneTxHf1RCzruglmhsOdj2KQJhG6qKAUbtFkG0kCVJ/e
+      - traefik.http.routers.dashboard.priority=200
       - traefik.http.routers.dashboard.middlewares=dashboard-auth@docker
+      - traefik.http.routers.dashboard-lan.rule=HostRegexp(`^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$$`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+      - traefik.http.routers.dashboard-lan.entrypoints=websecure
+      - traefik.http.routers.dashboard-lan.service=api@internal
+      - traefik.http.routers.dashboard-lan.tls=true
+      - traefik.http.routers.dashboard-lan.priority=50
+      - traefik.http.routers.dashboard-lan.middlewares=dashboard-auth@docker
 
 networks:
   nfx-edge:

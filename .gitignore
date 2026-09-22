@@ -30,10 +30,9 @@ certs/
 certificates/
 ssl/
 
-## Traefik live routes (keep *.example.*)
+## Traefik live routes (templates are dynamic.example/, never mount that)
 dynamic/*
-!dynamic/*.example.yml
-!dynamic/*.example.yaml
+!dynamic/.gitkeep
 
 ## Go build artifacts
 *.exe

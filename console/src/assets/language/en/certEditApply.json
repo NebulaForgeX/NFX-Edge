@@ -34,7 +34,7 @@
     "reapplying": "Re-applying...",
     "editCertificate": "Edit Certificate",
     "forceRenewal": "Enable Force Renewal",
-    "forceRenewalHelp": "When enabled, will force re-apply certificate (even if not expired). When disabled, will use cached certificate if available.",
+    "forceRenewalHelp": "If this apex already exists with the same SANs, you will be asked to overwrite. Different SANs always force a CA issue — disk cache is not used.",
     "rateLimitTitle": "Rate Limit Information",
     "rateLimitInfo": "Let's Encrypt limit: A maximum of 5 certificates can be issued for the same set of identifiers within 168 hours (7 days). If force renewal is enabled, the certificate will be re-applied even if not expired, which may trigger rate limits."
   },

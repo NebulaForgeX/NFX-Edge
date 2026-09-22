@@ -7,5 +7,5 @@ import (
 )
 
 func (h *Handler) ByDomain(ctx context.Context, domain string) (*certQuery.CertificateVO, error) {
-	return h.one(ctx, "domain = ?", domain)
+	return h.one(ctx, "LOWER(domain) = LOWER(?)", domain)
 }

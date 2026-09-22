@@ -69,15 +69,38 @@ services:
       traefik.project: "nfx-edge"
       traefik.docker.network: nfx-edge
       traefik.http.services.edge-console-secure.loadbalancer.server.port: "${CONSOLE_PORT}"
+      traefik.http.middlewares.edge-console-root-secure.redirectregex.regex: ^https?://[^/]+/?$$
+      traefik.http.middlewares.edge-console-root-secure.redirectregex.replacement: https://${TRAEFIK_CONSOLE_HOST}/console/nfx-edge/
+      traefik.http.middlewares.edge-console-root-secure.redirectregex.permanent: "true"
       traefik.http.routers.edge-console-secure.entrypoints: web
-      traefik.http.routers.edge-console-secure.rule: PathPrefix(`/console/nfx-edge`)
+      traefik.http.routers.edge-console-secure.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-edge`)"
       traefik.http.routers.edge-console-secure.service: edge-console-secure
       traefik.http.routers.edge-console-secure.priority: "25"
       traefik.http.routers.edge-console-secure-tls.entrypoints: websecure
-      traefik.http.routers.edge-console-secure-tls.rule: PathPrefix(`/console/nfx-edge`)
+      traefik.http.routers.edge-console-secure-tls.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-edge`)"
       traefik.http.routers.edge-console-secure-tls.service: edge-console-secure
       traefik.http.routers.edge-console-secure-tls.tls: "true"
       traefik.http.routers.edge-console-secure-tls.priority: "25"
+      traefik.http.routers.edge-console-host-secure.entrypoints: web
+      traefik.http.routers.edge-console-host-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-edge`)
+      traefik.http.routers.edge-console-host-secure.service: edge-console-secure
+      traefik.http.routers.edge-console-host-secure.priority: "200"
+      traefik.http.routers.edge-console-host-secure-tls.entrypoints: websecure
+      traefik.http.routers.edge-console-host-secure-tls.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-edge`)
+      traefik.http.routers.edge-console-host-secure-tls.service: edge-console-secure
+      traefik.http.routers.edge-console-host-secure-tls.tls: "true"
+      traefik.http.routers.edge-console-host-secure-tls.priority: "200"
+      traefik.http.routers.edge-console-root-secure.entrypoints: web
+      traefik.http.routers.edge-console-root-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
+      traefik.http.routers.edge-console-root-secure.middlewares: edge-console-root-secure
+      traefik.http.routers.edge-console-root-secure.service: edge-console-secure
+      traefik.http.routers.edge-console-root-secure.priority: "210"
+      traefik.http.routers.edge-console-root-secure-tls.entrypoints: websecure
+      traefik.http.routers.edge-console-root-secure-tls.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
+      traefik.http.routers.edge-console-root-secure-tls.middlewares: edge-console-root-secure
+      traefik.http.routers.edge-console-root-secure-tls.service: edge-console-secure
+      traefik.http.routers.edge-console-root-secure-tls.tls: "true"
+      traefik.http.routers.edge-console-root-secure-tls.priority: "210"
     restart: always
     networks:
       - nfx-edge

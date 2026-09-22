@@ -18,7 +18,7 @@ import (
 )
 
 func (s *Service) Apply(ctx context.Context, accountID, profileID, domain, email string, sans []string, folderName string, force bool) CommandResult {
-	domain = strings.TrimSpace(domain)
+	domain = strings.ToLower(strings.TrimSpace(domain))
 	email = strings.TrimSpace(email)
 	if domain == "" || email == "" {
 		return CommandResult{Success: false, Message: sitesErr.CodeCertificateDomainEmailRequired}
@@ -31,7 +31,11 @@ func (s *Service) Apply(ctx context.Context, accountID, profileID, domain, email
 		if existing.AccountID != nil && *existing.AccountID != accountID {
 			return CommandResult{Success: false, Message: sitesErr.CodeCertificateAlreadyExists}
 		}
-		if owned(existing, accountID) && existing.Status == "success" && !force {
+		sansSame := pemx.NamesEqual(requestedNames(domain, sans), storedNames(existing))
+		if !sansSame {
+			force = true
+		}
+		if owned(existing, accountID) && existing.Status == "success" && !force && sansSame {
 			return CommandResult{Success: false, Message: sitesErr.CodeCertificateAlreadyExists}
 		}
 		return s.runIssue(ctx, accountID, profileID, domain, email, sans, folderName, force, existing.ID)
@@ -60,7 +64,28 @@ func (s *Service) Reapply(ctx context.Context, accountID, id string, force bool)
 	if row.ProfileID != nil {
 		pid = *row.ProfileID
 	}
+	if row.SANsChanged || !pemx.NamesEqual(requestedNames(row.Domain, sans), storedNames(row)) {
+		force = true
+	}
 	return s.runIssue(ctx, aid, pid, row.Domain, email, sans, folder, force, row.ID)
+}
+
+func requestedNames(domain string, sans []string) []string {
+	return append([]string{domain}, sans...)
+}
+
+func storedNames(row *Certificate) []string {
+	if row == nil {
+		return nil
+	}
+	if row.Certificate != nil && strings.TrimSpace(*row.Certificate) != "" {
+		if info, err := pemx.Parse(*row.Certificate); err == nil {
+			return info.AllDomains
+		}
+	}
+	var cur []string
+	_ = json.Unmarshal(row.SANs, &cur)
+	return cur
 }
 
 func (s *Service) runIssue(ctx context.Context, accountID, profileID, domain, email string, sans []string, folderName string, force bool, renewID string) CommandResult {

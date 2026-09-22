@@ -49,7 +49,7 @@
   "reapply": {
     "title": "Re-apply Certificate",
     "confirm": "Re-apply certificate for \"{{domain}}\"?",
-    "confirmDetail": "The server loads domain, contact email, and SANs from the database. Only “force renewal” below controls whether cached certs are skipped and the CA is asked to re-issue.",
+    "confirmDetail": "If SANs differ from the issued certificate, the CA is forced and cache is skipped. If SANs match, check force renewal below to ignore cache.",
     "confirmSubmit": "Apply",
     "forceRenewal": "Force renewal (ignore cache; re-issue even if not expired — may hit CA rate limits)",
     "emailRequired": "This certificate has no contact email. Add one on the edit page or use Add Certificate.",
