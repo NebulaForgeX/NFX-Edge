@@ -1,0 +1,80 @@
+.wrap {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  border: 1px solid var(--gray-a5);
+  background: var(--color-bg);
+}
+
+.ledger {
+  width: 100%;
+  max-width: 100%;
+}
+
+.ledger :global(table) {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.ledger :global(.rt-TableCell),
+.ledger :global(.rt-TableColumnHeaderCell) {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.ledger :global(.rt-TableRow) {
+  box-shadow: inset 0 -1px var(--gray-a4);
+}
+
+.ledger :global(.rt-TableBody .rt-TableRow:last-child) {
+  box-shadow: none;
+}
+
+.head {
+  font-size: 10px !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gray-10) !important;
+  background: var(--color-bg-2);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.cell,
+.mono {
+  min-width: 0;
+  vertical-align: middle;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: var(--gray-12);
+}
+
+.cell :global(.rt-TextFieldRoot),
+.cell :global(.rt-TextAreaRoot),
+.mono :global(.rt-TextFieldRoot),
+.mono :global(.rt-TextAreaRoot) {
+  width: 100%;
+  max-width: 100%;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  background: color-mix(in oklab, var(--color-primary) 6%, transparent);
+}
+
+.picked {
+  background: color-mix(in oklab, var(--color-primary) 10%, transparent);
+}

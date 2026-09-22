@@ -1,0 +1,11 @@
+.frame {
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.title {
+  margin: 0;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gray-10);
+}

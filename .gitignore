@@ -1,68 +1,111 @@
-# ============================================
-# Websites Docker Compose 项目 .gitignore
-# ============================================
+# NFX-Edge — Traefik reverse proxy + Go sites + Vite console
 
-# 环境配置文件（包含实际配置信息）
+## Env / secrets
 .env
+.env.*
+.env.local
+.env.*.local
+*.env
+!.example.env
+!.example.secure.env
+!.env.example
 
-# Traefik 动态配置（站点/证书为本地实际值，不入库）
-dynamic/www-*.yml
-dynamic/admin-*.yml
-dynamic/tls.yaml
-
-# 网站内容目录（包含实际网站文件）
-www.*.com/
-admin.*.com/
-*.com/
-
-# 证书文件（敏感信息）
-*.pem
+## Issued certs (keep folder)
+websites/*
+!websites/.gitkeep
+acme-challenges/*
+!acme-challenges/.gitkeep
+.certbot/
+acme.json
 *.key
+*.pem
 *.crt
+*.cer
 *.cert
 *.p12
 *.pfx
-acme.json
+*.jks
+*.keystore
+certs/
+certificates/
+ssl/
 
-# 日志文件
-*.log
-logs/
-*.log.*
+## Traefik live routes (keep *.example.*)
+dynamic/*
+!dynamic/*.example.yml
+!dynamic/*.example.yaml
 
-# Docker 相关临时文件
-.dockerignore
-docker-compose.yml
-docker-compose.override.yml
+## Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+tmp/
+*.test
+*.out
+*.prof
+*.pprof
+*.cover
+cover.out
+coverage/
+vendor/
+go.work
+go.work.sum
 
-# 备份文件
-*.bak
-*.backup
-*.old
+## Tooling & temporary files
+.air.toml.local
+.buildcache/
+.cache/
+cache/
+.task/
+*.pid
+*.sock
 *.tmp
-*~
+*.temp
+*.cache
+*.orig
+*.rej
 
-# 系统文件
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-desktop.ini
+## Console
+/console/dist/
+/console/node_modules/
+/console/.turbo/
+!/console/.env.dev
+!/console/.env.secure
+!/console/.env.example
+!/console/.example.env
 
-# 编辑器文件
-.vscode/
+## Logs / OS / editors
+logs/
+*.log
+log/
 .idea/
+.vscode/
+.cursor/
+.DS_Store
+Thumbs.db
 *.swp
 *.swo
 *~
-.project
-.classpath
-.settings/
+*.iml
+*.ipr
+*.iws
 
-# 临时文件
-*.tmp
-*.temp
-.cache/
+## Docker overrides
+docker-compose.override.yml
+.dockerignore.local
 
+## Atlas local build (keep migrations)
+databases/build/
+databases/gen/
+databases/debug.txt
+databases/bin/
+*.sql
+*.dump
+*.bak
+*.backup
+!databases/
+!databases/**

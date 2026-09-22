@@ -1,0 +1,75 @@
+{
+  "title": "Certificate Management",
+  "subtitle": "Check and manage SSL/TLS certificate status",
+  "certType": {
+    "label": "Certificate Type",
+    "websites": "Website Certificates",
+    "apis": "API Certificates",
+    "database": "Database Certificates"
+  },
+  "actions": {
+    "check": "Check Certificates",
+    "export": "Export Certificates",
+    "checking": "Checking certificates...",
+    "exporting": "Exporting...",
+    "refresh": "Refresh Certificates",
+    "refreshing": "Refreshing...",
+    "add": "Add Certificate",
+    "apply": "Apply Certificate",
+    "view": "View",
+    "search": "Search",
+    "searchPlaceholder": "Search domain or folder",
+    "loadingMore": "Load more"
+  },
+  "status": {
+    "valid": "Valid",
+    "expired": "Expired",
+    "expiringSoon": "Expiring Soon",
+    "remainingDays": "Remaining {{days}} days",
+    "remaining": "Remaining"
+  },
+  "certificate": {
+    "domain": "Domain",
+    "email": "Contact email",
+    "issuer": "Issuer",
+    "expiryDate": "Expiry Date",
+    "unknown": "Unknown",
+    "list": "Certificate List",
+    "total": "total",
+    "empty": "No certificates found",
+    "sans": "SANs",
+    "lastError": "Last error",
+    "sansChangedHint": "SAN list was edited; re-apply the certificate to match what the CA issued"
+  },
+  "export": {
+    "success": "Export successful",
+    "failed": "Export failed",
+    "error": "Failed to export certificates"
+  },
+  "check": {
+    "error": "Failed to check certificates"
+  },
+  "refresh": {
+    "success": "Refresh successful",
+    "error": "Refresh failed"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page"
+  },
+  "delete": {
+    "confirm": {
+      "title": "Delete Certificate",
+      "message": "Are you sure you want to delete the certificate for domain \"{{domain}}\"? This will only delete the database record and will not affect the acme.json file.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "success": "Certificate deleted successfully",
+    "error": "Failed to delete certificate"
+  },
+  "update": {
+    "autoNotEditable": "Auto source certificates cannot be manually updated. Please refresh from folder instead."
+  },
+  "index": "02 — Certificates"
+}

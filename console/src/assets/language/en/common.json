@@ -1,0 +1,95 @@
+{
+  "title": "NFX-Edge",
+  "subtitle": "Certificate Management System",
+  "certManagement": {
+    "title": "Certificate Management",
+    "description": "Manage and monitor SSL/TLS certificate status, supports website and API certificates",
+    "action": "Enter Certificate Management →"
+  },
+  "quickCheck": {
+    "title": "Quick Check",
+    "description": "Quickly view the validity and status of all certificates",
+    "action": "Start Check →"
+  },
+  "certExport": {
+    "title": "Certificate Export",
+    "description": "One-click export of certificate files for easy use in other services",
+    "action": "Export Certificate →"
+  },
+  "refresh": {
+    "button": "Refresh Certificates",
+    "refreshing": "Refreshing...",
+    "certType": "Certificate Type",
+    "description": "Click to read acme.json files and update the certificate database",
+    "success": "Certificates refreshed successfully",
+    "error": "Failed to refresh certificates"
+  },
+  "search": {
+    "placeholder": "Search functions, pages...",
+    "noResults": "No results found for \"{{query}}\""
+  },
+  "footer": {
+    "copyright": "NFX-Edge. All rights reserved.",
+    "about": "About Us",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "suspense": {
+    "errorTitle": "Failed to Load",
+    "errorDescription": "Please check your network connection or try again later.",
+    "retryText": "Retry"
+  },
+  "theme": {
+    "default": "Default",
+    "light": "Light",
+    "dark": "Dark",
+    "cosmic": "Cosmic",
+    "corporate": "Corporate"
+  },
+  "layout": {
+    "show": "Show Sidebar",
+    "hide": "Hide Sidebar"
+  },
+  "validation": {
+    "domainRequired": "Please enter domain name",
+    "emailRequired": "Please enter a valid email address",
+    "folderNameRequired": "Please enter folder name",
+    "folderNameInvalid": "Folder name can only contain letters, numbers, underscores, and hyphens",
+    "certificateRequired": "Please enter certificate content (PEM format)",
+    "privateKeyRequired": "Please enter private key content (PEM format)",
+    "sansItemRequired": "SANs item cannot be empty",
+    "sansContentRequired": "SANs content cannot be empty"
+  },
+  "messages": {
+    "folderNameRequired": "Folder name is required",
+    "certificateIdMissing": "Certificate ID is missing, cannot update",
+    "unsupportedSource": "Unsupported certificate source type",
+    "certificateUpdateSuccess": "Certificate updated successfully!",
+    "certificateUpdateFailed": "Failed to update certificate",
+    "certificateCreateSuccess": "Certificate created successfully!",
+    "certificateCreateFailed": "Failed to create certificate",
+    "certificateApplySuccess": "Certificate applied successfully!",
+    "certificateApplyFailed": "Failed to apply certificate",
+    "errorReason": "Error reason",
+    "checkFormErrors": "Please check form errors"
+  },
+  "dashboard": {
+    "totalCerts": "Certificates",
+    "expiringSoon": "Expiring within 30 days",
+    "expiringTable": "Expiring certificates",
+    "noExpiring": "No certificates expiring in the next 30 days",
+    "colDomain": "Domain",
+    "colIssuer": "Issuer",
+    "colExpiry": "Expiry",
+    "colStatus": "Status",
+    "dns": "Namecheap",
+    "files": "Files",
+    "analysis": "TLS analysis",
+    "addHint": "Apply Let's Encrypt or import PEM",
+    "dnsHint": "Namecheap domain list and API account",
+    "filesHint": "Exported certificate files",
+    "analysisHint": "Parse PEM certificate and private key",
+    "index": "01 — Cabinet",
+    "certs": "Certificates"
+  }
+}

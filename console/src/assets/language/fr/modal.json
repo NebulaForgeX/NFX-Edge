@@ -1,0 +1,15 @@
+{
+  "ok": "OK",
+  "cancel": "Annuler",
+  "confirm": "Confirmer",
+  "noMessage": "Aucun message",
+  "loading": {
+    "shortTitle": "Veuillez patienter",
+    "defaultMessage": "Traitement en cours…",
+    "hint": "Ne fermez pas cette page"
+  },
+  "search": {
+    "noResults": "Aucun résultat trouvé pour \"{{query}}\""
+  }
+}
+

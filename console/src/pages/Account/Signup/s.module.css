@@ -1,0 +1,174 @@
+.page {
+  min-height: 100dvh;
+  color: var(--gray-12);
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 31px,
+      color-mix(in oklab, var(--gray-6) 55%, transparent) 32px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 31px,
+      color-mix(in oklab, var(--gray-5) 35%, transparent) 32px
+    ),
+    var(--color-bg);
+}
+
+.rail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 52px;
+  padding: 0 var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  background: color-mix(in oklab, var(--color-bg) 92%, transparent);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.product {
+  font-family: var(--heading-font-family), sans-serif;
+  font-size: var(--font-size-2);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 32rem);
+  justify-content: center;
+  gap: var(--space-6);
+  padding: var(--space-7) var(--space-5) var(--space-8);
+}
+
+.stepRail {
+  position: relative;
+  margin: 0;
+  padding: var(--space-8) 0 0;
+  list-style: none;
+}
+
+.stepRail::before {
+  content: "";
+  position: absolute;
+  left: 1.15rem;
+  top: 5.2rem;
+  bottom: 1.5rem;
+  width: 1px;
+  background: var(--color-border);
+}
+
+.step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.stepNum {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  flex-shrink: 0;
+  font-family: var(--heading-font-family), sans-serif;
+  font-size: var(--font-size-1);
+  letter-spacing: 0.12em;
+  background: var(--color-bg);
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.stepCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 4px;
+}
+
+.stepLabel {
+  font-size: var(--font-size-2);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.stepHint {
+  font-size: var(--font-size-1);
+  color: var(--gray-11);
+}
+
+.sheet {
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-primary);
+  background: var(--color-bg);
+  padding: var(--space-6);
+}
+
+.sheetHead {
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.kicker {
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.fieldNum {
+  padding-top: 6px;
+  font-family: var(--heading-font-family), sans-serif;
+  font-size: var(--font-size-1);
+  letter-spacing: 0.14em;
+  color: var(--gray-10);
+}
+
+@media (max-width: 840px) {
+  .body {
+    grid-template-columns: 1fr;
+    padding-top: var(--space-4);
+  }
+
+  .stepRail {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-top: 0;
+  }
+
+  .stepRail::before {
+    display: none;
+  }
+
+  .step {
+    flex: 1;
+    margin-bottom: 0;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-2);
+  }
+
+  .stepCopy {
+    padding-top: 0;
+  }
+}

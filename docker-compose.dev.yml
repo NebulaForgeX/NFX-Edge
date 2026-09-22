@@ -1,0 +1,133 @@
+name: nfx-edge-dev
+
+# Dev sites + console. Reverse proxy is docker-compose.traefik.yml (`task traefik`).
+# HTTP-01 ACME is sites-base, not Traefik.
+
+services:
+  sites-base:
+    image: nfx-edge-sites-base:dev
+    container_name: NFX-Edge-Sites-Base-Dev
+    build:
+      context: .
+      dockerfile: inputs/sites/configuration/Dockerfile.Base
+      target: dev
+    environment:
+      - ENV=dev
+    command: [ "air", "-c", "inputs/sites/base/.air.toml" ]
+    expose:
+      - "${HTTP_PORT}"
+      - "${GRPC_PORT_SITES}"
+    ports:
+      - "${GRPC_EXT_PORT_SITES}:${GRPC_PORT_SITES}"
+    labels:
+      traefik.enable: "true"
+      traefik.project: "nfx-edge"
+      traefik.docker.network: nfx-edge
+      traefik.http.services.edge-sites-base.loadbalancer.server.port: "${HTTP_PORT}"
+      traefik.http.routers.edge-sites-base.entrypoints: web
+      traefik.http.middlewares.nfx-edge-sites-gw.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
+      traefik.http.routers.edge-sites-base.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_SITES}`)
+      traefik.http.routers.edge-sites-base.priority: "20"
+      traefik.http.routers.edge-sites-base.middlewares: nfx-edge-sites-gw
+      traefik.http.routers.edge-sites-base.service: edge-sites-base
+      traefik.http.routers.edge-sites-base-tls.entrypoints: websecure
+      traefik.http.routers.edge-sites-base-tls.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_SITES}`)
+      traefik.http.routers.edge-sites-base-tls.priority: "20"
+      traefik.http.routers.edge-sites-base-tls.middlewares: nfx-edge-sites-gw
+      traefik.http.routers.edge-sites-base-tls.service: edge-sites-base
+      traefik.http.routers.edge-sites-base-tls.tls: "true"
+      traefik.http.routers.edge-sites-acme.entrypoints: web
+      traefik.http.routers.edge-sites-acme.rule: "PathPrefix(`/.well-known/acme-challenge`)"
+      traefik.http.routers.edge-sites-acme.priority: "100"
+      traefik.http.routers.edge-sites-acme.service: edge-sites-base
+    volumes:
+      - ./websites:/app/websites:rw
+      - ./acme-challenges:/acme-challenges:rw
+      - ./errors/langs:/app/errors/langs
+      - ./messages/langs:/app/messages/langs
+    develop:
+      watch:
+        - action: sync
+          path: inputs/sites/base
+          target: /app/inputs/sites/base
+        - action: sync
+          path: inputs/sites/configuration
+          target: /app/inputs/sites/configuration
+        - action: sync
+          path: modules/sites
+          target: /app/modules/sites
+        - action: sync
+          path: connections
+          target: /app/connections
+        - action: sync
+          path: enums
+          target: /app/enums
+        - action: sync
+          path: errors/src
+          target: /app/errors/src
+        - action: sync
+          path: events
+          target: /app/events
+        - action: sync
+          path: pkgs
+          target: /app/pkgs
+        - action: sync
+          path: protos
+          target: /app/protos
+        - action: sync
+          path: go.mod
+          target: /app/go.mod
+        - action: sync
+          path: go.sum
+          target: /app/go.sum
+        - action: sync
+          path: .env
+          target: /app/.env
+        - action: rebuild
+          path: inputs/sites/configuration/Dockerfile.Base
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - nfx-edge
+      - nfx-stack
+
+  console:
+    image: node:22-bookworm-slim
+    container_name: NFX-Edge-Console-Dev
+    working_dir: /app
+    volumes:
+      - ./console:/app
+    command: ["node", "node_modules/vite/bin/vite.js", "--host", "0.0.0.0"]
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+      VITE_IDENTITY_API_URL: ${VITE_IDENTITY_API_URL}
+      VITE_PORT: ${VITE_PORT}
+      VITE_BASE: ${VITE_BASE}
+      DOCKER: "1"
+    expose:
+      - "${VITE_PORT}"
+    labels:
+      traefik.enable: "true"
+      traefik.project: "nfx-edge"
+      traefik.docker.network: nfx-edge
+      traefik.http.services.edge-console.loadbalancer.server.port: "${VITE_PORT}"
+      traefik.http.routers.edge-console.entrypoints: web
+      traefik.http.routers.edge-console.rule: PathPrefix(`/console/nfx-edge`)
+      traefik.http.routers.edge-console.service: edge-console
+      traefik.http.routers.edge-console.priority: "25"
+      traefik.http.routers.edge-console-tls.entrypoints: websecure
+      traefik.http.routers.edge-console-tls.rule: PathPrefix(`/console/nfx-edge`)
+      traefik.http.routers.edge-console-tls.service: edge-console
+      traefik.http.routers.edge-console-tls.tls: "true"
+      traefik.http.routers.edge-console-tls.priority: "25"
+    init: true
+    networks:
+      - nfx-edge
+
+networks:
+  nfx-edge:
+    external: true
+    name: nfx-edge
+  nfx-stack:
+    external: true
+    name: nfx-stack

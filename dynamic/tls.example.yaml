@@ -1,8 +1,10 @@
-# 复制为 tls.yaml 并按实际站点修改证书路径
-# cp dynamic/tls.example.yaml dynamic/tls.yaml
+# Copy to tls.yaml and set real site folders:
+#   cp dynamic/tls.example.yaml dynamic/tls.yaml
 #
-# certFile / keyFile 路径相对于容器内挂载：${CERTS_DIR} -> /certs/websites
-# 目录名通常与 NFX-Vault Websites/<name> 一致
+# certFile / keyFile are inside the container: ./websites -> /certs/websites
+# Folder names match websites/<name> written by sites-base (console export / ACME apply).
+# Do not list a path until the files exist — Traefik fails the whole file provider.
+# Keep this example file's certificates list empty so Traefik can watch /dynamic.
 
 tls:
   certificates:

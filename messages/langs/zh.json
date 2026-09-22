@@ -1,0 +1,78 @@
+{
+  "CACHE_INVALIDATED": {
+    "title": "缓存已刷新",
+    "body": "证书缓存已清除"
+  },
+  "CERTIFICATES_EXPORTED": {
+    "title": "证书已导出",
+    "body": "证书已全部导出"
+  },
+  "CERTIFICATES_IMPORTED": {
+    "title": "证书已导入",
+    "body": "已从磁盘导入证书"
+  },
+  "CERTIFICATE_ANALYZED": {
+    "title": "证书已分析",
+    "body": "证书分析完成"
+  },
+  "CERTIFICATE_CREATED": {
+    "title": "证书已创建",
+    "body": "证书已创建"
+  },
+  "CERTIFICATE_DELETED": {
+    "title": "证书已删除",
+    "body": "证书已删除"
+  },
+  "CERTIFICATE_EXPORTED": {
+    "title": "证书已导出",
+    "body": "证书已导出到 websites 目录"
+  },
+  "CERTIFICATE_ISSUED": {
+    "title": "证书已签发",
+    "body": "证书已签发"
+  },
+  "CERTIFICATE_PARSED": {
+    "title": "证书已解析",
+    "body": "已从 PEM 填入证书字段"
+  },
+  "CERTIFICATE_UPDATED": {
+    "title": "证书已更新",
+    "body": "证书已更新"
+  },
+  "DIRECTORY_LISTED": {
+    "title": "目录已列出",
+    "body": "已加载目录列表"
+  },
+  "FILE_DELETED": {
+    "title": "已删除",
+    "body": "已删除"
+  },
+  "FILE_READ": {
+    "title": "文件已读取",
+    "body": "已加载文件内容"
+  },
+  "NAMECHEAP_CONNECTED": {
+    "title": "校验成功",
+    "body": "Namecheap API 凭证已校验"
+  },
+  "NAMECHEAP_CREDENTIAL_DELETED": {
+    "title": "凭证已删除",
+    "body": "Namecheap API 凭证已删除"
+  },
+  "NAMECHEAP_CREDENTIAL_SAVED": {
+    "title": "凭证已保存",
+    "body": "Namecheap API 凭证已保存"
+  },
+  "NAMECHEAP_HOST_ADDED": {
+    "title": "已添加 host",
+    "body": "已添加 host 记录"
+  },
+  "NAMECHEAP_HOST_DELETED": {
+    "title": "已删除 host",
+    "body": "已删除 host 记录"
+  },
+  "NAMECHEAP_HOST_UPDATED": {
+    "title": "已更新 host",
+    "body": "已更新 host 记录"
+  }
+}

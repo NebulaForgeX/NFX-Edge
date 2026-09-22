@@ -1,0 +1,94 @@
+{
+  "title": "Déverrouiller",
+  "rail": {
+    "product": "Edge",
+    "tls": "TLS",
+    "dns": "DNS",
+    "file": "FILE"
+  },
+  "protocol": {
+    "kicker": "Protocole d'ouverture",
+    "title": "Entrer dans le coffre",
+    "subtitle": "Présentez l'Account qui détient les clés.",
+    "stepEmail": "01",
+    "stepPassword": "02",
+    "stepEnter": "03"
+  },
+  "facsimile": {
+    "begin": "-----BEGIN CERTIFICATE-----",
+    "end": "-----END CERTIFICATE-----",
+    "issuerLabel": "Issuer",
+    "issuer": "CN=NFX Edge Intermediate",
+    "subjectLabel": "Subject",
+    "subject": "CN=console.edge.local",
+    "notAfterLabel": "NotAfter",
+    "notAfter": "2031-09-20T00:00:00Z",
+    "serialLabel": "Serial",
+    "serial": "7F:2A:11:C0:00:19",
+    "body": "MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAwTzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2VhcmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMTUwNjA0MTEwNDM4WhcNMzUwNjA0MTEwNDM4WjBPMQswCQYDVQQGEwJVUzEpMCcGA1UEChMgSW50ZXJuZXQgU2VjdXJpdHkgUmVzZWFyY2ggR3JvdXAxFTATBgNVBAMTDElTUkcgUm9vdCBYMTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAK3oJHP0FDfzm54rVygch77ct984kIxuPOZXoHj3dcKi",
+    "kind": "Certificat X.509",
+    "algo": "RSA 4096 / SHA-256",
+    "watermark": "VERROUILLÉ",
+    "fingerprintLabel": "Empreinte",
+    "fingerprint": "SHA256:7F2A:11C0:0019:B4E8:C31D",
+    "summary": "Fac-similé PEM · émetteur NFX Edge Intermediate · fin 2031"
+  },
+  "form": {
+    "welcomeBack": "Bon retour",
+    "title": "Déverrouiller {{name}}",
+    "subtitle": "Continuez avec votre Account NFX — l'identité d'abord.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "vous@exemple.com",
+    "passwordLabel": "Phrase secrète",
+    "passwordPlaceholder": "Entrez votre phrase secrète",
+    "showPassword": "Afficher",
+    "hidePassword": "Masquer",
+    "rememberMe": "Garder cette session",
+    "submit": "Déverrouiller",
+    "phoneLabel": "Téléphone",
+    "phonePlaceholder": "+15551234567",
+    "channelEmail": "E-mail",
+    "channelPhone": "Téléphone",
+    "validation": {
+      "emailRequired": "L'e-mail est requis",
+      "emailInvalid": "Entrez un e-mail valide",
+      "phoneRequired": "Le téléphone est requis",
+      "phoneInvalid": "Entrez un numéro valide",
+      "passwordRequired": "Le mot de passe est requis"
+    }
+  },
+  "promo": {
+    "newTo": "Nouveau sur {{name}} ?",
+    "createAccount": "Émettre un compte"
+  },
+  "selectProfile": {
+    "eyebrow": "Table d'identités",
+    "title": "Quel Profile continuer ?",
+    "subtitle": "Votre Account peut porter plusieurs Profile.",
+    "back": "Retour à l'ouverture",
+    "colKind": "Type",
+    "colName": "Nom",
+    "colId": "ID",
+    "kind": {
+      "authority": "Authority",
+      "community": "Community"
+    },
+    "kindHint": {
+      "authority": "Modération et rôles",
+      "community": "Usage quotidien"
+    },
+    "roles": {
+      "pulser": "Pulser",
+      "tester": "Testeur",
+      "creator": "Créateur",
+      "reviewer": "Réviseur",
+      "moderator": "Modérateur",
+      "inspector": "Inspecteur",
+      "supporter": "Support",
+      "auditor": "Auditeur",
+      "administrator": "Administrateur",
+      "owner": "Propriétaire",
+      "forger": "Forger"
+    }
+  }
+}

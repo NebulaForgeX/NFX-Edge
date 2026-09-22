@@ -1,0 +1,94 @@
+{
+  "title": "解锁",
+  "rail": {
+    "product": "Edge",
+    "tls": "TLS",
+    "dns": "DNS",
+    "file": "FILE"
+  },
+  "protocol": {
+    "kicker": "解锁协议",
+    "title": "进入凭证柜",
+    "subtitle": "出示持有密钥的 Account。",
+    "stepEmail": "01",
+    "stepPassword": "02",
+    "stepEnter": "03"
+  },
+  "facsimile": {
+    "begin": "-----BEGIN CERTIFICATE-----",
+    "end": "-----END CERTIFICATE-----",
+    "issuerLabel": "Issuer",
+    "issuer": "CN=NFX Edge Intermediate",
+    "subjectLabel": "Subject",
+    "subject": "CN=console.edge.local",
+    "notAfterLabel": "NotAfter",
+    "notAfter": "2031-09-20T00:00:00Z",
+    "serialLabel": "Serial",
+    "serial": "7F:2A:11:C0:00:19",
+    "body": "MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAwTzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2VhcmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMTUwNjA0MTEwNDM4WhcNMzUwNjA0MTEwNDM4WjBPMQswCQYDVQQGEwJVUzEpMCcGA1UEChMgSW50ZXJuZXQgU2VjdXJpdHkgUmVzZWFyY2ggR3JvdXAxFTATBgNVBAMTDElTUkcgUm9vdCBYMTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAK3oJHP0FDfzm54rVygch77ct984kIxuPOZXoHj3dcKi",
+    "kind": "X.509 证书",
+    "algo": "RSA 4096 / SHA-256",
+    "watermark": "锁定",
+    "fingerprintLabel": "指纹",
+    "fingerprint": "SHA256:7F2A:11C0:0019:B4E8:C31D",
+    "summary": "PEM 摹本 · 签发者 NFX Edge Intermediate · 有效至 2031"
+  },
+  "form": {
+    "welcomeBack": "欢迎回来",
+    "title": "解锁 {{name}}",
+    "subtitle": "继续你的 NFX Account——先身份，再 Edge。",
+    "emailLabel": "邮箱",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "口令",
+    "passwordPlaceholder": "输入口令",
+    "showPassword": "显示口令",
+    "hidePassword": "隐藏口令",
+    "rememberMe": "保持此会话",
+    "submit": "解锁",
+    "phoneLabel": "手机",
+    "phonePlaceholder": "+15551234567",
+    "channelEmail": "邮箱",
+    "channelPhone": "手机",
+    "validation": {
+      "emailRequired": "请输入邮箱",
+      "emailInvalid": "邮箱格式不正确",
+      "phoneRequired": "请输入手机号",
+      "phoneInvalid": "手机号格式不正确",
+      "passwordRequired": "请输入密码"
+    }
+  },
+  "promo": {
+    "newTo": "还没有 {{name}}？",
+    "createAccount": "签发账号"
+  },
+  "selectProfile": {
+    "eyebrow": "身份表",
+    "title": "用哪个 Profile 继续？",
+    "subtitle": "一个 Account 可以持有多个 Profile。",
+    "back": "返回解锁",
+    "colKind": "类型",
+    "colName": "名称",
+    "colId": "ID",
+    "kind": {
+      "authority": "Authority",
+      "community": "Community"
+    },
+    "kindHint": {
+      "authority": "审核与角色",
+      "community": "日常使用"
+    },
+    "roles": {
+      "pulser": "脉搏者",
+      "tester": "测试者",
+      "creator": "创作者",
+      "reviewer": "审核员",
+      "moderator": "治理员",
+      "inspector": "巡查员",
+      "supporter": "支持员",
+      "auditor": "审计员",
+      "administrator": "管理员",
+      "owner": "所有者",
+      "forger": "Forger"
+    }
+  }
+}

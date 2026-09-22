@@ -1,0 +1,27 @@
+{
+  "title": "Modifier le certificat",
+  "subtitle": "Modifiez dossier, e-mail et SAN. Le PEM et la clé privée ne se modifient pas ici (voir la fiche détail).",
+  "form": {
+    "editTitle": "Modifier le certificat",
+    "editSubtitle": "Modifiez dossier, e-mail et SAN. PEM et clé privée : consultation sur la fiche détail.",
+    "readOnly": "(Lecture seule)",
+    "autoNotEditable": "Les certificats découverts automatiquement ne peuvent pas être modifiés manuellement. Veuillez actualiser depuis les dossiers pour mettre à jour.",
+    "manualApplyEditable": "Les certificats appliqués manuellement ne peuvent modifier que le nom du dossier",
+    "basicInfo": "Informations de base",
+    "store": "Type de certificat",
+    "domain": "Domaine",
+    "source": "Source",
+    "folderName": "Nom du dossier",
+    "folderNamePlaceholder": "par exemple : api_lucaslyu_com",
+    "folderNameHelp": "Identifiant unique, ne peut contenir que des lettres, des chiffres, des traits de soulignement et des tirets",
+    "update": "Mettre à jour le certificat",
+    "updating": "Mise à jour..."
+  },
+  "source": {
+    "auto": "Auto",
+    "manual_apply": "Application manuelle",
+    "manual_add": "Ajout manuel"
+  },
+  "loading": "Chargement du certificat...",
+  "index": "02 — Certificats"
+}

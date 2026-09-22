@@ -1,0 +1,15 @@
+{
+  "ok": "确定",
+  "cancel": "取消",
+  "confirm": "确认",
+  "noMessage": "无内容",
+  "loading": {
+    "shortTitle": "请稍候",
+    "defaultMessage": "正在处理请求…",
+    "hint": "请勿关闭或刷新页面"
+  },
+  "search": {
+    "noResults": "未找到 \"{{query}}\" 的结果"
+  }
+}
+

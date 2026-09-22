@@ -1,0 +1,94 @@
+{
+  "title": "Unlock",
+  "rail": {
+    "product": "Edge",
+    "tls": "TLS",
+    "dns": "DNS",
+    "file": "FILE"
+  },
+  "protocol": {
+    "kicker": "Unlock protocol",
+    "title": "Enter the cabinet",
+    "subtitle": "Present the Account that holds the keys.",
+    "stepEmail": "01",
+    "stepPassword": "02",
+    "stepEnter": "03"
+  },
+  "facsimile": {
+    "begin": "-----BEGIN CERTIFICATE-----",
+    "end": "-----END CERTIFICATE-----",
+    "issuerLabel": "Issuer",
+    "issuer": "CN=NFX Edge Intermediate",
+    "subjectLabel": "Subject",
+    "subject": "CN=console.edge.local",
+    "notAfterLabel": "NotAfter",
+    "notAfter": "2031-09-20T00:00:00Z",
+    "serialLabel": "Serial",
+    "serial": "7F:2A:11:C0:00:19",
+    "body": "MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAwTzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2VhcmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMTUwNjA0MTEwNDM4WhcNMzUwNjA0MTEwNDM4WjBPMQswCQYDVQQGEwJVUzEpMCcGA1UEChMgSW50ZXJuZXQgU2VjdXJpdHkgUmVzZWFyY2ggR3JvdXAxFTATBgNVBAMTDElTUkcgUm9vdCBYMTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAK3oJHP0FDfzm54rVygch77ct984kIxuPOZXoHj3dcKi",
+    "kind": "X.509 Certificate",
+    "algo": "RSA 4096 / SHA-256",
+    "watermark": "LOCKED",
+    "fingerprintLabel": "Fingerprint",
+    "fingerprint": "SHA256:7F2A:11C0:0019:B4E8:C31D",
+    "summary": "PEM facsimile · issuer NFX Edge Intermediate · not after 2031"
+  },
+  "form": {
+    "welcomeBack": "Welcome back",
+    "title": "Unlock {{name}}",
+    "subtitle": "Continue with your NFX Account — identity first, edge next.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Passphrase",
+    "passwordPlaceholder": "Enter your passphrase",
+    "showPassword": "Show passphrase",
+    "hidePassword": "Hide passphrase",
+    "rememberMe": "Keep this session",
+    "submit": "Unlock",
+    "phoneLabel": "Phone",
+    "phonePlaceholder": "+15551234567",
+    "channelEmail": "Email",
+    "channelPhone": "Phone",
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email",
+      "phoneRequired": "Phone is required",
+      "phoneInvalid": "Enter a valid phone number",
+      "passwordRequired": "Password is required"
+    }
+  },
+  "promo": {
+    "newTo": "New to {{name}}?",
+    "createAccount": "Issue an account"
+  },
+  "selectProfile": {
+    "eyebrow": "Identity table",
+    "title": "Which Profile continues?",
+    "subtitle": "Your Account can hold more than one Profile.",
+    "back": "Back to unlock",
+    "colKind": "Kind",
+    "colName": "Name",
+    "colId": "ID",
+    "kind": {
+      "authority": "Authority",
+      "community": "Community"
+    },
+    "kindHint": {
+      "authority": "Moderation & roles",
+      "community": "Everyday use"
+    },
+    "roles": {
+      "pulser": "Pulser",
+      "tester": "Tester",
+      "creator": "Creator",
+      "reviewer": "Reviewer",
+      "moderator": "Moderator",
+      "inspector": "Inspector",
+      "supporter": "Supporter",
+      "auditor": "Auditor",
+      "administrator": "Administrator",
+      "owner": "Owner",
+      "forger": "Forger"
+    }
+  }
+}

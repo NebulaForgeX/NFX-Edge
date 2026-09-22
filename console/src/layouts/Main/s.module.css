@@ -1,0 +1,31 @@
+.root {
+  position: relative;
+  min-height: 100%;
+}
+
+.page {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  overflow: clip;
+  background: var(--color-bg);
+  color: var(--gray-12);
+}
+
+.page > :last-child {
+  z-index: 2;
+}
+
+.backgroundGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: linear-gradient(color-mix(in oklab, var(--gray-12) 5%, transparent) 1px, transparent 1px);
+  background-size: 100% 32px;
+  mask-image: linear-gradient(to bottom, black, transparent 72%);
+}
+
+.backgroundDotGrid {
+  display: none;
+}
