@@ -6,6 +6,8 @@
     "domainPlaceholder": "e.g., example.com",
     "domainApexHelp": "Enter the apex (example.com). SAN names are added as prefixes.",
     "domainLocked": "Carried over from Namecheap.",
+    "domainReadOnly": "The apex is fixed. Update the folder, email, and SAN prefixes.",
+    "editHint": "Only the folder, contact email, and SAN prefixes are written back.",
     "folderName": "Folder Name",
     "folderNamePlaceholder": "e.g., api_lucaslyu_com",
     "folderNameHelp": "Unique identifier, can only contain letters, numbers, underscores, and hyphens",

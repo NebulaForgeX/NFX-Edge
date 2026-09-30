@@ -2,10 +2,9 @@ import type { FieldErrors } from "react-hook-form";
 import type { EditCertificateFormValues } from "../../schemas/certificateSchema";
 
 import { memo } from "react";
+import { Box, Button, Flex, Grid, Text } from "@radix-ui/themes";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-
-import { Button } from "@/components";
 
 import {
   DomainController,
@@ -28,35 +27,37 @@ const CertificateEditForm = memo(({ onSubmit, onSubmitError, isPending }: Certif
   const methods = useFormContext<EditCertificateFormValues>();
 
   return (
-    <div className={styles.root}>
-      <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{t("form.basicInfo")}</h3>
-          <div className={styles.basicInfoGrid}>
-            <div className={styles.leftColumn}>
-              <DomainController />
+    <form onSubmit={(e) => e.preventDefault()}>
+      <Box className={styles.hairline}>
+        <Box py="5">
+          <Flex direction="column" gap="4">
+            <Text className={styles.kicker}>{t("form.basicInfo")}</Text>
+            <Text as="p" size="2" className={styles.lede}>
+              {t("form.editHint")}
+            </Text>
+            <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+              <DomainController readOnly />
               <FolderNameController />
-              <EmailControllerForAdd requireEmail={false} />
+              <EmailControllerForAdd requireEmail={false} prefillAccount={false} />
               <IssuerController record />
-            </div>
-          </div>
-          <SANsController />
-        </div>
-
-        <div className={styles.actions}>
-          <Button
-            type="button"
-            variant="primary"
-            size="large"
-            className={styles.submitBtn}
-            disabled={isPending}
-            onClick={methods.handleSubmit(onSubmit, onSubmitError)}
-          >
-            {isPending ? t("form.updating") : t("form.update")}
-          </Button>
-        </div>
-      </form>
-    </div>
+            </Grid>
+          </Flex>
+        </Box>
+      </Box>
+      <Box className={styles.hairline}>
+        <Box py="5">
+          <Flex direction="column" gap="4">
+            <Text className={styles.kicker}>{t("form.sans")}</Text>
+            <SANsController />
+            <Flex justify="end">
+              <Button size="2" disabled={isPending} loading={isPending} onClick={methods.handleSubmit(onSubmit, onSubmitError)}>
+                {isPending ? t("form.updating") : t("form.update")}
+              </Button>
+            </Flex>
+          </Flex>
+        </Box>
+      </Box>
+    </form>
   );
 });
 

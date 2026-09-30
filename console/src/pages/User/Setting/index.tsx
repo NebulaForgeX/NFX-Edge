@@ -11,7 +11,7 @@ import { SystemSettings, ThemeSettings } from "./components";
 
 function SettingsSection({ id, title, description, children }: { id: string; title: string; description: string; children: ReactNode }) {
   return (
-    <Section size="1" py="0" aria-labelledby={id}>
+    <Section size="1" aria-labelledby={id}>
       <Box pb="3">
       <Flex direction="column" gap="1">
         <Heading as="h2" id={id} size="4">

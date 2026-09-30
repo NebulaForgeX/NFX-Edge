@@ -8,20 +8,63 @@
   "actions": {
     "saveChanges": "Save changes"
   },
+  "saveSuccess": "Profile updated",
   "labels": {
     "displayName": "Display name",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "gender": "Gender",
+    "genderUnspecified": "Not specified",
+    "genderFemale": "Female",
+    "genderMale": "Male",
+    "genderNonbinary": "Non-binary",
+    "birthday": "Birthday",
     "bio": "Bio",
-    "city": "Location",
-    "website": "Website"
+    "city": "City",
+    "country": "Country",
+    "website": "Website",
+    "timezone": "Timezone",
+    "profileLanguage": "Language",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français"
   },
   "sections": {
     "basics": {
       "title": "Basics",
       "description": "Display name and public details."
+    },
+    "identity": {
+      "title": "Name",
+      "description": "How this profile is addressed."
+    },
+    "place": {
+      "title": "Place",
+      "description": "City, country, timezone, and website."
+    },
+    "personal": {
+      "title": "Personal",
+      "description": "Gender, birthday, and bio."
     }
   },
+  "datePicker": {
+    "open": "Open calendar",
+    "title": "Birthday",
+    "placeholder": "YYYY-MM-DD",
+    "year": "Year",
+    "month": "Month",
+    "day": "Day",
+    "clear": "Clear",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
   "edit": {
-    "saveSuccess": "Profile updated"
+    "saveSuccess": "Profile updated",
+    "validation": {
+      "maxLength": "Must be at most {{max}} characters",
+      "birthdayInvalid": "Use YYYY-MM-DD",
+      "websiteInvalid": "Website must start with http:// or https://"
+    }
   },
   "avatar": {
     "title": "Avatar",

@@ -18,6 +18,7 @@ const CertificateOperations = memo(({ certificateId }: CertificateOperationsProp
 
   return (
     <Box className={styles.frame}>
+      <Box className={styles.frameFill}>
       <Box px="4">
         <Box py="5">
           <Flex direction="column" gap="4">
@@ -48,6 +49,7 @@ const CertificateOperations = memo(({ certificateId }: CertificateOperationsProp
             </Flex>
           </Flex>
         </Box>
+      </Box>
       </Box>
     </Box>
   );

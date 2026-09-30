@@ -16,10 +16,22 @@
   width: 168px;
   height: 126px;
   aspect-ratio: 4 / 3;
+}
+
+.tileClip {
   overflow: hidden;
+}
+
+.tileEdge {
   border: 1px solid var(--gray-a5);
+}
+
+.tileRadius {
   border-radius: var(--radius-3);
-  background: var(--gray-2, var(--gray-3));
+}
+
+.tileFill {
+  background: var(--gray-3);
 }
 
 /* 原生 button 重置 + 虚线上传位装饰 */

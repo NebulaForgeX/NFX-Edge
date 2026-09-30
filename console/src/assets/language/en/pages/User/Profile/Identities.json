@@ -1,10 +1,14 @@
 {
   "title": "Identities",
-  "description": "Switch profiles, manage emails and password for this Account.",
+  "description": "Switch profiles, manage emails, phones, and password for this Account.",
   "empty": {
     "emails": {
       "title": "No emails yet",
       "description": "Add an email to secure this Account."
+    },
+    "phones": {
+      "title": "No phones yet",
+      "description": "Add a phone number for this Account."
     },
     "profiles": {
       "title": "No profiles yet",
@@ -17,6 +21,9 @@
     "remove": "Remove",
     "verify": "Verify",
     "addEmail": "Add email",
+    "addPhone": "Add phone",
+    "editPhone": "Edit phone",
+    "savePhone": "Save phone",
     "updatePassword": "Update password",
     "createProfile": "Create profile",
     "editEmail": "Edit email",
@@ -34,6 +41,8 @@
     "passwordSendCodeHint": "We will send a code to your primary email {{email}}.",
     "passwordSendCodeHintNoEmail": "Set and verify a primary email before sending a code.",
     "emailPlaceholder": "name@example.com",
+    "phonePlaceholder": "+1 604 555 0100",
+    "newPhone": "New phone number",
     "currentPassword": "Current password",
     "newPassword": "New password",
     "displayName": "Display name",
@@ -57,6 +66,10 @@
     "emails": {
       "title": "Emails",
       "description": "Verify and choose a primary address for this Account."
+    },
+    "phones": {
+      "title": "Phones",
+      "description": "Verify and choose a primary phone for this Account."
     },
     "password": {
       "title": "Password",

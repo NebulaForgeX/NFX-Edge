@@ -8,7 +8,7 @@ import { useSearchParams } from "react-router";
 import { Input } from "@/components";
 import styles from "./s.module.css";
 
-const DomainController = memo(() => {
+const DomainController = memo(({ readOnly = false }: { readOnly?: boolean }) => {
   const { t } = useTranslation("certificateElements");
   const [searchParams] = useSearchParams();
   const lockedApex = (searchParams.get("domain") ?? "").trim();
@@ -34,8 +34,8 @@ const DomainController = memo(() => {
         type="text"
         placeholder={t("form.domainPlaceholder")}
         error={errors.domain?.message}
-        readOnly={Boolean(lockedApex)}
-        helperText={lockedApex ? t("form.domainLocked") : t("form.domainApexHelp")}
+        readOnly={readOnly || Boolean(lockedApex)}
+        helperText={lockedApex ? t("form.domainLocked") : readOnly ? t("form.domainReadOnly") : t("form.domainApexHelp")}
       />
     </div>
   );

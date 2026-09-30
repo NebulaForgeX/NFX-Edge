@@ -10,9 +10,10 @@ import styles from "./s.module.css";
 
 interface EmailControllerForAddProps {
   requireEmail?: boolean;
+  prefillAccount?: boolean;
 }
 
-const EmailControllerForAdd = memo(({ requireEmail = false }: EmailControllerForAddProps) => {
+const EmailControllerForAdd = memo(({ requireEmail = false, prefillAccount = true }: EmailControllerForAddProps) => {
   const { t } = useTranslation("certificateElements");
   const loginEmail = useLoginEmail();
   const {
@@ -22,10 +23,9 @@ const EmailControllerForAdd = memo(({ requireEmail = false }: EmailControllerFor
   } = useFormContext<CertificateFormSharedValues>();
 
   useEffect(() => {
-    if (loginEmail) {
-      setValue("email", loginEmail, { shouldValidate: true, shouldDirty: false });
-    }
-  }, [loginEmail, setValue]);
+    if (!prefillAccount || !loginEmail) return;
+    setValue("email", loginEmail, { shouldValidate: true, shouldDirty: false });
+  }, [loginEmail, prefillAccount, setValue]);
 
   return (
     <div className={styles.formControl}>

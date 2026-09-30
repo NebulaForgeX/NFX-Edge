@@ -6,6 +6,8 @@
     "domainPlaceholder": "例如：example.com",
     "domainApexHelp": "填写 apex（example.com）。SAN 只加前缀。",
     "domainLocked": "已从 Namecheap 带入。",
+    "domainReadOnly": "主域名不可改。可以改文件夹、邮箱和 SAN 前缀。",
+    "editHint": "保存时只会写回文件夹、联系邮箱和 SAN 前缀。",
     "folderName": "文件夹名称",
     "folderNamePlaceholder": "例如：api_lucaslyu_com",
     "folderNameHelp": "唯一标识符，只能包含字母、数字、下划线和连字符",

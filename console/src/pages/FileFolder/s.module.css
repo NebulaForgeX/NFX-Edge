@@ -22,7 +22,13 @@
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+.listEdge {
   border: 1px solid var(--gray-6);
+}
+
+.listFill {
   background: var(--color-background);
 }
 
@@ -31,7 +37,13 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--space-3);
   align-items: center;
+}
+
+.rowPad {
   padding-inline: 0.65rem;
+}
+
+.rowRule {
   border-bottom: 1px solid var(--gray-6);
 }
 

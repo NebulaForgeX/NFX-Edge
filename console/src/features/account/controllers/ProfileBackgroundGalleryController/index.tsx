@@ -52,7 +52,7 @@ const SortableBackgroundItem = ({ draft, onRemove, removeLabel }: SortableBackgr
     <Box
       ref={setNodeRef}
       style={style}
-      className={`${styles.tile} ${isDragging ? styles.tileDragging : ""} ${isBusy ? styles.tileBusy : ""} ${isFailed ? styles.tileFailed : ""}`}
+      className={`${styles.tile} ${styles.tileClip} ${styles.tileEdge} ${styles.tileRadius} ${styles.tileFill} ${isDragging ? styles.tileDragging : ""} ${isBusy ? styles.tileBusy : ""} ${isFailed ? styles.tileFailed : ""}`}
       {...(isBusy || isFailed ? {} : attributes)}
       {...(isBusy || isFailed ? {} : listeners)}
     >
@@ -171,7 +171,7 @@ const ProfileBackgroundGalleryController = ({ profile }: ProfileBackgroundGaller
       />
 
       <Flex ref={uploadSurfaceRef} align="stretch" gap="3" className={styles.uploadSurface}>
-        <Flex asChild align="center" justify="center" flexShrink="0" className={`${styles.addTile} ${atLimit ? styles.addTileDisabled : ""}`}>
+        <Flex asChild align="center" justify="center" flexShrink="0" className={`${styles.addTile} ${styles.tileClip} ${styles.tileEdge} ${styles.tileRadius} ${styles.tileFill} ${atLimit ? styles.addTileDisabled : ""}`}>
           <Button type="button" variant="ghost" disabled={uploading || confirming || atLimit} onClick={() => fileInputRef.current?.click()}>
             <Box px="2">
               <Box py="2">

@@ -6,6 +6,9 @@
 
 .stamp {
   border: 1px solid var(--gray-6);
+}
+
+.stampFill {
   background: var(--color-background);
 }
 .stampPx {

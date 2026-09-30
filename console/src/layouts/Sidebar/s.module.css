@@ -102,7 +102,6 @@
 .menuArea {
   flex: 1 1 auto;
   min-height: 0;
-  padding: 8px 20px 12px;
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -111,10 +110,11 @@
 .menuAreaCollapsed {
   overflow-y: auto;
 }
-.sectionTitle {
-  margin: 19px 0 9px;
-  padding: 20px 10px 0;
+.sectionRule {
   border-top: 1px solid var(--gray-a4);
+}
+
+.sectionTitle {
   color: var(--gray-11);
   text-transform: uppercase;
 }
@@ -196,7 +196,6 @@
 .footer {
   flex-shrink: 0;
   margin-top: auto;
-  padding: 10px 20px 20px;
 }
 .logout {
   width: 100%;
@@ -285,8 +284,6 @@
 }
 
 .menuAreaCollapsed .sectionTitle {
-  padding: 16px 0 0;
-  margin: 17px -8px 9px;
   text-align: center;
   justify-content: center;
 }

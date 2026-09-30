@@ -6,6 +6,8 @@
     "domainPlaceholder": "par exemple : example.com",
     "domainApexHelp": "Saisissez l'apex (example.com). Les SAN s'ajoutent comme préfixes.",
     "domainLocked": "Repris depuis Namecheap.",
+    "domainReadOnly": "L'apex est fixe. Le dossier, l'e-mail et les préfixes SAN peuvent changer.",
+    "editHint": "Seuls le dossier, l'e-mail et les préfixes SAN sont enregistrés.",
     "folderName": "Nom du dossier",
     "folderNamePlaceholder": "par exemple : api_lucaslyu_com",
     "folderNameHelp": "Identifiant unique, ne peut contenir que des lettres, des chiffres, des traits de soulignement et des tirets",

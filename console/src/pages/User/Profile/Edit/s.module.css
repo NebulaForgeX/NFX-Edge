@@ -1,5 +1,4 @@
 .hairline {
-  width: 100%;
   border-bottom: 1px solid var(--gray-6);
 }
 
@@ -23,10 +22,19 @@
 .portrait {
   width: 88px;
   height: 88px;
-  border: 1px solid var(--gray-6);
-  background: var(--color-panel-solid);
-  overflow: hidden;
   flex-shrink: 0;
+}
+
+.portraitEdge {
+  border: 1px solid var(--gray-6);
+}
+
+.portraitFill {
+  background: var(--color-panel-solid);
+}
+
+.portraitClip {
+  overflow: hidden;
 }
 
 .portrait :global(.rt-AvatarRoot) {

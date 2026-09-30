@@ -1,10 +1,14 @@
 {
   "title": "Identités",
-  "description": "Changez de profil, gérez les e-mails et le mot de passe de ce compte.",
+  "description": "Changez de profil, gérez les e-mails, téléphones et le mot de passe de ce compte.",
   "empty": {
     "emails": {
       "title": "Aucun e-mail",
       "description": "Ajoutez un e-mail pour sécuriser ce compte."
+    },
+    "phones": {
+      "title": "Aucun téléphone",
+      "description": "Ajoutez un numéro pour ce compte."
     },
     "profiles": {
       "title": "Aucun profil",
@@ -17,6 +21,9 @@
     "remove": "Supprimer",
     "verify": "Vérifier",
     "addEmail": "Ajouter un e-mail",
+    "addPhone": "Ajouter un téléphone",
+    "editPhone": "Modifier le téléphone",
+    "savePhone": "Enregistrer",
     "updatePassword": "Mettre à jour le mot de passe",
     "createProfile": "Créer un profil",
     "editEmail": "Modifier l'e-mail",
@@ -34,6 +41,8 @@
     "passwordSendCodeHint": "Nous enverrons un code à l'e-mail principal {{email}}.",
     "passwordSendCodeHintNoEmail": "Définissez et vérifiez un e-mail principal avant d'envoyer un code.",
     "emailPlaceholder": "name@example.com",
+    "phonePlaceholder": "+33 6 00 00 00 00",
+    "newPhone": "Nouveau numéro",
     "currentPassword": "Mot de passe actuel",
     "newPassword": "Nouveau mot de passe",
     "displayName": "Nom d'affichage",
@@ -57,6 +66,10 @@
     "emails": {
       "title": "E-mails",
       "description": "Vérifiez et choisissez une adresse principale pour ce compte."
+    },
+    "phones": {
+      "title": "Téléphones",
+      "description": "Vérifiez et choisissez un numéro principal pour ce compte."
     },
     "password": {
       "title": "Mot de passe",

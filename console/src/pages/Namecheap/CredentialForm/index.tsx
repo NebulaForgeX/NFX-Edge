@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from "react";
-import { Box, Button, Checkbox, Flex, Text } from "@radix-ui/themes";
+import { Box, Button, Checkbox, Flex, Grid, Text } from "@radix-ui/themes";
 import { Input } from "@/components";
 import { useTranslation } from "react-i18next";
 
@@ -48,7 +48,7 @@ const CredentialForm = memo(({ initial, keepKeyHint, pending, submitLabel, onSub
           <input type="text" name="username" autoComplete="username" tabIndex={-1} readOnly />
           <input type="password" name="password" autoComplete="current-password" tabIndex={-1} readOnly />
         </div>
-        <Flex direction="column" gap="4">
+        <Grid columns={{ initial: "1", sm: "2" }} gap="4">
           <Input label={t("credential.label")} name="namecheap-label" autoComplete="off" value={label} onChange={(e) => setLabel(e.target.value)} />
           <Input
             label={t("credential.apiUser")}
@@ -68,7 +68,7 @@ const CredentialForm = memo(({ initial, keepKeyHint, pending, submitLabel, onSub
             placeholder={keepKeyHint ? t("credential.apiKeyKeep") : ""}
           />
           <Input label={t("credential.clientIp")} name="namecheap-client-ip" autoComplete="off" value={clientIp} onChange={(e) => setClientIp(e.target.value)} />
-        </Flex>
+        </Grid>
       </Box>
       <Flex wrap="wrap" gap="2" align="center">
         <Flex gap="2" align="center">

@@ -8,20 +8,63 @@
   "actions": {
     "saveChanges": "Enregistrer"
   },
+  "saveSuccess": "Profil mis à jour",
   "labels": {
     "displayName": "Nom d'affichage",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "gender": "Genre",
+    "genderUnspecified": "Non précisé",
+    "genderFemale": "Femme",
+    "genderMale": "Homme",
+    "genderNonbinary": "Non binaire",
+    "birthday": "Naissance",
     "bio": "Bio",
-    "city": "Localité",
-    "website": "Site web"
+    "city": "Ville",
+    "country": "Pays",
+    "website": "Site web",
+    "timezone": "Fuseau",
+    "profileLanguage": "Langue",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français"
   },
   "sections": {
     "basics": {
       "title": "Essentiel",
       "description": "Nom d'affichage et détails publics."
+    },
+    "identity": {
+      "title": "Nom",
+      "description": "Comment ce profil est nommé."
+    },
+    "place": {
+      "title": "Lieu",
+      "description": "Ville, pays, fuseau et site."
+    },
+    "personal": {
+      "title": "Personnel",
+      "description": "Genre, naissance et bio."
     }
   },
+  "datePicker": {
+    "open": "Ouvrir le calendrier",
+    "title": "Naissance",
+    "placeholder": "YYYY-MM-DD",
+    "year": "Année",
+    "month": "Mois",
+    "day": "Jour",
+    "clear": "Effacer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer"
+  },
   "edit": {
-    "saveSuccess": "Profil mis à jour"
+    "saveSuccess": "Profil mis à jour",
+    "validation": {
+      "maxLength": "Au plus {{max}} caractères",
+      "birthdayInvalid": "Utilisez YYYY-MM-DD",
+      "websiteInvalid": "Le site doit commencer par http:// ou https://"
+    }
   },
   "avatar": {
     "title": "Avatar",

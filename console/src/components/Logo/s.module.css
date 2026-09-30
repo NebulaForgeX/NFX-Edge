@@ -1,0 +1,96 @@
+.logo {
+  appearance: none;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.mark {
+  display: block;
+  overflow: hidden;
+}
+
+.mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sizePlain {
+  width: 40px;
+  height: 40px;
+}
+
+.sizeGlassSquare {
+  width: 54px;
+  height: 54px;
+}
+
+.sizeGlassCircle {
+  width: 48px;
+  height: 48px;
+}
+
+.sizeSmall {
+  width: 36px;
+  height: 36px;
+}
+
+.sizeLargePlain {
+  width: calc(40px + var(--space-3));
+  height: calc(40px + var(--space-3));
+}
+
+.sizeLargeGlassSquare {
+  width: 64px;
+  height: 64px;
+}
+
+.sizeLargeGlassCircle {
+  width: 56px;
+  height: 56px;
+}
+
+.radiusChip {
+  border-radius: var(--radius-chip);
+}
+
+.radiusIcon {
+  border-radius: var(--radius-icon);
+}
+
+.radiusFull {
+  border-radius: 50%;
+}
+
+.edgeSquare {
+  border: 1px solid color-mix(in srgb, white 30%, transparent);
+}
+
+.edgeCircle {
+  border: 1px solid color-mix(in srgb, white 46%, transparent);
+}
+
+.fillSquare {
+  background: color-mix(in srgb, white 18%, transparent);
+}
+
+.fillCircle {
+  background: color-mix(in srgb, white 20%, transparent);
+}
+
+.shadowPlain {
+  box-shadow: 0 14px 30px color-mix(in oklab, var(--black-a3) 75%, transparent);
+}
+
+.shadowSquare {
+  box-shadow: 0 12px 34px color-mix(in srgb, var(--black-a6) 72%, transparent);
+}
+
+.shadowCircle {
+  box-shadow: 0 16px 36px color-mix(in srgb, var(--black-a6) 54%, transparent);
+}

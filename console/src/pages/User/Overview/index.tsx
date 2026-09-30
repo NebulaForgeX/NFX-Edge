@@ -34,6 +34,7 @@ const DashboardBody = memo(() => {
     <Flex direction="column" gap="5">
       <div className={styles.stamps}>
         <div className={styles.stamp}>
+          <div className={styles.stampFill}>
           <div className={styles.stampPx}>
             <div className={styles.stampPy}>
               <div className={styles.stampStack}>
@@ -42,8 +43,10 @@ const DashboardBody = memo(() => {
               </div>
             </div>
           </div>
+          </div>
         </div>
         <div className={styles.stamp}>
+          <div className={styles.stampFill}>
           <div className={styles.stampPx}>
             <div className={styles.stampPy}>
               <div className={styles.stampStack}>
@@ -51,6 +54,7 @@ const DashboardBody = memo(() => {
                 <span className={`${styles.stampVal} ${expiring.length ? styles.stampWarn : ""}`}>{expiring.length}</span>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>

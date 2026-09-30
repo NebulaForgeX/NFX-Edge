@@ -1,13 +1,25 @@
-.frame {
+.frameSize {
   min-height: 14rem;
+}
+
+.frameEdge {
   border: 1px dashed var(--gray-6);
+}
+
+.frameFill {
   background: var(--color-panel-solid);
 }
 
-.stamp {
+.stampSize {
   width: 40px;
   height: 40px;
+}
+
+.stampEdge {
   border: 1px solid color-mix(in oklab, var(--accent-9) 45%, var(--gray-6));
+}
+
+.stampInk {
   color: var(--accent-9);
 }
 

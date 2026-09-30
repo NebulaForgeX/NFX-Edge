@@ -22,9 +22,13 @@ export default function PageHeader({ icon, title, description, actions, index, d
         <Flex asChild align="start" justify="between" gap="4" wrap="wrap">
           <header>
             <Flex align="start" gap="4" minWidth="0">
-              <Flex align="center" justify="center" flexShrink="0" className={styles.stamp}>
-                <AnimatedIcon icon={icon} size={compact ? 15 : 18} />
-              </Flex>
+              <Box className={styles.stampSize}>
+                <Box className={styles.stampEdge}>
+                  <Flex align="center" justify="center" className={`${styles.stampFill} ${styles.stampInk}`}>
+                    <AnimatedIcon icon={icon} size={compact ? 15 : 18} />
+                  </Flex>
+                </Box>
+              </Box>
               <Flex direction="column" gap="2" minWidth="0" className={styles.copy}>
                 {index ? (
                   <Text as="span" className={styles.index}>

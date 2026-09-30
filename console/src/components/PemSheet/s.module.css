@@ -1,7 +1,13 @@
 .sheet {
   position: relative;
   min-height: 0;
+}
+
+.sheetEdge {
   border: 1px solid var(--gray-6);
+}
+
+.sheetFill {
   background: var(--color-background);
 }
 .sheetPx {

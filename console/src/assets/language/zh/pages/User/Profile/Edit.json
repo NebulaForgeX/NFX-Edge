@@ -8,20 +8,63 @@
   "actions": {
     "saveChanges": "保存更改"
   },
+  "saveSuccess": "资料已更新",
   "labels": {
     "displayName": "显示名称",
+    "firstName": "名",
+    "lastName": "姓",
+    "gender": "性别",
+    "genderUnspecified": "未填写",
+    "genderFemale": "女",
+    "genderMale": "男",
+    "genderNonbinary": "非二元",
+    "birthday": "生日",
     "bio": "简介",
-    "city": "所在地",
-    "website": "网站"
+    "city": "城市",
+    "country": "国家",
+    "website": "网站",
+    "timezone": "时区",
+    "profileLanguage": "语言",
+    "langEn": "English",
+    "langZh": "中文",
+    "langFr": "Français"
   },
   "sections": {
     "basics": {
       "title": "基本信息",
       "description": "显示名称与公开详情。"
+    },
+    "identity": {
+      "title": "姓名",
+      "description": "这个资料如何被称呼。"
+    },
+    "place": {
+      "title": "地点",
+      "description": "城市、国家、时区与网站。"
+    },
+    "personal": {
+      "title": "个人",
+      "description": "性别、生日与简介。"
     }
   },
+  "datePicker": {
+    "open": "打开日历",
+    "title": "生日",
+    "placeholder": "YYYY-MM-DD",
+    "year": "年",
+    "month": "月",
+    "day": "日",
+    "clear": "清除",
+    "cancel": "取消",
+    "confirm": "确认"
+  },
   "edit": {
-    "saveSuccess": "资料已更新"
+    "saveSuccess": "资料已更新",
+    "validation": {
+      "maxLength": "最多 {{max}} 个字符",
+      "birthdayInvalid": "请使用 YYYY-MM-DD",
+      "websiteInvalid": "网站必须以 http:// 或 https:// 开头"
+    }
   },
   "avatar": {
     "title": "头像",

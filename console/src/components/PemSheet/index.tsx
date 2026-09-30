@@ -70,7 +70,7 @@ export default function PemSheet({
 
   return (
     <div
-      className={`${styles.sheet} ${dragging ? styles.dragging : ""} ${error ? styles.invalid : ""}`}
+      className={`${styles.sheet} ${styles.sheetEdge} ${styles.sheetFill} ${dragging ? styles.dragging : ""} ${error ? styles.invalid : ""}`}
       onDragOver={(event) => {
         event.preventDefault();
         setDragging(true);

@@ -14,14 +14,20 @@ export type EmptyStateProps = {
 
 const EmptyState = ({ icon, title, description, action }: EmptyStateProps) => {
   return (
-    <Box className={styles.frame}>
+    <Box className={styles.frameSize}>
+      <Box className={styles.frameEdge}>
+        <Box className={styles.frameFill}>
       <Box px="5">
         <Box py="8">
           <Flex direction="column" align="center" justify="center" gap="3">
             {icon ? (
-              <Flex align="center" justify="center" className={styles.stamp}>
-                <AnimatedIcon icon={icon} size={20} />
-              </Flex>
+              <Box className={styles.stampSize}>
+                <Box className={styles.stampEdge}>
+                  <Flex align="center" justify="center" className={styles.stampInk}>
+                    <AnimatedIcon icon={icon} size={20} />
+                  </Flex>
+                </Box>
+              </Box>
             ) : null}
             <Heading as="h3" size="4" align="center" className={styles.title}>
               {title}
@@ -33,6 +39,8 @@ const EmptyState = ({ icon, title, description, action }: EmptyStateProps) => {
             ) : null}
             {action}
           </Flex>
+        </Box>
+      </Box>
         </Box>
       </Box>
     </Box>

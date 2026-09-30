@@ -96,9 +96,13 @@ const FileModal = memo(() => {
                     Download
                   </Button>
                 </Flex>
-                <Box className={styles.hairline}>
-                  <Box className={styles.fileContent}>
-                    <pre className={styles.pre}>{fileContent}</pre>
+                <Box className={styles.edge}>
+                  <Box className={`${styles.fill} ${styles.radius} ${styles.clip}`}>
+                    <Box py="4">
+                      <Box px="4">
+                        <pre className={styles.pre}>{fileContent}</pre>
+                      </Box>
+                    </Box>
                   </Box>
                 </Box>
               </Flex>

@@ -7,7 +7,7 @@ import { getLogoSrc } from "@/constants";
 import { routerEventEmitter } from "@/events/router";
 import { ROUTES } from "@/navigations";
 
-import styles from "./styles.module.css";
+import styles from "./s.module.css";
 
 export interface LogoProps {
   to?: string;
@@ -22,7 +22,21 @@ export interface LogoProps {
 
 function Logo({ to = ROUTES.HOME, alt = `${APP_NAME} logo`, title, subtitle, variant = "plain", size = "medium", className = "", onClick }: LogoProps) {
   const appearance = useResolvedAppearance();
-  const logoClasses = [styles.logo, styles[variant], styles[size], className].filter(Boolean).join(" ");
+  const sizeClass =
+    size === "small"
+      ? styles.sizeSmall
+      : size === "large" && variant === "plain"
+        ? styles.sizeLargePlain
+        : size === "large" && variant === "glassSquare"
+          ? styles.sizeLargeGlassSquare
+          : size === "large" && variant === "glassCircle"
+            ? styles.sizeLargeGlassCircle
+            : variant === "glassSquare"
+              ? styles.sizeGlassSquare
+              : variant === "glassCircle"
+                ? styles.sizeGlassCircle
+                : styles.sizePlain;
+  const logoClasses = [styles.logo, className].filter(Boolean).join(" ");
 
   return (
     <Flex asChild align="center" gap="3" width="fit-content">
@@ -36,10 +50,20 @@ function Logo({ to = ROUTES.HOME, alt = `${APP_NAME} logo`, title, subtitle, var
           onClick?.();
         }}
       >
-        <Box asChild className={styles.mark}>
-          <span>
-            <img src={getLogoSrc(appearance)} alt={alt} />
-          </span>
+        <Box className={sizeClass}>
+          <Box className={variant === "glassCircle" ? styles.radiusFull : variant === "glassSquare" ? styles.radiusIcon : styles.radiusChip}>
+            <Box className={variant === "glassCircle" ? styles.edgeCircle : variant === "glassSquare" ? styles.edgeSquare : undefined}>
+              <Box className={variant === "glassCircle" ? styles.fillCircle : variant === "glassSquare" ? styles.fillSquare : undefined}>
+                <Box className={variant === "plain" ? styles.shadowPlain : variant === "glassSquare" ? styles.shadowSquare : styles.shadowCircle}>
+                  <Box asChild className={styles.mark}>
+                    <span>
+                      <img src={getLogoSrc(appearance)} alt={alt} />
+                    </span>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
         </Box>
 
         {(title || subtitle) && (

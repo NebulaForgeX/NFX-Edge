@@ -1,14 +1,20 @@
 import { PenIcon } from "nfx-ui/icons";
+import type { ReactNode } from "react";
+
 import { Upload } from "lucide-react";
 import { useRef, useState } from "react";
-import { Avatar, Box, Button, Flex, Text, TextArea } from "@radix-ui/themes";
+import { Avatar, Box, Button, Dialog, Flex, Grid, Select, Text, TextArea, TextField } from "@radix-ui/themes";
+import { LanguageEnum } from "nfx-ui/enums";
 import { systemEventEmitter } from "nfx-ui/events";
 import { useConfirmImageUpload, useConfirmProfileAvatar, useCurrentProfile, useDeleteImage, usePatchProfile, usePrepareImageUpload } from "nfx-ui/hooks";
+import { useInitUserProfileEditForm, type UserProfileEditFormData } from "nfx-ui/schemas";
+import type { Profile } from "nfx-ui/types";
+import { Controller, type Control, type FieldPath } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Input, LucideIcon, PageHeader } from "@/components";
+import { LucideIcon, PageHeader } from "@/components";
 import { PageFrame } from "@/layouts";
-import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, getCommandMessage, isEmptyPatch, resolveAccountInitial, safeNullable, safeStringable } from "@/utils";
+import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, getCommandMessage, isEmptyPatch, resolveAccountInitial, safeNullable } from "@/utils";
 
 import BackgroundGallery from "./backgrounds/BackgroundGallery";
 import styles from "./s.module.css";
@@ -87,7 +93,11 @@ function AvatarSection() {
           <Flex align="center" justify="between" gap="4" wrap="wrap">
             <Flex align="center" gap="4" minWidth="0">
               <div className={styles.portrait}>
+                <div className={styles.portraitEdge}>
+                  <div className={`${styles.portraitFill} ${styles.portraitClip}`}>
                 <Avatar size="5" radius="none" src={src} fallback={initial} />
+                  </div>
+                </div>
               </div>
               <Text size="2" color="gray">
                 {t("avatar.pickHint")}
@@ -120,14 +130,242 @@ function AvatarSection() {
   );
 }
 
+const GENDERS = ["female", "male", "nonbinary"] as const;
+const TIMEZONES = ["UTC", "America/Vancouver", "America/Los_Angeles", "America/New_York", "Europe/London", "Europe/Paris", "Asia/Shanghai", "Asia/Tokyo"] as const;
+
+function genderLabel(t: (key: string) => string, value: string) {
+  if (value === "female") return t("labels.genderFemale");
+  if (value === "male") return t("labels.genderMale");
+  if (value === "nonbinary") return t("labels.genderNonbinary");
+  return value;
+}
+
+function Field({ label, children, error }: { label: string; children: ReactNode; error?: string }) {
+  return (
+    <Flex direction="column" gap="1">
+      <Text size="1" color="gray">
+        {label}
+      </Text>
+      {children}
+      {error ? (
+        <Text size="1" color="red">
+          {error}
+        </Text>
+      ) : null}
+    </Flex>
+  );
+}
+
+function TextControl({ name, control }: { name: FieldPath<UserProfileEditFormData>; control: Control<UserProfileEditFormData> }) {
+  return <Controller name={name} control={control} render={({ field }) => <TextField.Root size="2" value={String(field.value ?? "")} onChange={field.onChange} />} />;
+}
+
+function BirthdayField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const { t } = useTranslation("pages.User.Profile.Edit");
+  const [open, setOpen] = useState(false);
+  const parsed = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  const today = new Date();
+  const [year, setYear] = useState(parsed?.[1] ?? String(today.getFullYear() - 25));
+  const [month, setMonth] = useState(parsed?.[2] ?? "01");
+  const [day, setDay] = useState(parsed?.[3] ?? "01");
+  const years = Array.from({ length: today.getFullYear() - 1899 }, (_, index) => String(today.getFullYear() - index));
+
+  return (
+    <>
+      <TextField.Root size="2" readOnly value={parsed ? value : ""} placeholder={t("datePicker.placeholder")} onClick={() => setOpen(true)} />
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Content maxWidth="24rem">
+          <Box py="2">
+            <Flex direction="column" gap="4">
+              <Dialog.Title>{t("datePicker.title")}</Dialog.Title>
+              <Grid columns="3" gap="3">
+                <Field label={t("datePicker.year")}>
+                  <Select.Root value={year} onValueChange={setYear}>
+                    <Select.Trigger />
+                    <Select.Content>
+                      {years.map((item) => (
+                        <Select.Item key={item} value={item}>
+                          {item}
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                </Field>
+                <Field label={t("datePicker.month")}>
+                  <Select.Root value={month} onValueChange={setMonth}>
+                    <Select.Trigger />
+                    <Select.Content>
+                      {Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0")).map((item) => (
+                        <Select.Item key={item} value={item}>
+                          {item}
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                </Field>
+                <Field label={t("datePicker.day")}>
+                  <Select.Root value={day} onValueChange={setDay}>
+                    <Select.Trigger />
+                    <Select.Content>
+                      {Array.from({ length: 31 }, (_, index) => String(index + 1).padStart(2, "0")).map((item) => (
+                        <Select.Item key={item} value={item}>
+                          {item}
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                </Field>
+              </Grid>
+              <Flex justify="end" gap="2">
+                <Button variant="outline" onClick={() => { onChange(""); setOpen(false); }}>
+                  {t("datePicker.clear")}
+                </Button>
+                <Button variant="outline" onClick={() => setOpen(false)}>
+                  {t("datePicker.cancel")}
+                </Button>
+                <Button
+                  onClick={() => {
+                    const candidate = new Date(Number(year), Number(month) - 1, Number(day));
+                    if (candidate.getFullYear() !== Number(year) || candidate.getMonth() !== Number(month) - 1 || candidate.getDate() !== Number(day)) return;
+                    onChange(`${year}-${month}-${day}`);
+                    setOpen(false);
+                  }}
+                >
+                  {t("datePicker.confirm")}
+                </Button>
+              </Flex>
+            </Flex>
+          </Box>
+        </Dialog.Content>
+      </Dialog.Root>
+    </>
+  );
+}
+
+function ProfileForm({ profile }: { profile: Profile.Response.ProfileBase }) {
+  const { t } = useTranslation("pages.User.Profile.Edit");
+  const form = useInitUserProfileEditForm(profile);
+  const patch = usePatchProfile();
+  const genderValue = form.watch("gender");
+  const timezoneValue = form.watch("timezone");
+  const genderOptions = genderValue && !GENDERS.includes(genderValue as (typeof GENDERS)[number]) ? [genderValue, ...GENDERS] : [...GENDERS];
+  const timezoneOptions = timezoneValue && !TIMEZONES.includes(timezoneValue as (typeof TIMEZONES)[number]) ? [timezoneValue, ...TIMEZONES] : [...TIMEZONES];
+
+  return (
+    <>
+      <Box className={styles.hairline}>
+        <Box py="5">
+          <Flex direction="column" gap="4">
+            <Text className={styles.kicker}>{t("sections.identity.title")}</Text>
+            <Text as="p" size="2" className={styles.lede}>{t("sections.identity.description")}</Text>
+            <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+              <Field label={t("labels.displayName")}><TextControl name="displayName" control={form.control} /></Field>
+              <Field label={t("labels.profileLanguage")}>
+                <Controller
+                  name="profileLanguage"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Select.Root value={field.value} onValueChange={field.onChange}>
+                      <Select.Trigger />
+                      <Select.Content>
+                        <Select.Item value={LanguageEnum.EN}>{t("labels.langEn")}</Select.Item>
+                        <Select.Item value={LanguageEnum.ZH}>{t("labels.langZh")}</Select.Item>
+                        <Select.Item value={LanguageEnum.FR}>{t("labels.langFr")}</Select.Item>
+                      </Select.Content>
+                    </Select.Root>
+                  )}
+                />
+              </Field>
+              <Field label={t("labels.firstName")}><TextControl name="firstName" control={form.control} /></Field>
+              <Field label={t("labels.lastName")}><TextControl name="lastName" control={form.control} /></Field>
+            </Grid>
+          </Flex>
+        </Box>
+      </Box>
+      <Box className={styles.hairline}>
+        <Box py="5">
+          <Flex direction="column" gap="4">
+            <Text className={styles.kicker}>{t("sections.place.title")}</Text>
+            <Text as="p" size="2" className={styles.lede}>{t("sections.place.description")}</Text>
+            <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+              <Field label={t("labels.city")}><TextControl name="city" control={form.control} /></Field>
+              <Field label={t("labels.country")}><TextControl name="country" control={form.control} /></Field>
+              <Field label={t("labels.timezone")}>
+                <Controller
+                  name="timezone"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Select.Root value={field.value || "UTC"} onValueChange={field.onChange}>
+                      <Select.Trigger />
+                      <Select.Content>
+                        {timezoneOptions.map((zone) => (
+                          <Select.Item key={zone} value={zone}>{zone}</Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select.Root>
+                  )}
+                />
+              </Field>
+              <Field label={t("labels.website")} error={form.formState.errors.website?.message}>
+                <TextControl name="website" control={form.control} />
+              </Field>
+            </Grid>
+          </Flex>
+        </Box>
+      </Box>
+      <Box className={styles.hairline}>
+        <Box py="5">
+          <Flex direction="column" gap="4">
+            <Text className={styles.kicker}>{t("sections.personal.title")}</Text>
+            <Text as="p" size="2" className={styles.lede}>{t("sections.personal.description")}</Text>
+            <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+              <Field label={t("labels.gender")}>
+                <Controller
+                  name="gender"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Select.Root value={field.value || "unspecified"} onValueChange={(value) => field.onChange(value === "unspecified" ? "" : value)}>
+                      <Select.Trigger />
+                      <Select.Content>
+                        <Select.Item value="unspecified">{t("labels.genderUnspecified")}</Select.Item>
+                        {genderOptions.map((value) => (
+                          <Select.Item key={value} value={value}>{genderLabel(t, value)}</Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select.Root>
+                  )}
+                />
+              </Field>
+              <Field label={t("labels.birthday")}>
+                <Controller name="birthday" control={form.control} render={({ field }) => <BirthdayField value={field.value} onChange={field.onChange} />} />
+              </Field>
+            </Grid>
+            <Field label={t("labels.bio")}>
+              <Controller name="bio" control={form.control} render={({ field }) => <TextArea size="2" rows={5} value={field.value} onChange={field.onChange} />} />
+            </Field>
+            <Flex justify="end">
+              <Button
+                size="2"
+                loading={patch.isPending}
+                onClick={form.handleSubmit((values) => {
+                  const body = buildProfilePatch(profile, values);
+                  if (isEmptyPatch(body)) return;
+                  patch.mutate(body);
+                })}
+              >
+                {t("actions.saveChanges")}
+              </Button>
+            </Flex>
+          </Flex>
+        </Box>
+      </Box>
+    </>
+  );
+}
+
 export default function ProfileEditPage() {
   const { t } = useTranslation("pages.User.Profile.Edit");
   const { profile } = useCurrentProfile();
-  const patch = usePatchProfile();
-  const [displayName, setDisplayName] = useState(safeStringable(profile?.displayName));
-  const [bio, setBio] = useState(safeStringable(profile?.bio));
-  const [city, setCity] = useState(safeStringable(profile?.city));
-  const [website, setWebsite] = useState(safeStringable(profile?.website));
 
   return (
     <PageFrame>
@@ -140,47 +378,11 @@ export default function ProfileEditPage() {
           </Box>
         </Box>
       ) : null}
-      <Box className={styles.hairline}>
+      {profile ? <ProfileForm profile={profile} /> : (
         <Box py="5">
-          <Flex direction="column" gap="4">
-            <Text className={styles.kicker}>{t("sections.basics.title")}</Text>
-            <Text as="p" size="2" className={styles.lede}>
-              {t("sections.basics.description")}
-            </Text>
-            <div className={styles.fields}>
-              <Input label={t("labels.displayName")} value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
-              <Input label={t("labels.city")} value={city} onChange={(e) => setCity(e.target.value)} />
-              <Flex direction="column" gap="1" className={styles.span2}>
-                <Text as="span" className={styles.kicker} style={{ letterSpacing: "0.14em", color: "var(--gray-10)" }}>
-                  {t("labels.bio")}
-                </Text>
-                <TextArea size="2" variant="classic" value={bio} onChange={(e) => setBio(e.target.value)} rows={4} />
-              </Flex>
-              <Input className={styles.span2} label={t("labels.website")} value={website} onChange={(e) => setWebsite(e.target.value)} />
-            </div>
-            <Flex justify="end">
-              <Button
-                size="2"
-                loading={patch.isPending}
-                disabled={!profile}
-                onClick={() => {
-                  if (!profile) return;
-                  const body = buildProfilePatch(profile, {
-                    displayName,
-                    bio,
-                    city,
-                    website,
-                  });
-                  if (isEmptyPatch(body)) return;
-                  patch.mutate(body);
-                }}
-              >
-                {t("actions.saveChanges")}
-              </Button>
-            </Flex>
-          </Flex>
+          <Text size="2" color="gray">{t("empty.description")}</Text>
         </Box>
-      </Box>
+      )}
     </PageFrame>
   );
 }

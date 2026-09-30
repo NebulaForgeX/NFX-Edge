@@ -1,5 +1,4 @@
 .hairline {
-  width: 100%;
   border-bottom: 1px solid var(--gray-6);
 }
 
@@ -29,11 +28,20 @@
   color: var(--gray-11);
 }
 
-.stamp {
+.stampSize {
   width: 32px;
   height: 32px;
+}
+
+.stampEdge {
   border: 1px solid color-mix(in oklab, var(--accent-9) 55%, var(--gray-6));
+}
+
+.stampFill {
   background: var(--color-background);
+}
+
+.stampInk {
   color: var(--accent-9);
 }
 

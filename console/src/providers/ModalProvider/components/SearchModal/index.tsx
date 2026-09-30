@@ -1,6 +1,6 @@
 import { FileDescriptionIcon, HomeIcon, MagnifierIcon, RouterIcon, ShieldCheck, StackIcon, XIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Box, Button as RadixButton, Dialog, Flex } from "@radix-ui/themes";
+import { Box, Button as RadixButton, Dialog, Flex, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { Input } from "@/components";
 
@@ -187,33 +187,51 @@ const SearchModal = memo(() => {
         </Box>
 
         <Box className={styles.results}>
-        {results.length > 0 ? (
-          results.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <RadixButton
-                key={item.id}
-                type="button"
-                variant="ghost"
-                className={`${styles.resultItem} ${index === selectedIndex ? styles.selected : ""}`}
-                onClick={() => handleSelect(item)}
-                onMouseEnter={() => setSelectedIndex(index)}
-              >
-                <div className={styles.resultIcon}>
-                  <Icon size={20} />
-                </div>
-                <div className={styles.resultContent}>
-                  <div className={styles.resultTitle}>{item.title}</div>
-                  <div className={styles.resultDescription}>{item.description}</div>
-                </div>
-              </RadixButton>
-            );
-          })
-        ) : (
-          <div className={styles.noResults}>
-            <p>{t("search.noResults", { ns: "modal", query: searchQuery }) || `No results found for "${searchQuery}"`}</p>
-          </div>
-        )}
+          <Box py="2">
+            <Box px="2">
+              {results.length > 0 ? (
+                results.map((item, index) => {
+                  const Icon = item.icon;
+                  const selected = index === selectedIndex;
+                  return (
+                    <Box key={item.id} mb="1">
+                      <Box className={selected ? styles.resultEdgeSelected : styles.resultEdge}>
+                        <Box className={selected ? styles.resultFillSelected : styles.resultFill}>
+                          <Box py="2">
+                            <Box px="3">
+                              <RadixButton type="button" variant="ghost" onClick={() => handleSelect(item)} onMouseEnter={() => setSelectedIndex(index)}>
+                                <Flex align="center" gap="3" width="100%">
+                                  <Box className={styles.iconSize}>
+                                    <Flex align="center" justify="center" className={`${styles.iconFill} ${styles.iconInk}`}>
+                                      <Icon size={20} />
+                                    </Flex>
+                                  </Box>
+                                  <Box>
+                                    <Text as="div" size="3" weight="medium">
+                                      {item.title}
+                                    </Text>
+                                    <Text as="div" size="2" color="gray">
+                                      {item.description}
+                                    </Text>
+                                  </Box>
+                                </Flex>
+                              </RadixButton>
+                            </Box>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                  );
+                })
+              ) : (
+                <Box py="6">
+                  <Text align="center" color="gray">
+                    {t("search.noResults", { ns: "modal", query: searchQuery }) || `No results found for "${searchQuery}"`}
+                  </Text>
+                </Box>
+              )}
+            </Box>
+          </Box>
         </Box>
       </Dialog.Content>
     </Dialog.Root>

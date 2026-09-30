@@ -156,9 +156,11 @@ const FileFolderPage = memo(() => {
       ) : items.length === 0 ? (
         <div className={styles.empty}>{t("empty")}</div>
       ) : (
-        <ul className={styles.list}>
+        <ul className={`${styles.list} ${styles.listEdge} ${styles.listFill}`}>
           {items.map((item) => (
-            <li key={item.path} className={styles.row}>
+            <li key={item.path} className={styles.rowRule}>
+              <div className={styles.rowPad}>
+              <div className={styles.row}>
               <button type="button" className={styles.open} onClick={() => handleItemClick(item)}>
                 <span className={styles.mark}>{item.type === "directory" ? <StackIcon size={16} /> : <FileDescriptionIcon size={16} />}</span>
                 <span className={styles.name}>{item.name}</span>
@@ -178,6 +180,8 @@ const FileFolderPage = memo(() => {
                   <TrashIcon size={14} />
                 </Button>
               </Flex>
+              </div>
+              </div>
             </li>
           ))}
         </ul>

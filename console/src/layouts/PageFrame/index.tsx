@@ -21,16 +21,18 @@ function PageFrame({ children, className, maxWidth = PAGE_FRAME_DEFAULT_MAX_WIDT
   const frameClass = [fullHeight ? styles.fullHeightFrame : "", safeStringable(className)].filter(Boolean).join(" ");
 
   return (
-    <Container size="4" align="center" px="6" width="100%" maxWidth={resolvedMaxWidth} className={frameClass || undefined}>
-      {fullHeight ? (
-        <div className={styles.fullHeightBody}>{children}</div>
-      ) : (
-        <Box py="7">
-          <Flex direction="column" gap="7" width="100%" className={styles.stack}>
-            {children}
-          </Flex>
-        </Box>
-      )}
+    <Container size="4" align="center" width="100%" maxWidth={resolvedMaxWidth} className={frameClass || undefined}>
+      <Box px="6">
+        {fullHeight ? (
+          <div className={styles.fullHeightBody}>{children}</div>
+        ) : (
+          <Box py="7">
+            <Flex direction="column" gap="7" width="100%" className={styles.stack}>
+              {children}
+            </Flex>
+          </Box>
+        )}
+      </Box>
     </Container>
   );
 }

@@ -8,16 +8,23 @@ import {
   useChangePassword,
   useCreateForgerProfile,
   useCreateEmail,
+  useCreatePhone,
   useDeleteEmail,
+  useDeletePhone,
   useDeleteProfile,
   useListEmails,
+  useListPhones,
   useListProfiles,
   useSelectProfile,
   useSendChangePasswordVerificationCode,
   useSendEmailVerificationCode,
+  useSendPhoneVerificationCode,
   useSetPrimaryEmail,
+  useSetPrimaryPhone,
   useUpdateEmail,
+  useUpdatePhone,
   useVerifyEmail,
+  useVerifyPhone,
 } from "nfx-ui/hooks";
 import { useAuthStore, usePreferenceStore } from "nfx-ui/stores";
 import { isVerificationCodeComplete, normalizeVerificationCode } from "nfx-ui/utils";
@@ -27,7 +34,7 @@ import { PageHeader, Suspense } from "@/components";
 import { PageFrame } from "@/layouts";
 import { buildAvatarImageSrc, safeArray, safeStringable } from "@/utils";
 
-type SectionId = "emails" | "password" | "profiles";
+type SectionId = "emails" | "phones" | "password" | "profiles";
 
 type IdentityRow = {
   profileId: string;
@@ -220,6 +227,145 @@ function EmailsSection() {
       </Flex>
       {emailItems.map((item) => (
         <EmailRow key={item.id} item={item} />
+      ))}
+    </Flex>
+  );
+}
+
+function PhoneRow({
+  item,
+}: {
+  item: {
+    id: string;
+    phone: string;
+    isPrimary: boolean;
+    verifiedAt: Nilable<string>;
+  };
+}) {
+  const { t } = useTranslation("pages.User.Profile.Identities");
+  const deletePhone = useDeletePhone();
+  const setPrimary = useSetPrimaryPhone();
+  const sendCode = useSendPhoneVerificationCode();
+  const verify = useVerifyPhone();
+  const updatePhone = useUpdatePhone();
+  const [code, setCode] = useState("");
+  const [nextPhone, setNextPhone] = useState(item.phone);
+  const [editing, setEditing] = useState(false);
+  const verified = Boolean(item.verifiedAt);
+  const hint = [item.isPrimary ? t("labels.primary") : null, verified ? t("labels.verified") : t("labels.unverified")].filter(Boolean).join(" · ");
+
+  return (
+    <Flex direction="column" gap="3">
+      <Box>
+        <Text size="2" weight="bold">
+          {item.phone}
+        </Text>
+        {hint ? (
+          <Text size="1" color="gray" mt="1">
+            {hint}
+          </Text>
+        ) : null}
+      </Box>
+      <Flex gap="2" wrap="wrap" align="center">
+        {!verified ? (
+          <Button size="1" variant="outline" loading={sendCode.isPending} onClick={() => sendCode.mutate(item.id)}>
+            {t("actions.sendCode")}
+          </Button>
+        ) : null}
+        {!item.isPrimary ? (
+          <Button size="1" variant="outline" onClick={() => setPrimary.mutate(item.id)}>
+            {t("actions.setPrimary")}
+          </Button>
+        ) : null}
+        <Button size="1" variant="outline" onClick={() => setEditing((v) => !v)}>
+          {editing ? t("actions.cancelEdit") : t("actions.editPhone")}
+        </Button>
+        <Button size="1" variant="outline" color="red" onClick={() => deletePhone.mutate(item.id)}>
+          {t("actions.remove")}
+        </Button>
+      </Flex>
+      {editing ? (
+        <Flex direction="column" gap="2">
+          <Text size="1" color="gray">
+            {t("labels.newPhone")}
+          </Text>
+          <Flex align="center" gap="3" wrap="wrap">
+            <Box minWidth="0" flexGrow="1">
+              <TextField.Root size="2" value={nextPhone} onChange={(e) => setNextPhone(e.target.value)} />
+            </Box>
+            <Button
+              size="1"
+              loading={updatePhone.isPending}
+              disabled={!nextPhone.trim() || nextPhone.trim() === item.phone}
+              onClick={() => updatePhone.mutate({ phoneId: item.id, phone: nextPhone.trim() }, { onSuccess: () => setEditing(false) })}
+            >
+              {t("actions.savePhone")}
+            </Button>
+          </Flex>
+        </Flex>
+      ) : null}
+      {!verified ? (
+        <Flex direction="column" gap="2">
+          <Text size="1" color="gray">
+            {t("labels.verificationCode")}
+          </Text>
+          <Flex align="center" gap="3" wrap="wrap">
+            <Box minWidth="0" flexGrow="1">
+              <TextField.Root
+                size="2"
+                value={code}
+                onChange={(e) => setCode(normalizeVerificationCode(e.target.value))}
+                placeholder={t("labels.verificationCodePlaceholder")}
+              />
+            </Box>
+            <Button
+              size="1"
+              loading={verify.isPending}
+              disabled={!isVerificationCodeComplete(code)}
+              onClick={() => verify.mutate({ phoneId: item.id, verificationCode: normalizeVerificationCode(code) }, { onSuccess: () => setCode("") })}
+            >
+              {t("actions.verify")}
+            </Button>
+          </Flex>
+        </Flex>
+      ) : null}
+    </Flex>
+  );
+}
+
+function PhonesSection() {
+  const { t } = useTranslation("pages.User.Profile.Identities");
+  const phones = useListPhones();
+  const createPhone = useCreatePhone();
+  const [newPhone, setNewPhone] = useState("");
+  const items = safeArray(phones.data?.items);
+
+  return (
+    <Flex direction="column" gap="3">
+      <Box>
+        <Text size="2" weight="bold">
+          {t("sections.phones.title")}
+        </Text>
+        <Text size="1" color="gray" mt="1">
+          {t("sections.phones.description")}
+        </Text>
+      </Box>
+      {items.length ? null : <EmptyBlock title={t("empty.phones.title")} description={t("empty.phones.description")} />}
+      <Flex direction="column" gap="2">
+        <Text size="1" color="gray">
+          {t("labels.phonePlaceholder")}
+        </Text>
+        <Flex align="center" gap="3" wrap="wrap">
+          <Box minWidth="0" flexGrow="1">
+            <TextField.Root size="2" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder={t("labels.phonePlaceholder")} />
+          </Box>
+          <Button size="2" onClick={() => createPhone.mutate({ phone: newPhone }, { onSuccess: () => setNewPhone("") })}>
+            {t("actions.addPhone")}
+          </Button>
+        </Flex>
+      </Flex>
+      {items.map((item) => (
+        <PhoneRow key={item.id} item={item} />
       ))}
     </Flex>
   );
@@ -490,6 +636,7 @@ function IdentitiesBody() {
   const sections: { id: SectionId; label: string }[] = [
     { id: "profiles", label: t("sections.profiles.title") },
     { id: "emails", label: t("sections.emails.title") },
+    { id: "phones", label: t("sections.phones.title") },
     { id: "password", label: t("sections.password.title") },
   ];
 
@@ -508,6 +655,7 @@ function IdentitiesBody() {
       <Flex direction="column" gap="3" minWidth="0">
         {section === "profiles" ? <ProfilesSection /> : null}
         {section === "emails" ? <EmailsSection /> : null}
+        {section === "phones" ? <PhonesSection /> : null}
         {section === "password" ? <PasswordSection /> : null}
       </Flex>
     </Grid>
