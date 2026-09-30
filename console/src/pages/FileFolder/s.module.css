@@ -22,8 +22,8 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg);
+  border: 1px solid var(--gray-6);
+  background: var(--color-background);
 }
 
 .row {
@@ -32,7 +32,7 @@
   gap: var(--space-3);
   align-items: center;
   padding-inline: 0.65rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--gray-6);
 }
 
 .row:last-child {
@@ -40,7 +40,7 @@
 }
 
 .row:hover {
-  background: color-mix(in oklab, var(--color-primary) 5%, transparent);
+  background: color-mix(in oklab, var(--accent-9) 5%, transparent);
 }
 
 .open {
@@ -59,7 +59,7 @@
 
 .mark {
   display: flex;
-  color: var(--color-primary);
+  color: var(--accent-9);
 }
 
 .name {
@@ -84,9 +84,9 @@
   align-items: center;
   justify-content: center;
   min-height: 12rem;
-  border: 1px dashed var(--color-border);
+  border: 1px dashed var(--gray-6);
   color: var(--gray-10);
-  background: var(--color-bg-2);
+  background: var(--color-panel-solid);
 }
 
 .ops {

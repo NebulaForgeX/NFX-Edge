@@ -1,14 +1,14 @@
 .frame {
   min-height: 14rem;
-  border: 1px dashed var(--color-border);
-  background: var(--color-bg-2);
+  border: 1px dashed var(--gray-6);
+  background: var(--color-panel-solid);
 }
 
 .stamp {
   width: 40px;
   height: 40px;
-  border: 1px solid color-mix(in oklab, var(--color-primary) 45%, var(--color-border));
-  color: var(--color-primary);
+  border: 1px solid color-mix(in oklab, var(--accent-9) 45%, var(--gray-6));
+  color: var(--accent-9);
 }
 
 .title {

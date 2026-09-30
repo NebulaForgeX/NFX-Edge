@@ -3,7 +3,7 @@
   max-width: 100%;
   overflow-x: hidden;
   border: 1px solid var(--gray-a5);
-  background: var(--color-bg);
+  background: var(--color-background);
 }
 
 .ledger {
@@ -38,7 +38,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gray-10) !important;
-  background: var(--color-bg-2);
+  background: var(--color-panel-solid);
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -72,9 +72,9 @@
 }
 
 .clickable:hover {
-  background: color-mix(in oklab, var(--color-primary) 6%, transparent);
+  background: color-mix(in oklab, var(--accent-9) 6%, transparent);
 }
 
 .picked {
-  background: color-mix(in oklab, var(--color-primary) 10%, transparent);
+  background: color-mix(in oklab, var(--accent-9) 10%, transparent);
 }

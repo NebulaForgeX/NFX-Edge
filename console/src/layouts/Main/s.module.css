@@ -8,7 +8,7 @@
   z-index: 2;
   min-height: 100vh;
   overflow: clip;
-  background: var(--color-bg);
+  background: var(--color-background);
   color: var(--gray-12);
 }
 

@@ -1,6 +1,6 @@
 .root {
-  border: 1px solid var(--color-border);
-  background: var(--color-bg);
+  border: 1px solid var(--gray-6);
+  background: var(--color-background);
 }
 
 .header {
@@ -9,7 +9,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.15rem 0.85rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--gray-6);
 }
 
 .headerMain {
@@ -26,8 +26,8 @@
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  color: var(--color-primary);
-  border: 1px solid color-mix(in oklab, var(--color-primary) 45%, var(--color-border));
+  color: var(--accent-9);
+  border: 1px solid color-mix(in oklab, var(--accent-9) 45%, var(--gray-6));
 }
 
 .headerText {
@@ -63,8 +63,8 @@
   font-size: 0.875rem;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
-  color: var(--color-primary);
-  border: 1px solid var(--color-border);
+  color: var(--accent-9);
+  border: 1px solid var(--gray-6);
 }
 
 .list {
@@ -79,7 +79,7 @@
   align-items: baseline;
   gap: 0.75rem 1rem;
   padding: 0.55rem 1.15rem;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--gray-6);
 }
 
 .item:last-child {

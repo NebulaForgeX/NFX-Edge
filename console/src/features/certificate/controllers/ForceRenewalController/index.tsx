@@ -1,6 +1,7 @@
 import type { CertificateFormSharedValues } from "../../schemas/certificateSchema";
 
 import { memo } from "react";
+import { Checkbox, Flex, Text } from "@radix-ui/themes";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -11,19 +12,21 @@ const ForceRenewalController = memo(() => {
   const { control } = useFormContext<CertificateFormSharedValues>();
 
   return (
-    <div className={styles.formControl}>
-      <label className={styles.label} style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
-        <Controller
-          name="forceRenewal"
-          control={control}
-          render={({ field }) => (
-            <input type="checkbox" checked={!!field.value} onChange={(e) => field.onChange(e.target.checked)} />
-          )}
-        />
-        <span>{t("form.forceRenewal")}</span>
-      </label>
-      <p style={{ margin: 0, color: "var(--color-fg-muted)", fontSize: "0.8125rem", lineHeight: 1.4 }}>{t("form.forceRenewalHelp")}</p>
-    </div>
+    <Flex direction="column" gap="1" className={styles.formControl}>
+      <Text as="label" size="2">
+        <Flex align="center" gap="2">
+          <Controller
+            name="forceRenewal"
+            control={control}
+            render={({ field }) => <Checkbox checked={!!field.value} onCheckedChange={(checked) => field.onChange(checked === true)} />}
+          />
+          <Text size="2">{t("form.forceRenewal")}</Text>
+        </Flex>
+      </Text>
+      <Text size="1" color="gray">
+        {t("form.forceRenewalHelp")}
+      </Text>
+    </Flex>
   );
 });
 

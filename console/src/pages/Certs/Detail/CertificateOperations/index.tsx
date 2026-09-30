@@ -41,7 +41,7 @@ const CertificateOperations = memo(({ certificateId }: CertificateOperationsProp
                 variant="secondary"
                 icon={<TrashIcon size={16} />}
                 disabled={isDeleting}
-                style={{ color: "var(--color-danger)" }}
+                style={{ color: "var(--red-9)" }}
               >
                 {isDeleting ? t("delete.deleting") || "Deleting..." : t("actions.delete") || "Delete"}
               </IconButton>

@@ -1,121 +1,57 @@
 import { TriangleAlertIcon, XIcon } from "nfx-ui/icons";
-import { memo, useEffect, useRef, useCallback } from "react";
-import { Button } from "@/components";
-
+import { memo } from "react";
+import { Box, Button, Dialog, Flex, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
+
 import ModalStore, { useModalStore } from "@/stores/modal";
-import styles from "./Modal.module.css";
+
+import styles from "./s.module.css";
 
 const TooltipModal = memo(() => {
   const { t } = useTranslation("certificateElements");
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const isOpen = useModalStore((state) => state.tooltipModal.isOpen);
   const message = useModalStore((state) => state.tooltipModal.message);
   const errorTime = useModalStore((state) => state.tooltipModal.errorTime);
-  const position = useModalStore((state) => state.tooltipModal.position);
-  const hideModal = ModalStore.getState().hideModal;
 
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (isOpen && !dialog.open) {
-      dialog.showModal();
-    } else if (!isOpen && dialog.open) {
-      dialog.close();
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isOpen && position && dialogRef.current) {
-      const dialog = dialogRef.current;
-      // 等待 dialog 打开后再计算位置
-      const updatePosition = () => {
-        if (!dialog.open) return;
-        
-        const { x, y } = position;
-        const dialogRect = dialog.getBoundingClientRect();
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-
-        let top = y + 8; // 默认在下方
-        let left = x;
-
-        // 确保 tooltip 不会超出视口
-        if (left + dialogRect.width > viewportWidth) {
-          left = viewportWidth - dialogRect.width - 8;
-        }
-        if (left < 0) {
-          left = 8;
-        }
-
-        if (top + dialogRect.height > viewportHeight) {
-          top = y - dialogRect.height - 8; // 改为在上方
-        }
-        if (top < 0) {
-          top = 8;
-        }
-
-        dialog.style.top = `${top}px`;
-        dialog.style.left = `${left}px`;
-      };
-
-      // 使用 requestAnimationFrame 确保 DOM 已更新
-      requestAnimationFrame(() => {
-        requestAnimationFrame(updatePosition);
-      });
-    }
-  }, [isOpen, position]);
-
-  const handleClose = useCallback(() => {
-    hideModal("tooltip");
-  }, [hideModal]);
-
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent<HTMLDialogElement>) => {
-      if (e.target === dialogRef.current) {
-        handleClose();
-      }
-    },
-    [handleClose]
-  );
-
-  if (!isOpen || !message) {
-    return null;
-  }
+  const handleClose = () => {
+    ModalStore.getState().hideModal("tooltip");
+  };
 
   return (
-    <dialog
-      ref={dialogRef}
-      className={styles.modal}
-      onClose={handleClose}
-      onClick={handleBackdropClick}
+    <Dialog.Root
+      open={Boolean(isOpen && message)}
+      onOpenChange={(open) => {
+        if (!open) handleClose();
+      }}
     >
-      <div className={styles.content}>
-        <div className={styles.header}>
-          <TriangleAlertIcon size={20} className={styles.icon} />
-          <h3 className={styles.title}>{t("error.lastError") || "Last Error"}</h3>
-          <Button
-            type="button"
-            variant="ghost"
-            iconOnly
-            leftIcon={<XIcon size={18} />}
-            className={styles.closeButton}
-            onClick={handleClose}
-            aria-label={t("common.close") || "Close"}
-          />
-        </div>
-        <p className={styles.message}>{message}</p>
-        {errorTime && (
-          <p className={styles.time}>
-            {t("error.errorTime") || "Error Time"}: {new Date(errorTime).toLocaleString()}
-          </p>
-        )}
-      </div>
-    </dialog>
+      <Dialog.Content maxWidth="40rem" className={styles.shell}>
+        <Flex direction="column" gap="3">
+          <Flex align="center" justify="between" gap="3">
+            <Flex align="center" gap="2" minWidth="0">
+              <Text color="red">
+                <TriangleAlertIcon size={20} />
+              </Text>
+              <Dialog.Title mb="0" size="2">
+                {t("error.lastError") || "Last Error"}
+              </Dialog.Title>
+            </Flex>
+            <Button type="button" variant="ghost" aria-label={t("common.close") || "Close"} onClick={handleClose}>
+              <XIcon size={18} />
+            </Button>
+          </Flex>
+          <Box className={styles.hairline} />
+          <Dialog.Description size="2">{message}</Dialog.Description>
+          {errorTime ? (
+            <Text size="1" color="gray">
+              {t("error.errorTime") || "Error Time"}: {new Date(errorTime).toLocaleString()}
+            </Text>
+          ) : null}
+        </Flex>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 });
 
 TooltipModal.displayName = "TooltipModal";
 
 export default TooltipModal;
-

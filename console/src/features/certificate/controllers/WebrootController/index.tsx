@@ -19,7 +19,7 @@ const WebrootController = memo(() => {
     <div className={styles.formControl}>
       <label className={styles.label}>{t("form.webroot")}</label>
       <Input {...register("webroot")} type="text" placeholder={t("form.webrootPlaceholder")} error={errors.webroot?.message} />
-      <p style={{ margin: 0, color: "var(--color-fg-muted)", fontSize: "0.8125rem", lineHeight: 1.4 }}>{t("form.webrootHelp")}</p>
+      <p style={{ margin: 0, color: "var(--gray-10)", fontSize: "0.8125rem", lineHeight: 1.4 }}>{t("form.webrootHelp")}</p>
     </div>
   );
 });

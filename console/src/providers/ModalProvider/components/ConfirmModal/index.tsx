@@ -1,36 +1,21 @@
 import { TriangleAlertIcon } from "nfx-ui/icons";
-import { memo, useEffect, useRef, useCallback, useState } from "react";
+import { memo, useEffect, useState } from "react";
+import { Button, Checkbox, Dialog, Flex, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
-import { Button } from "@/components";
 import ModalStore, { useModalStore } from "@/stores/modal";
 
-import styles from "./Modal.module.css";
+import styles from "./s.module.css";
 
 const ConfirmModal = memo(() => {
   const { t } = useTranslation("modal");
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const isOpen = useModalStore((state) => state.confirmModal.isOpen);
-  const type = useModalStore((state) => state.modalType);
   const title = useModalStore((state) => state.confirmModal.title);
   const message = useModalStore((state) => state.confirmModal.message);
   const confirmText = useModalStore((state) => state.confirmModal.confirmText);
   const cancelText = useModalStore((state) => state.confirmModal.cancelText);
   const forceRenewalOption = useModalStore((state) => state.confirmModal.forceRenewalOption);
-  const hideModal = ModalStore.getState().hideModal;
-  const onCancel = ModalStore.getState().confirmModal.onCancel;
-
   const [forceRenewalChecked, setForceRenewalChecked] = useState(false);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (isOpen && !dialog.open) {
-      dialog.showModal();
-    } else if (!isOpen && dialog.open) {
-      dialog.close();
-    }
-  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -38,53 +23,60 @@ const ConfirmModal = memo(() => {
     }
   }, [isOpen, forceRenewalOption?.defaultChecked, forceRenewalOption?.label]);
 
-  const handleClose = useCallback(() => {
-    hideModal("confirm");
-  }, [hideModal]);
+  const handleClose = () => {
+    ModalStore.getState().hideModal("confirm");
+  };
 
-  const handleConfirm = useCallback(() => {
-    const { onConfirm, forceRenewalOption: frOpt } = ModalStore.getState().confirmModal;
-    if (frOpt) {
+  const handleConfirm = () => {
+    const { onConfirm, forceRenewalOption: option } = ModalStore.getState().confirmModal;
+    if (option) {
       onConfirm?.({ forceRenewal: forceRenewalChecked });
     } else {
       onConfirm?.();
     }
-    hideModal("confirm");
-  }, [forceRenewalChecked, hideModal]);
+    handleClose();
+  };
 
-  const handleCancel = useCallback(() => {
-    if (onCancel) onCancel();
-    hideModal("confirm");
-  }, [onCancel, hideModal]);
+  const handleCancel = () => {
+    ModalStore.getState().confirmModal.onCancel?.();
+    handleClose();
+  };
 
   return (
-    <dialog ref={dialogRef} className={styles.modal} onClose={handleClose}>
-      <div className={`${styles.content} ${styles[type]}`}>
-        <div className={styles.icon}>
-          <TriangleAlertIcon size={32} />
-        </div>
-        {title && <h3 className={styles.title}>{title}</h3>}
-        <p className={styles.message}>{message || t("noMessage")}</p>
-        {forceRenewalOption ? (
-          <label className={styles.checkboxRow}>
-            <input
-              type="checkbox"
-              checked={forceRenewalChecked}
-              onChange={(e) => setForceRenewalChecked(e.target.checked)}
-            />
-            <span>{forceRenewalOption.label}</span>
-          </label>
-        ) : null}
-        <div className={styles.buttonGroup}>
-          <Button type="button" variant="outline" onClick={handleCancel}>
-            {cancelText || t("cancel")}
-          </Button>
-          <Button type="button" variant="primary" onClick={handleConfirm}>
-            {confirmText || t("confirm")}
-          </Button>
-        </div>
-      </div>
-    </dialog>
+    <Dialog.Root
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) handleCancel();
+      }}
+    >
+      <Dialog.Content maxWidth="28rem">
+        <Flex direction="column" align="center" gap="4">
+          <Text color="amber">
+            <TriangleAlertIcon size={32} />
+          </Text>
+          {title ? <Dialog.Title align="center">{title}</Dialog.Title> : <Dialog.Title className={styles.srOnly}>{t("confirm")}</Dialog.Title>}
+          <Dialog.Description size="2" color="gray" className={styles.message}>
+            {message || t("noMessage")}
+          </Dialog.Description>
+          {forceRenewalOption ? (
+            <Text as="label" size="2" color="gray">
+              <Flex align="start" gap="2">
+                <Checkbox checked={forceRenewalChecked} onCheckedChange={(checked) => setForceRenewalChecked(checked === true)} />
+                <Text size="2">{forceRenewalOption.label}</Text>
+              </Flex>
+            </Text>
+          ) : null}
+          <Flex gap="3" justify="center" width="100%">
+            <Button type="button" variant="outline" color="gray" onClick={handleCancel}>
+              {cancelText || t("cancel")}
+            </Button>
+            <Button type="button" color="red" onClick={handleConfirm}>
+              {confirmText || t("confirm")}
+            </Button>
+          </Flex>
+        </Flex>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 });
 

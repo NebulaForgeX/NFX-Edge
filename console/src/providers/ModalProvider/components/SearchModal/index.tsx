@@ -1,8 +1,8 @@
 import { FileDescriptionIcon, HomeIcon, MagnifierIcon, RouterIcon, ShieldCheck, StackIcon, XIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Button as RadixButton } from "@radix-ui/themes";
+import { Box, Button as RadixButton, Dialog, Flex } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
-import { Button, Input } from "@/components";
+import { Input } from "@/components";
 
 import { routerEventEmitter } from "@/events/router";
 import { useSearchCertificate } from "@/hooks";
@@ -25,7 +25,6 @@ const SearchModal = memo(() => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const searchMutation = useSearchCertificate();
 
   const { t } = useTranslation(["common", "modal", "navigation"]);
@@ -142,56 +141,52 @@ const SearchModal = memo(() => {
   );
 
   useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (isOpen && !dialog.open) dialog.showModal();
-    else if (!isOpen && dialog.open) dialog.close();
-  }, [isOpen]);
-
-  useEffect(() => {
     if (isOpen && inputRef.current) {
       setTimeout(() => inputRef.current?.focus(), 0);
     }
   }, [isOpen]);
-
-  const handleDialogClose = useCallback(() => {
-    hideModal("search");
-  }, [hideModal]);
 
   useEffect(() => {
     setSelectedIndex(0);
   }, [searchQuery]);
 
   return (
-    <dialog ref={dialogRef} className={styles.modal} onClose={handleDialogClose}>
-      <div className={styles.searchBox}>
-        <div className={styles.searchField}>
-          <Input
-            ref={inputRef}
-            fullWidth
-            variant="filled"
-            leftIcon={<MagnifierIcon size={20} />}
-            type="text"
-            placeholder={t("search.placeholder", { ns: "common" })}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
-        </div>
-        {searchQuery ? (
-          <Button
-            type="button"
-            variant="ghost"
-            iconOnly
-            leftIcon={<XIcon size={16} />}
-            onClick={() => setSearchQuery("")}
-            className={styles.clearBtn}
-            aria-label="Clear search"
-          />
-        ) : null}
-      </div>
+    <Dialog.Root
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) hideModal("search");
+      }}
+    >
+      <Dialog.Content maxWidth="40rem" style={{ padding: 0 }} onKeyDown={handleKeyDown}>
+        <Dialog.Title className={styles.srOnly}>{t("search.placeholder", { ns: "common" })}</Dialog.Title>
+        <Box className={styles.hairline}>
+          <Box py="4">
+            <Box px="5">
+              <Flex align="center" gap="3">
+                <Box className={styles.searchField}>
+                  <Input
+                    ref={inputRef}
+                    fullWidth
+                    variant="filled"
+                    leftIcon={<MagnifierIcon size={20} />}
+                    type="text"
+                    placeholder={t("search.placeholder", { ns: "common" })}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                  />
+                </Box>
+                {searchQuery ? (
+                  <RadixButton type="button" variant="ghost" className={styles.clearBtn} aria-label="Clear search" onClick={() => setSearchQuery("")}>
+                    <XIcon size={16} />
+                  </RadixButton>
+                ) : null}
+              </Flex>
+            </Box>
+          </Box>
+        </Box>
 
-      <div className={styles.results}>
+        <Box className={styles.results}>
         {results.length > 0 ? (
           results.map((item, index) => {
             const Icon = item.icon;
@@ -219,8 +214,9 @@ const SearchModal = memo(() => {
             <p>{t("search.noResults", { ns: "modal", query: searchQuery }) || `No results found for "${searchQuery}"`}</p>
           </div>
         )}
-      </div>
-    </dialog>
+        </Box>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 });
 

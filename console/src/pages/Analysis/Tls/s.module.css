@@ -10,7 +10,7 @@
 
 .sheet {
   position: relative;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--gray-6);
 }
 
 .sheetPx {
@@ -22,7 +22,7 @@
 }
 
 .hairline {
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--gray-6);
 }
 
 .kicker {
@@ -37,7 +37,7 @@
   position: absolute;
   width: 14px;
   height: 14px;
-  border-color: var(--color-primary);
+  border-color: var(--accent-9);
   border-style: solid;
   pointer-events: none;
 }
@@ -97,7 +97,7 @@
 }
 
 .sansHairline {
-  border-top: 1px dashed var(--color-border);
+  border-top: 1px dashed var(--gray-6);
 }
 
 .vacant {
@@ -114,7 +114,7 @@
   font-weight: 700;
   line-height: 0.78;
   letter-spacing: -0.07em;
-  color: color-mix(in oklab, var(--color-primary) 16%, transparent);
+  color: color-mix(in oklab, var(--accent-9) 16%, transparent);
   pointer-events: none;
   user-select: none;
 }

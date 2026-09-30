@@ -4,15 +4,15 @@
   gap: 0.75rem;
   padding: 0.875rem 1rem;
   border-radius: var(--radius-card);
-  border: 1px solid color-mix(in srgb, #c2410c 35%, var(--color-border-3));
-  background: color-mix(in srgb, #c2410c 10%, var(--color-bg-2));
-  color: var(--color-fg-text);
+  border: 1px solid color-mix(in srgb, var(--orange-11) 35%, var(--gray-6));
+  background: color-mix(in srgb, var(--orange-11) 10%, var(--color-panel-solid));
+  color: var(--gray-12);
 }
 
 .icon {
   flex-shrink: 0;
   margin-top: 0.05rem;
-  color: #c2410c;
+  color: var(--orange-11);
 }
 
 .text {

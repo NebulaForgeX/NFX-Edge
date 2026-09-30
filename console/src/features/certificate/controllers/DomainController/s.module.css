@@ -6,21 +6,21 @@
 
 .label {
   font-weight: 500;
-  color: var(--color-fg-text);
+  color: var(--gray-12);
 }
 
 .required {
-  color: var(--color-danger);
+  color: var(--red-9);
 }
 
 .helpText {
-  color: var(--color-fg);
+  color: var(--gray-11);
   font-size: 0.875rem;
   margin: 0;
 }
 
 .errorMessage {
-  color: var(--color-danger);
+  color: var(--red-9);
   font-size: 0.875rem;
   margin: 0;
 }

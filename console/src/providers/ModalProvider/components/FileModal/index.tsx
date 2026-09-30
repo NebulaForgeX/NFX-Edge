@@ -1,40 +1,32 @@
 import { DownloadIcon, XIcon } from "nfx-ui/icons";
-import { memo, useEffect, useRef, useState } from "react";
-import { Button } from "@/components";
+import { memo, useEffect, useState } from "react";
+import { Box, Button, Dialog, Flex, IconButton, Text } from "@radix-ui/themes";
 import { getApiErrorMessage } from "nfx-ui/utils";
 
-import ModalStore, { useModalStore } from "@/stores/modal";
 import { useDownloadFile, useFetchFileContent } from "@/hooks/file";
-import styles from "./Modal.module.css";
+import ModalStore, { useModalStore } from "@/stores/modal";
+
+import styles from "./s.module.css";
 
 const FileModal = memo(() => {
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const isOpen = useModalStore((state) => state.fileModal.isOpen);
   const filePath = useModalStore((state) => state.fileModal.filePath);
   const fileName = useModalStore((state) => state.fileModal.fileName);
-  const hideModal = ModalStore.getState().hideModal;
   const fetchContent = useFetchFileContent();
   const downloadMutation = useDownloadFile();
   const mutateContent = fetchContent.mutateAsync;
 
-  const [fileContent, setFileContent] = useState<string>("");
+  const [fileContent, setFileContent] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (isOpen && !dialog.open) {
-      dialog.showModal();
-    } else if (!isOpen && dialog.open) {
-      dialog.close();
+    if (!isOpen) {
       setFileContent("");
       setError(null);
+      return;
     }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen || !filePath) return;
+    if (!filePath) return;
     let cancelled = false;
     setLoading(true);
     setError(null);
@@ -60,7 +52,7 @@ const FileModal = memo(() => {
   }, [isOpen, filePath, mutateContent]);
 
   const handleClose = () => {
-    hideModal("file");
+    ModalStore.getState().hideModal("file");
   };
 
   const handleDownload = async () => {
@@ -70,36 +62,51 @@ const FileModal = memo(() => {
     await downloadMutation.mutateAsync({ filePath, folderName: pathParts.join("_") });
   };
 
-  if (!isOpen) return null;
-
   return (
-    <dialog ref={dialogRef} className={styles.modal} onClose={handleClose}>
-      <div className={styles.content}>
-        <div className={styles.header}>
-          <div className={styles.headerLeft}>
-            <h3 className={styles.title}>{fileName || "File"}</h3>
-          </div>
-          <Button type="button" variant="ghost" iconOnly leftIcon={<XIcon size={20} />} onClick={handleClose} className={styles.closeBtn} aria-label="Close" />
-        </div>
-
-        <div className={styles.body}>
-          {loading ? (
-            <div className={styles.loading}>Loading...</div>
-          ) : error ? (
-            <div className={styles.error}>{error}</div>
-          ) : (
-            <div className={styles.fileContentView}>
-              <div className={styles.fileContentHeader}>
-                <Button type="button" variant="outline" leftIcon={<DownloadIcon size={18} />} onClick={() => void handleDownload()} className={styles.downloadBtn} title="Download">
-                  Download
-                </Button>
-              </div>
-              <pre className={styles.fileContent}>{fileContent}</pre>
-            </div>
-          )}
-        </div>
-      </div>
-    </dialog>
+    <Dialog.Root
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) handleClose();
+      }}
+    >
+      <Dialog.Content maxWidth="50rem" style={{ padding: 0 }}>
+        <Box className={styles.hairline}>
+          <Box py="4">
+            <Box px="5">
+              <Flex align="center" justify="between" gap="3">
+                <Dialog.Title mb="0">{fileName || "File"}</Dialog.Title>
+                <IconButton type="button" variant="ghost" aria-label="Close" onClick={handleClose}>
+                  <XIcon size={18} />
+                </IconButton>
+              </Flex>
+            </Box>
+          </Box>
+        </Box>
+        <Box py="4">
+          <Box px="4">
+            {loading ? (
+              <Text color="gray">Loading...</Text>
+            ) : error ? (
+              <Text color="red">{error}</Text>
+            ) : (
+              <Flex direction="column" gap="3">
+                <Flex justify="end">
+                  <Button type="button" variant="outline" onClick={() => void handleDownload()}>
+                    <DownloadIcon size={16} />
+                    Download
+                  </Button>
+                </Flex>
+                <Box className={styles.hairline}>
+                  <Box className={styles.fileContent}>
+                    <pre className={styles.pre}>{fileContent}</pre>
+                  </Box>
+                </Box>
+              </Flex>
+            )}
+          </Box>
+        </Box>
+      </Dialog.Content>
+    </Dialog.Root>
   );
 });
 

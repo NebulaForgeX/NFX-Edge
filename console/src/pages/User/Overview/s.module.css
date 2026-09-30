@@ -5,8 +5,8 @@
 }
 
 .stamp {
-  border: 1px solid var(--color-border);
-  background: var(--color-bg);
+  border: 1px solid var(--gray-6);
+  background: var(--color-background);
 }
 .stampPx {
   padding-inline: 1.1rem;
@@ -38,7 +38,7 @@
 }
 
 .stampWarn {
-  color: var(--color-primary);
+  color: var(--accent-9);
 }
 
 .ledgerBlock {

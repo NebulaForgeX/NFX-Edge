@@ -2,13 +2,13 @@
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
-  background: var(--color-bg);
+  background: var(--color-background);
   color: var(--gray-12);
 }
 
 .railHairline {
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-bg);
+  border-bottom: 1px solid var(--gray-6);
+  background: var(--color-background);
 }
 
 .railPx {
@@ -24,7 +24,7 @@
   font-size: var(--font-size-2);
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--accent-9);
 }
 
 .bodyFill {
@@ -43,8 +43,8 @@
 .protocolRule {
   min-width: 0;
   min-height: 0;
-  border-right: 1px solid var(--color-border);
-  background: var(--color-bg-2);
+  border-right: 1px solid var(--gray-6);
+  background: var(--color-panel-solid);
 }
 
 .protocolClip {
@@ -66,7 +66,7 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--accent-9);
 }
 
 .title {
@@ -105,9 +105,9 @@
   font-family: var(--heading-font-family), sans-serif;
   font-size: 11px;
   letter-spacing: 0.08em;
-  color: var(--color-primary);
-  border: 1px solid color-mix(in oklab, var(--color-primary) 55%, var(--color-border));
-  background: var(--color-bg);
+  color: var(--accent-9);
+  border: 1px solid color-mix(in oklab, var(--accent-9) 55%, var(--gray-6));
+  background: var(--color-background);
 }
 
 .submit {
@@ -120,7 +120,7 @@
   min-height: 0;
   overflow: hidden;
   background:
-    radial-gradient(90% 70% at 78% 18%, color-mix(in oklab, var(--color-primary) 14%, transparent), transparent 58%),
+    radial-gradient(90% 70% at 78% 18%, color-mix(in oklab, var(--accent-9) 14%, transparent), transparent 58%),
     var(--gray-2);
 }
 
@@ -144,8 +144,8 @@
   width: 100%;
   min-height: 0;
   overflow: hidden;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg);
+  border: 1px solid var(--gray-6);
+  background: var(--color-background);
 }
 
 .sheetPx {
@@ -167,7 +167,7 @@
   position: absolute;
   width: 16px;
   height: 16px;
-  border-color: var(--color-primary);
+  border-color: var(--accent-9);
   border-style: solid;
   pointer-events: none;
 }
@@ -197,7 +197,7 @@
 }
 
 .sheetTopRule {
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--gray-6);
 }
 
 .sheetTopPy {
@@ -209,7 +209,7 @@
   font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--accent-9);
 }
 
 .sheetTopMeta {
@@ -270,7 +270,7 @@
 }
 
 .sheetFootRule {
-  border-top: 1px dashed var(--color-border);
+  border-top: 1px dashed var(--gray-6);
 }
 
 .sheetFootPy {
@@ -285,7 +285,7 @@
 }
 
 .pemBegin {
-  color: var(--color-primary);
+  color: var(--accent-9);
 }
 
 .watermark {
@@ -298,15 +298,15 @@
   font-weight: 700;
   line-height: 0.78;
   letter-spacing: -0.07em;
-  color: color-mix(in oklab, var(--color-primary) 16%, transparent);
+  color: color-mix(in oklab, var(--accent-9) 16%, transparent);
   pointer-events: none;
   user-select: none;
 }
 
 .pemSummaryRule {
   display: none;
-  border-top: 1px solid var(--color-border);
-  background: var(--color-bg-2);
+  border-top: 1px solid var(--gray-6);
+  background: var(--color-panel-solid);
 }
 
 .pemSummary {

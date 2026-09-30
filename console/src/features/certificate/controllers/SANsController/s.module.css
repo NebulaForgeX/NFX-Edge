@@ -1,7 +1,7 @@
 .sectionTitle {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--color-fg-heading);
+  color: var(--gray-12);
   margin: 0;
 }
 
@@ -15,13 +15,13 @@
   min-height: 100px;
   max-height: 300px;
   overflow-y: auto;
-  border: 1px solid var(--color-border-4);
+  border: 1px solid var(--gray-7);
   border-radius: var(--radius-input, 4px);
-  background-color: var(--color-bg);
+  background-color: var(--color-background);
 }
 
 .item {
-  border-bottom: 1px solid var(--color-border-3);
+  border-bottom: 1px solid var(--gray-6);
 }
 
 .item:last-child {
@@ -32,7 +32,7 @@
   flex: 1;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.875rem;
-  color: var(--color-fg-text);
+  color: var(--gray-12);
   word-break: break-all;
 }
 
@@ -45,7 +45,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100px;
-  color: var(--color-fg-text);
+  color: var(--gray-12);
   opacity: 0.5;
   font-size: 0.875rem;
   text-align: center;
@@ -53,7 +53,7 @@
 
 .helpText {
   font-size: 0.75rem;
-  color: var(--color-fg-text);
+  color: var(--gray-12);
   opacity: 0.7;
   margin: 0;
 }
