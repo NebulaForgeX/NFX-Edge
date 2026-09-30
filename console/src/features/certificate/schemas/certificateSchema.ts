@@ -18,7 +18,6 @@ export type CertificateFormSharedValues = {
   email: string;
   issuer: string;
   sans: string[];
-  webroot: string;
   forceRenewal: boolean;
 };
 
@@ -44,7 +43,6 @@ export const createApplyCertificateFormSchema = (t: TFunction) => {
     certificate: z.string().default(""),
     privateKey: z.string().default(""),
     sans: sansField(t),
-    webroot: z.string().trim().default(""),
     forceRenewal: z.boolean().default(false),
   });
 };
@@ -62,7 +60,6 @@ export const createManualCertificateFormSchema = (t: TFunction) => {
     certificate: z.string().trim().min(1, t("validation.certificateRequired", { ns: "common" })),
     privateKey: z.string().trim().min(1, t("validation.privateKeyRequired", { ns: "common" })),
     sans: sansField(t),
-    webroot: z.string().trim().default(""),
     forceRenewal: z.boolean().default(false),
   });
 };
@@ -76,7 +73,6 @@ export const createEditCertificateFormSchema = (t: TFunction) => {
     ]),
     issuer: z.string().trim().default(""),
     sans: sansField(t),
-    webroot: z.string().trim().default(""),
     forceRenewal: z.boolean().default(false),
   });
 };

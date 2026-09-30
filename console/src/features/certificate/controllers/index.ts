@@ -5,5 +5,4 @@ export { default as IssuerController } from "./IssuerController";
 export { default as CertificateController } from "./CertificateController";
 export { default as PrivateKeyController } from "./PrivateKeyController";
 export { default as SANsController } from "./SANsController";
-export { default as WebrootController } from "./WebrootController";
 export { default as ForceRenewalController } from "./ForceRenewalController";

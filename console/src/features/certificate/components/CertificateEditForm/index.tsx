@@ -47,7 +47,6 @@ const CertificateEditForm = memo(({ onSubmit, onSubmitError, isPending }: Certif
       <Box className={styles.hairline}>
         <Box py="5">
           <Flex direction="column" gap="4">
-            <Text className={styles.kicker}>{t("form.sans")}</Text>
             <SANsController />
             <Flex justify="end">
               <Button size="2" disabled={isPending} loading={isPending} onClick={methods.handleSubmit(onSubmit, onSubmitError)}>

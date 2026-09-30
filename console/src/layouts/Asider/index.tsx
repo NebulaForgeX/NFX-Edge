@@ -4,13 +4,13 @@ import { useEffect, useRef } from "react";
 import { Avatar, Box, Button, Flex, IconButton, Text } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
 import { useCurrentProfile } from "nfx-ui/hooks";
-import { clearAuth, closeAsider, useAuthStore, useLayoutStore } from "nfx-ui/stores";
+import { closeAsider, useAuthStore, useLayoutStore } from "nfx-ui/stores";
 import { useTranslation } from "react-i18next";
 
 import { Logo, PreferencesPopover } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { ROUTES } from "@/navigations";
-import { buildImageUrl, resolveAccountDisplayName, resolveAccountInitial, safeNullable } from "@/utils";
+import { buildImageUrl, logoutSession, resolveAccountDisplayName, resolveAccountInitial, safeNullable } from "@/utils";
 
 import styles from "./s.module.css";
 
@@ -150,9 +150,8 @@ function Asider() {
                         variant="outline"
                         size="2"
                         onClick={() => {
-                          clearAuth();
                           closeAsider();
-                          routerEventEmitter.navigate({ to: ROUTES.LOGIN });
+                          void logoutSession().then(() => routerEventEmitter.navigate({ to: ROUTES.LOGIN }));
                         }}
                       >
                         <AnimatedIcon icon={LogoutIcon} size={18} aria-hidden="true" />

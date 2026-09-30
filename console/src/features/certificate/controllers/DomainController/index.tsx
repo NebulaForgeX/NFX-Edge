@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
 
 import { Input } from "@/components";
-import styles from "./s.module.css";
 
 const DomainController = memo(({ readOnly = false }: { readOnly?: boolean }) => {
   const { t } = useTranslation("certificateElements");
@@ -25,19 +24,15 @@ const DomainController = memo(({ readOnly = false }: { readOnly?: boolean }) => 
   }, [lockedApex, setValue]);
 
   return (
-    <div className={styles.formControl}>
-      <label className={styles.label}>
-        {t("form.domain")} <span className={styles.required}>*</span>
-      </label>
-      <Input
-        {...register("domain")}
-        type="text"
-        placeholder={t("form.domainPlaceholder")}
-        error={errors.domain?.message}
-        readOnly={readOnly || Boolean(lockedApex)}
-        helperText={lockedApex ? t("form.domainLocked") : readOnly ? t("form.domainReadOnly") : t("form.domainApexHelp")}
-      />
-    </div>
+    <Input
+      {...register("domain")}
+      label={t("form.domain")}
+      type="text"
+      placeholder={t("form.domainPlaceholder")}
+      error={errors.domain?.message}
+      readOnly={readOnly || Boolean(lockedApex)}
+      helperText={lockedApex ? t("form.domainLocked") : readOnly ? t("form.domainReadOnly") : t("form.domainApexHelp")}
+    />
   );
 });
 

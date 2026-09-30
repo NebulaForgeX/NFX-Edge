@@ -5,14 +5,12 @@ import { Checkbox, Flex, Text } from "@radix-ui/themes";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import styles from "../EmailControllerForAdd/s.module.css";
-
 const ForceRenewalController = memo(() => {
   const { t } = useTranslation("certificateElements");
   const { control } = useFormContext<CertificateFormSharedValues>();
 
   return (
-    <Flex direction="column" gap="1" className={styles.formControl}>
+    <Flex direction="column" gap="1">
       <Text as="label" size="2">
         <Flex align="center" gap="2">
           <Controller

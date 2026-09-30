@@ -2,14 +2,14 @@ import type { FieldErrors } from "react-hook-form";
 import type { CertificateFormValues } from "../../schemas/certificateSchema";
 
 import { memo, useCallback } from "react";
+import { Box, Button, Flex, Grid, Text } from "@radix-ui/themes";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { safeArray, safeStringable } from "nfx-ui/utils";
 
-import { Button } from "@/components";
 import { useParseCertificatePreview } from "@/hooks";
 import { showError, showSuccess } from "@/stores/modal";
 import { getCommandMessage } from "@/utils";
-import { safeArray, safeStringable } from "nfx-ui/utils";
 
 import {
   CertificateController,
@@ -60,50 +60,44 @@ const CertificateImportForm = memo(({ onSubmit, onSubmitError, isPending }: Cert
   );
 
   return (
-    <div className={styles.root}>
-      <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{t("form.sectionPem")}</h3>
-          <p className={styles.sectionHint}>{t("form.sectionPemHint")}</p>
-          <CertificateController />
-          <PrivateKeyController />
-          <Button
-            type="button"
-            variant="outline"
-            disabled={parsing || !methods.watch("certificate")?.trim()}
-            onClick={() => void handleParsed(methods.getValues("certificate"))}
-          >
-            {parsing ? t("upload.parsing") : t("upload.parseFill")}
-          </Button>
-        </div>
-
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{t("form.basicInfo")}</h3>
-          <div className={styles.basicInfoGrid}>
-            <div className={styles.leftColumn}>
+    <form onSubmit={(e) => e.preventDefault()}>
+      <Box className={styles.hairline}>
+        <Box py="5">
+          <Flex direction="column" gap="4">
+            <Text className={styles.kicker}>{t("form.sectionPem")}</Text>
+            <Text as="p" size="2" className={styles.lede}>
+              {t("form.sectionPemHint")}
+            </Text>
+            <CertificateController />
+            <PrivateKeyController />
+            <Flex>
+              <Button type="button" variant="outline" disabled={parsing || !methods.watch("certificate")?.trim()} onClick={() => void handleParsed(methods.getValues("certificate"))}>
+                {parsing ? t("upload.parsing") : t("upload.parseFill")}
+              </Button>
+            </Flex>
+          </Flex>
+        </Box>
+      </Box>
+      <Box className={styles.hairline}>
+        <Box py="5">
+          <Flex direction="column" gap="4">
+            <Text className={styles.kicker}>{t("form.basicInfo")}</Text>
+            <Grid columns={{ initial: "1", sm: "2" }} gap="4">
               <DomainController />
               <FolderNameController />
               <EmailControllerForAdd />
               <IssuerController record />
-            </div>
-          </div>
-          <SANsController />
-        </div>
-
-        <div className={styles.actions}>
-          <Button
-            type="button"
-            variant="primary"
-            size="large"
-            className={styles.submitBtn}
-            disabled={isPending}
-            onClick={methods.handleSubmit(onSubmit, onSubmitError)}
-          >
-            {isPending ? t("form.creating") : t("form.create")}
-          </Button>
-        </div>
-      </form>
-    </div>
+            </Grid>
+            <SANsController />
+            <Flex justify="end">
+              <Button type="button" size="2" disabled={isPending} loading={isPending} onClick={methods.handleSubmit(onSubmit, onSubmitError)}>
+                {isPending ? t("form.creating") : t("form.create")}
+              </Button>
+            </Flex>
+          </Flex>
+        </Box>
+      </Box>
+    </form>
   );
 });
 

@@ -63,7 +63,6 @@ export const useSubmitCertificate = () => {
         email,
         sans: values.sans && values.sans.length > 0 ? values.sans : undefined,
         folderName: values.folderName?.trim() || undefined,
-        webroot: values.webroot?.trim() || undefined,
         forceRenewal: values.forceRenewal,
       });
     },

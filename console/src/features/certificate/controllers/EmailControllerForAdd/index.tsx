@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 
 import { Input } from "@/components";
 import useLoginEmail from "../../hooks/useLoginEmail";
-import styles from "./s.module.css";
 
 interface EmailControllerForAddProps {
   requireEmail?: boolean;
@@ -28,19 +27,14 @@ const EmailControllerForAdd = memo(({ requireEmail = false, prefillAccount = tru
   }, [loginEmail, prefillAccount, setValue]);
 
   return (
-    <div className={styles.formControl}>
-      <label className={styles.label}>
-        {t("form.email")}
-        {requireEmail ? <span className={styles.required}> *</span> : null}
-      </label>
-      <Input
-        {...register("email")}
-        type="email"
-        placeholder={t("form.emailPlaceholder")}
-        error={errors.email?.message}
-        helperText={loginEmail ? t("form.emailFromAccount") : undefined}
-      />
-    </div>
+    <Input
+      {...register("email")}
+      label={requireEmail ? `${t("form.email")} *` : t("form.email")}
+      type="email"
+      placeholder={t("form.emailPlaceholder")}
+      error={errors.email?.message}
+      helperText={loginEmail && prefillAccount ? t("form.emailFromAccount") : undefined}
+    />
   );
 });
 

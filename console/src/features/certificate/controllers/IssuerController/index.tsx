@@ -4,9 +4,10 @@ import { memo, useEffect, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { Flex, Text } from "@radix-ui/themes";
+
 import { Dropdown } from "@/components";
 import { CERTIFICATE_ISSUER_VALUES, DEFAULT_CERTIFICATE_ISSUER } from "@/enums";
-import styles from "./s.module.css";
 
 type IssuerControllerProps = {
   /** Import / edit: show the cert's issuer CN. Apply: ACME dropdown (Let's Encrypt only). */
@@ -31,10 +32,12 @@ const IssuerController = memo(({ record = false }: IssuerControllerProps) => {
   );
 
   return (
-    <div className={styles.formControl}>
-      <label className={styles.label}>{t("form.issuer")}</label>
+    <Flex direction="column" gap="1">
+      <Text size="1" color="gray">
+        {t("form.issuer")}
+      </Text>
       {record ? (
-        <p className={styles.helpText}>{current || "—"}</p>
+        <Text size="2">{current || "—"}</Text>
       ) : (
         <Dropdown
           options={options}
@@ -43,7 +46,7 @@ const IssuerController = memo(({ record = false }: IssuerControllerProps) => {
           error={Boolean(errors.issuer?.message)}
         />
       )}
-    </div>
+    </Flex>
   );
 });
 

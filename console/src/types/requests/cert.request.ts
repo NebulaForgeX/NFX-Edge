@@ -7,7 +7,6 @@ export interface ApplyCertificateRequest {
   email: string;
   sans?: string[];
   folderName?: string;
-  webroot?: string;
   forceRenewal?: boolean;
 }
 

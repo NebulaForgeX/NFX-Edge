@@ -2,7 +2,7 @@ import { XIcon } from "nfx-ui/icons";
 import type { CertificateFormSharedValues } from "../../schemas/certificateSchema";
 
 import { memo, useEffect, useRef, useState } from "react";
-import { Box, Button, Flex, IconButton } from "@radix-ui/themes";
+import { Box, Button, Flex, IconButton, Text } from "@radix-ui/themes";
 import { Controller, useFormContext, type ControllerRenderProps } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -87,7 +87,9 @@ const SANsController = memo(({ disabled = false, readOnly = false }: SANsControl
 
   return (
     <Flex direction="column" gap="3">
-      <h3 className={styles.sectionTitle}>{t("form.sans")}</h3>
+      <Text size="2" weight="medium">
+        {t("form.sans")}
+      </Text>
       <Controller
         name="sans"
         control={control}
@@ -151,14 +153,17 @@ const SANsController = memo(({ disabled = false, readOnly = false }: SANsControl
                 </Flex>
               ) : (
                 <Box px="3">
-                  <div className={styles.emptyState}>{readOnly ? t("form.sansReadOnly") : t("form.sansHelp")}</div>
+                  <Box py="4">
+                    <Text size="2" color="gray" align="center">
+                      {readOnly ? t("form.sansReadOnly") : t("form.sansHelp")}
+                    </Text>
+                  </Box>
                 </Box>
               )}
             </div>
           </Flex>
         )}
       />
-      <p className={styles.helpText}>{readOnly ? t("form.sansReadOnly") : t("form.sansHelp")}</p>
     </Flex>
   );
 });

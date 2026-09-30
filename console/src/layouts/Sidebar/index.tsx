@@ -4,16 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { Avatar, Box, Button, Flex, IconButton, Text } from "@radix-ui/themes";
 import { AnimatedIcon, type AnimatedIconComponent, ArrowNarrowLeftIcon, ArrowNarrowUpIcon, DownChevron, FileDescriptionIcon, GearIcon, LayersIcon, LayoutDashboardIcon, LogoutIcon, MagnifierIcon, PassportIcon, PenIcon, RightChevron, RouterIcon, ShieldCheck, StackIcon, UnorderedListIcon, UserIcon } from "nfx-ui/icons";
 import { ProfileKindEnum } from "nfx-ui/enums";
-import { authEventEmitter, authEvents } from "nfx-ui/events";
 import { useCurrentProfile } from "nfx-ui/hooks";
-import { AuthStore, clearAuth } from "nfx-ui/stores";
 import { useTranslation } from "react-i18next";
 import { Menu, Sidebar as ProSidebar } from "react-pro-sidebar";
 import { Link, Outlet, useLocation } from "react-router";
 
 import { useNamecheapCredentials } from "@/hooks/dns";
 import { ROUTES } from "@/navigations";
-import { buildImageUrl, resolveAccountDisplayName, safeNullable } from "@/utils";
+import { buildImageUrl, logoutSession, resolveAccountDisplayName, safeNullable } from "@/utils";
 
 import { MenuItem, SidebarMenuState, SubMenu } from "./menu";
 import styles from "./s.module.css";
@@ -316,9 +314,7 @@ function Sidebar() {
   const closeMobile = () => broken && setToggled(false);
 
   const handleLogout = () => {
-    const aID = AuthStore.getState().currentAccountId;
-    if (aID) authEventEmitter.emit(authEvents.LOGOUT, aID);
-    clearAuth();
+    void logoutSession();
   };
 
   return (

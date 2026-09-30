@@ -2,13 +2,15 @@ import type { FieldErrors } from "react-hook-form";
 import type { CertificateFormValues } from "../../schemas/certificateSchema";
 
 import { memo, useCallback, useRef } from "react";
+import { Box, Button, Flex, Grid, Text } from "@radix-ui/themes";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
-
-import { Button } from "@/components";
-import { Box, Flex } from "@radix-ui/themes";
 import { safeArray, safeStringable } from "nfx-ui/utils";
+
+import { useParseCertificatePreview } from "@/hooks";
+import { showError, showSuccess } from "@/stores/modal";
+import { getCommandMessage } from "@/utils";
 
 import {
   DomainController,
@@ -17,12 +19,8 @@ import {
   ForceRenewalController,
   IssuerController,
   SANsController,
-  WebrootController,
 } from "../../controllers";
 import NamecheapHostsHint from "../NamecheapHostsHint";
-import { useParseCertificatePreview } from "@/hooks";
-import { showError, showSuccess } from "@/stores/modal";
-import { getCommandMessage } from "@/utils";
 
 import styles from "./s.module.css";
 
@@ -69,69 +67,60 @@ const CertificateApplyForm = memo(({ onSubmit, onSubmitError, isPending }: Certi
   );
 
   return (
-    <div className={styles.root}>
-      <form onSubmit={(e) => e.preventDefault()} className={styles.form}>
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{t("form.sectionImport")}</h3>
-          <p className={styles.sectionHint}>{t("form.sectionImportHint")}</p>
-          <div className={styles.uploadRow}>
-            <input
-              ref={certFileRef}
-              type="file"
-              accept=".pem,.crt,.cer,.txt"
-              className={styles.hiddenFile}
-              onChange={handleCertFile}
-            />
-            <Button type="button" variant="outline" disabled={parsing} onClick={() => certFileRef.current?.click()}>
-              {parsing ? t("upload.parsing") : t("upload.certPemParseOnly")}
-            </Button>
-          </div>
-        </div>
-
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{t("form.basicInfo")}</h3>
-          <Flex gap="4" align="stretch" wrap="wrap" width="100%">
-            <Box className={styles.splitMain}>
-              <Flex direction="column" gap="4" width="100%" height="100%">
-                <div className={styles.leftColumn}>
+    <form onSubmit={(e) => e.preventDefault()}>
+      <Box className={styles.hairline}>
+        <Box py="5">
+          <Flex direction="column" gap="4">
+            <Text className={styles.kicker}>{t("form.sectionImport")}</Text>
+            <Text as="p" size="2" className={styles.lede}>
+              {t("form.sectionImportHint")}
+            </Text>
+            <input ref={certFileRef} type="file" accept=".pem,.crt,.cer,.txt" className={styles.hiddenFile} onChange={handleCertFile} />
+            <Flex>
+              <Button type="button" variant="outline" disabled={parsing} onClick={() => certFileRef.current?.click()}>
+                {parsing ? t("upload.parsing") : t("upload.certPemParseOnly")}
+              </Button>
+            </Flex>
+          </Flex>
+        </Box>
+      </Box>
+      <Box className={styles.hairline}>
+        <Box py="5">
+          <Flex direction="column" gap="4">
+            <Text className={styles.kicker}>{t("form.basicInfo")}</Text>
+            <Grid columns={{ initial: "1", lg: "2fr 1fr" }} gap="5">
+              <Flex direction="column" gap="4">
+                <Grid columns={{ initial: "1", sm: "2" }} gap="4">
                   <DomainController />
                   <FolderNameController />
                   <EmailControllerForAdd requireEmail />
                   <IssuerController />
-                </div>
+                </Grid>
                 <SANsController />
               </Flex>
-            </Box>
-            <Box className={styles.sideSlot}>
               <Box className={styles.sideRule}>
-                <Box px="4" className={styles.sideFill}>
+                <Box px="4">
                   <NamecheapHostsHint />
                 </Box>
               </Box>
-            </Box>
+            </Grid>
           </Flex>
-        </div>
-
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>{t("form.verification")}</h3>
-          <WebrootController />
-          <ForceRenewalController />
-        </div>
-
-        <div className={styles.actions}>
-          <Button
-            type="button"
-            variant="primary"
-            size="large"
-            className={styles.submitBtn}
-            disabled={isPending}
-            onClick={methods.handleSubmit(onSubmit, onSubmitError)}
-          >
-            {isPending ? t("form.applySubmitting") : t("form.applySubmit")}
-          </Button>
-        </div>
-      </form>
-    </div>
+        </Box>
+      </Box>
+      <Box className={styles.hairline}>
+        <Box py="5">
+          <Flex direction="column" gap="4">
+            <Text className={styles.kicker}>{t("form.verification")}</Text>
+            <ForceRenewalController />
+            <Flex justify="end">
+              <Button type="button" size="2" disabled={isPending} loading={isPending} onClick={methods.handleSubmit(onSubmit, onSubmitError)}>
+                {isPending ? t("form.applySubmitting") : t("form.applySubmit")}
+              </Button>
+            </Flex>
+          </Flex>
+        </Box>
+      </Box>
+    </form>
   );
 });
 

@@ -27,7 +27,6 @@ export default function useInitManualCertificateForm() {
       certificate: "",
       privateKey: "",
       sans: [],
-      webroot: "",
       forceRenewal: false,
     },
   });

@@ -33,7 +33,6 @@ export default function useInitApplyCertificateForm() {
       certificate: "",
       privateKey: "",
       sans,
-      webroot: "",
       forceRenewal: false,
     },
   });

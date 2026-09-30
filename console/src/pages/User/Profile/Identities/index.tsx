@@ -113,19 +113,7 @@ function EmailRow({
             </Text>
           ) : null}
         </Box>
-        <Box py="2">
-          <Flex align="center" justify="between" gap="3">
-          <Flex minWidth="0" flexGrow="1">
-            <Flex direction="column" gap="2">
-              <Text size="1" weight="medium" color="gray">
-                {t("labels.actions")}
-              </Text>
-              <Text size="2" color="gray">
-                {item.id}
-              </Text>
-            </Flex>
-          </Flex>
-          <Flex gap="2" wrap="wrap" align="center">
+        <Flex gap="2" wrap="wrap" align="center">
             {!verified ? (
               <Button size="1" variant="outline" loading={sendCode.isPending} onClick={() => sendCode.mutate({ emailId: item.id })}>
                 {t("actions.sendCode")}
@@ -143,8 +131,6 @@ function EmailRow({
               {t("actions.remove")}
             </Button>
           </Flex>
-        </Flex>
-        </Box>
 
         {editing ? (
           <Flex direction="column" gap="2">

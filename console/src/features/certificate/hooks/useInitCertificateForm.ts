@@ -25,7 +25,6 @@ export default function useInitCertificateForm(certificate?: CertificateDetailRe
           folderName: safeStringable(certificate.folderName),
           email: safeStringable(certificate.email),
           issuer: safeStringable(certificate.issuer),
-          webroot: "",
           forceRenewal: false,
         }
       : {
@@ -34,7 +33,6 @@ export default function useInitCertificateForm(certificate?: CertificateDetailRe
           email: "",
           issuer: "",
           sans: [],
-          webroot: "",
           forceRenewal: false,
         },
   });
@@ -49,7 +47,6 @@ export default function useInitCertificateForm(certificate?: CertificateDetailRe
       email: safeStringable(certificate.email),
       issuer: safeStringable(certificate.issuer),
       sans: safeArray(certificate.sans),
-      webroot: "",
       forceRenewal: false,
     });
   }, [certificateId, form]);
