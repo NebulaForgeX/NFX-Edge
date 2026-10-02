@@ -17,7 +17,7 @@ import { MenuItem, SidebarMenuState, SubMenu } from "./Menu";
 import styles from "./s.module.css";
 
 const SIDEBAR_WIDTH = "234px";
-const SIDEBAR_COLLAPSED_WIDTH = "84px";
+const SIDEBAR_COLLAPSED_WIDTH = "88px";
 
 function MenuLabel({ children, active = false }: { children: ReactNode; active?: boolean }) {
   return (
@@ -28,10 +28,13 @@ function MenuLabel({ children, active = false }: { children: ReactNode; active?:
 }
 
 function SectionTitle({ label, icon, collapsed }: { label: string; icon: AnimatedIconComponent; collapsed: boolean }) {
+  if (collapsed) {
+    return <Section size="1" mt="3" pt="3" pb="0" className={styles.sectionRule} />;
+  }
   return (
     <Section size="1" mt="4" pt="5" pb="0" className={styles.sectionRule}>
-      <Flex align="center" justify={collapsed ? "center" : "between"} gap="2">
-        <Text as="span" size="2" weight="bold" className={styles.sectionLabel} data-collapsed={collapsed ? "true" : "false"}>
+      <Flex align="center" justify="between" gap="2">
+        <Text as="span" size="2" weight="bold" className={styles.sectionLabel}>
           {label}
         </Text>
         <AnimatedIcon icon={icon} size={16} className={styles.sectionTitleIcon} />

@@ -9,12 +9,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 40px;
   height: 40px;
-  margin-block: 6px;
+  margin: 4px auto;
   padding: 0;
   border: 0;
-  border-radius: var(--radius-chip);
+  border-radius: var(--radius-3);
   color: var(--gray-11);
   background: transparent;
   cursor: pointer;
