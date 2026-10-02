@@ -2,7 +2,7 @@ import type { FieldErrors } from "react-hook-form";
 import type { CertificateFormValues } from "../../schemas/certificateSchema";
 
 import { memo, useCallback } from "react";
-import { Box, Button, Flex, Grid, Text } from "@radix-ui/themes";
+import { Box, Button, Flex, Grid, Section, Text } from "@radix-ui/themes";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { safeArray, safeStringable } from "nfx-ui/utils";
@@ -21,7 +21,7 @@ import {
   SANsController,
 } from "../../controllers";
 
-import styles from "../CertificateApplyForm/s.module.css";
+import styles from "./s.module.css";
 
 export interface CertificateImportFormProps {
   onSubmit: (data: CertificateFormValues) => Promise<void>;
@@ -62,7 +62,7 @@ const CertificateImportForm = memo(({ onSubmit, onSubmitError, isPending }: Cert
   return (
     <form onSubmit={(e) => e.preventDefault()}>
       <Box className={styles.hairline}>
-        <Box py="5">
+        <Section size="1" py="5">
           <Flex direction="column" gap="4">
             <Text className={styles.kicker}>{t("form.sectionPem")}</Text>
             <Text as="p" size="2" className={styles.lede}>
@@ -76,10 +76,10 @@ const CertificateImportForm = memo(({ onSubmit, onSubmitError, isPending }: Cert
               </Button>
             </Flex>
           </Flex>
-        </Box>
+        </Section>
       </Box>
       <Box className={styles.hairline}>
-        <Box py="5">
+        <Section size="1" py="5">
           <Flex direction="column" gap="4">
             <Text className={styles.kicker}>{t("form.basicInfo")}</Text>
             <Grid columns={{ initial: "1", sm: "2" }} gap="4">
@@ -95,7 +95,7 @@ const CertificateImportForm = memo(({ onSubmit, onSubmitError, isPending }: Cert
               </Button>
             </Flex>
           </Flex>
-        </Box>
+        </Section>
       </Box>
     </form>
   );

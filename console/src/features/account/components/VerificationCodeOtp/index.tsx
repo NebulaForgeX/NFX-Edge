@@ -76,7 +76,8 @@ export function VerificationCodeOtp({
             autoCapitalize="characters"
             autoCorrect="off"
             spellCheck={false}
-            className={[styles.otpSlot, showError ? styles.otpSlotError : ""].filter(Boolean).join(" ")}
+            className={styles.otpSlot}
+            data-invalid={showError ? "true" : undefined}
           />
         ))}
       </Flex>

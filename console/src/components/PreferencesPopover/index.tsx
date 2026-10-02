@@ -70,11 +70,12 @@ function PreferencesPopover({ triggerVariant = "outline" }: PreferencesPopoverPr
                     color="gray"
                     aria-label={c}
                     aria-pressed={active}
-                    className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
+                    className={styles.swatch}
+                    data-active={active ? "true" : "false"}
                     style={{ background: swatchVar(c) }}
                     onClick={() => syncPreference({ theme: { accent: AccentColor(c) } })}
                   >
-                    {active ? <CheckIcon color="white" width={11} height={11} /> : null}
+                    {active ? <CheckIcon color="var(--accent-contrast)" width={11} height={11} /> : null}
                   </Button>
                 );
               })}
@@ -96,11 +97,12 @@ function PreferencesPopover({ triggerVariant = "outline" }: PreferencesPopoverPr
                     color="gray"
                     aria-label={c}
                     aria-pressed={active}
-                    className={`${styles.swatch} ${active ? styles.swatchActive : ""}`}
+                    className={styles.swatch}
+                    data-active={active ? "true" : "false"}
                     style={{ background: swatchVar(c) }}
                     onClick={() => syncPreference({ theme: { gray: GrayColor(c) } })}
                   >
-                    {active ? <CheckIcon color="white" width={11} height={11} /> : null}
+                    {active ? <CheckIcon color="var(--accent-contrast)" width={11} height={11} /> : null}
                   </Button>
                 );
               })}
@@ -138,9 +140,7 @@ function PreferencesPopover({ triggerVariant = "outline" }: PreferencesPopoverPr
                 return (
                   <RadioCards.Item key={v} value={v} aria-label={platform}>
                     <Flex direction="column" align="center" gap="1" width="100%">
-                      <Box asChild className={`${styles.radiusCorner} ${RADIUS_CORNER[v]}`}>
-                        <span />
-                      </Box>
+                      <Flex flexGrow="0" flexShrink="0" className={`${styles.radiusCorner} ${RADIUS_CORNER[v]}`} />
                       <Text as="span" size="1" weight="bold" align="center">
                         {platform}
                       </Text>

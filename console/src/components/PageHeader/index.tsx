@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Box, Flex, Heading, Text } from "@radix-ui/themes";
+import { Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { AnimatedIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 
 import styles from "./s.module.css";
@@ -17,42 +17,34 @@ export type PageHeaderProps = {
 export default function PageHeader({ icon, title, description, actions, index, density = "panel" }: PageHeaderProps) {
   const compact = density === "panel";
   return (
-    <Box className={styles.hairline} width="100%">
-      <Box pb="5">
-        <Flex asChild align="start" justify="between" gap="4" wrap="wrap">
-          <header>
-            <Flex align="start" gap="4" minWidth="0">
-              <Box className={styles.stampSize}>
-                <Box className={styles.stampEdge}>
-                  <Flex align="center" justify="center" className={`${styles.stampFill} ${styles.stampInk}`}>
-                    <AnimatedIcon icon={icon} size={compact ? 15 : 18} />
-                  </Flex>
-                </Box>
-              </Box>
-              <Flex direction="column" gap="2" minWidth="0" className={styles.copy}>
-                {index ? (
-                  <Text as="span" className={styles.index}>
-                    {index}
-                  </Text>
-                ) : null}
-                <Heading as="h1" size={compact ? "7" : "8"} className={styles.title}>
-                  {title}
-                </Heading>
-                {description ? (
-                  <Text as="p" size="2" className={styles.lede}>
-                    {description}
-                  </Text>
-                ) : null}
-              </Flex>
-            </Flex>
-            {actions ? (
-              <Flex gap="2" wrap="wrap" align="center" className={styles.actions}>
-                {actions}
-              </Flex>
+    <Section size="1" pb="5" width="100%" className={styles.hairline}>
+      <Flex direction="column" gap="4">
+        <Flex align="start" gap="4" minWidth="0">
+          <Flex align="center" justify="center" className={styles.stamp}>
+            <AnimatedIcon icon={icon} size={compact ? 15 : 18} />
+          </Flex>
+          <Flex direction="column" gap="2" minWidth="0">
+            {index ? (
+              <Text as="span" size="1" className={styles.index}>
+                {index}
+              </Text>
             ) : null}
-          </header>
+            <Heading as="h1" size="7" className={styles.title}>
+              {title}
+            </Heading>
+            {description ? (
+              <Text as="p" size="2" color="gray" className={styles.lede}>
+                {description}
+              </Text>
+            ) : null}
+          </Flex>
         </Flex>
-      </Box>
-    </Box>
+        {actions ? (
+          <Flex gap="2" wrap="wrap" align="center">
+            {actions}
+          </Flex>
+        ) : null}
+      </Flex>
+    </Section>
   );
 }

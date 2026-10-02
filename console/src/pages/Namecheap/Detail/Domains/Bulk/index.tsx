@@ -2,10 +2,10 @@ import { RouterIcon } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 import { memo, useMemo, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import { Box, Button, Checkbox, Flex, Tabs, Text } from "@radix-ui/themes";
+import { Box, Button, Checkbox, Container, Flex, Section, Tabs, Text } from "@radix-ui/themes";
 import gsap from "gsap";
 import { PageFrame } from "@/layouts";
-import { Dropdown, EmptyState, Input, PageHeader } from "@/components";
+import { ActionBar, Dropdown, EmptyState, Input, PageHeader } from "@/components";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 import { getApiError } from "nfx-ui/utils";
@@ -25,12 +25,12 @@ gsap.registerPlugin(useGSAP);
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <Box className={styles.field}>
+    <Flex direction="column" className={styles.field}>
       <Flex direction="column" gap="1">
         <Text size="1">{label}</Text>
         {children}
       </Flex>
-    </Box>
+    </Flex>
   );
 }
 
@@ -50,7 +50,7 @@ function AddressInput({
   const { t } = useTranslation("dns");
   return (
     <Flex gap="2" align="center" width="100%">
-      <Box className={styles.grow}>
+      <Flex direction="column" className={styles.grow} minWidth="0" >
         <Input
           size="2"
           value={self ? "" : value}
@@ -58,7 +58,7 @@ function AddressInput({
           disabled={self}
           onChange={(event) => onValue(event.target.value)}
         />
-      </Box>
+      </Flex>
       <Checkbox checked={self} onCheckedChange={(value) => onSelf(value === true)} />
       <Text size="1">{t("bulk.addressSelfShort")}</Text>
     </Flex>
@@ -173,7 +173,7 @@ function AffectedPane({
 }) {
   const blocks = items.filter((item) => (item.changes?.length ?? 0) > 0 || item.status === "failed");
   return (
-    <div className={styles.pane}>
+    <Flex direction="column" className={styles.pane}>
       <Flex direction="column" gap="3">
         <Text size="2" weight="bold">
           {title}
@@ -182,11 +182,11 @@ function AffectedPane({
           <Text className={styles.hint}>{empty}</Text>
         ) : (
           <div className={styles.listFrame}>
-            <div className={styles.listScroll}>
+            <Box className={styles.listScroll}>
               {blocks.map((item) => (
                 <Box key={item.domain} className={styles.item}>
-                  <Box py="3">
-                    <Box px="3">
+                  <Section py="3">
+                    <Container width="100%" maxWidth="none" px="3" >
                       <Flex direction="column" gap="3">
                         <Text size="2" weight="bold">
                           {item.domain}
@@ -202,15 +202,15 @@ function AffectedPane({
                         ))}
                         {item.status === "failed" ? <Text className={styles.hint}>{item.message}</Text> : null}
                       </Flex>
-                    </Box>
-                  </Box>
+                    </Container>
+                  </Section>
                 </Box>
               ))}
-            </div>
+            </Box>
           </div>
         )}
       </Flex>
-    </div>
+    </Flex>
   );
 }
 
@@ -394,7 +394,7 @@ const NamecheapDomainsBulkPage = memo(() => {
     }
     return (
       <Flex gap="4" width="100%" align="start">
-        <div className={styles.pane}>
+        <Flex direction="column" className={styles.pane}>
           <Flex direction="column" gap="3">
             <Text size="2" weight="bold">
               {t("bulk.available")}
@@ -404,24 +404,24 @@ const NamecheapDomainsBulkPage = memo(() => {
               <Text className={styles.hint}>{t("bulk.noneAvailable")}</Text>
             ) : (
               <div className={styles.listFrame}>
-                <div className={styles.listScroll}>
+                <Box className={styles.listScroll}>
                   {available.map((row) => (
                     <Box key={row.name} className={styles.item}>
                       <button type="button" className={styles.pick} onClick={() => addDomain(row.name)}>
-                        <Box py="3">
-                          <Box px="3">
+                        <Section py="3">
+                          <Container width="100%" maxWidth="none" px="3" >
                             <Text>{row.name}</Text>
-                          </Box>
-                        </Box>
+                          </Container>
+                        </Section>
                       </button>
                     </Box>
                   ))}
-                </div>
+                </Box>
               </div>
             )}
           </Flex>
-        </div>
-        <div className={styles.pane}>
+        </Flex>
+        <Flex direction="column" className={styles.pane}>
           <Flex direction="column" gap="3">
             <Text size="2" weight="bold">
               {t("bulk.selected", { count: selected.length })}
@@ -430,26 +430,26 @@ const NamecheapDomainsBulkPage = memo(() => {
               <Text className={styles.hint}>{t("bulk.noneSelected")}</Text>
             ) : (
               <div className={styles.listFrame}>
-                <div className={styles.listScroll}>
+                <Box className={styles.listScroll}>
                   {selected.map((name) => (
                     <Box key={name} className={styles.item}>
-                      <Box py="3">
-                        <Box px="3">
+                      <Section py="3">
+                        <Container width="100%" maxWidth="none" px="3" >
                           <Flex align="center" justify="between" gap="3" width="100%">
                             <Text>{name}</Text>
                             <Button type="button" size="1" variant="ghost" color="red" onClick={() => removeDomain(name)}>
                               {t("bulk.remove")}
                             </Button>
                           </Flex>
-                        </Box>
-                      </Box>
+                        </Container>
+                      </Section>
                     </Box>
                   ))}
-                </div>
+                </Box>
               </div>
             )}
           </Flex>
-        </div>
+        </Flex>
       </Flex>
     );
   })();
@@ -461,17 +461,23 @@ const NamecheapDomainsBulkPage = memo(() => {
         index={t("index")}
         title={t("bulk.title")}
         description={credentialQuery.data ? `${credentialQuery.data.apiUser} · ${t("bulk.subtitle")}` : t("bulk.subtitle")}
-        actions={
-          <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_DOMAINS.replace(":credentialId", credentialId))}>
-            {t("bulk.back")}
-          </Button>
-        }
       />
+      <ActionBar
+        status={
+          <Text size="2" color="gray">
+            {credentialQuery.data?.apiUser || t("bulk.title")}
+          </Text>
+        }
+      >
+        <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_DOMAINS.replace(":credentialId", credentialId))}>
+          {t("bulk.back")}
+        </Button>
+      </ActionBar>
       <Flex direction="column" gap="4" width="100%">
-        <div ref={stageRef} className={styles.stage}>
-          <div ref={trackRef} className={styles.track}>
-            <div className={styles.board}>{lists}</div>
-            <div className={styles.board}>
+        <Box ref={stageRef} className={styles.stage}>
+          <Flex ref={trackRef} className={styles.track}>
+            <Flex direction="column" className={styles.board}>{lists}</Flex>
+            <Flex direction="column" className={styles.board}>
               <Flex gap="4" width="100%" align="start">
                 <AffectedPane
                   items={review}
@@ -490,11 +496,11 @@ const NamecheapDomainsBulkPage = memo(() => {
                   ttlAutomatic={t("bulk.ttlAutomatic")}
                 />
               </Flex>
-            </div>
-          </div>
-        </div>
+            </Flex>
+          </Flex>
+        </Box>
         <Box className={styles.actionRule}>
-          <Box pt="4">
+          <Section pt="4" pb="0">
             <Flex direction="column" gap="3">
               {stage === 1 ? (
                 <Tabs.Root value={action} onValueChange={(value) => setAction(value as NamecheapBulkHostActionEnum)}>
@@ -503,7 +509,7 @@ const NamecheapDomainsBulkPage = memo(() => {
                     <Tabs.Trigger value={NamecheapBulkHostActionEnum.ADD}>{t("bulk.actionAdd")}</Tabs.Trigger>
                     <Tabs.Trigger value={NamecheapBulkHostActionEnum.DELETE}>{t("bulk.actionDelete")}</Tabs.Trigger>
                   </Tabs.List>
-                  <Box pt="3">
+                  <Section pt="3" pb="0">
                     <Tabs.Content value={NamecheapBulkHostActionEnum.UPDATE}>
                       <Flex direction="column" gap="3">
                         <Text className={styles.hint}>{t("bulk.updateHint")}</Text>
@@ -598,7 +604,7 @@ const NamecheapDomainsBulkPage = memo(() => {
                         </Flex>
                       </Flex>
                     </Tabs.Content>
-                  </Box>
+                  </Section>
                 </Tabs.Root>
               ) : (
                 <Text className={styles.hint}>{t("bulk.reviewHint", { count: affectedCount })}</Text>
@@ -620,7 +626,7 @@ const NamecheapDomainsBulkPage = memo(() => {
                 )}
               </Flex>
             </Flex>
-          </Box>
+          </Section>
         </Box>
       </Flex>
     </PageFrame>

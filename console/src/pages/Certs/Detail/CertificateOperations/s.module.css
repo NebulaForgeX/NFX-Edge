@@ -1,14 +1,5 @@
-.frame {
-  border: 1px solid var(--gray-6);
-}
-
-.frameFill {
-  background: var(--color-background);
-}
-
 .title {
   margin: 0;
-  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gray-10);
 }

@@ -5,11 +5,13 @@
 import type { CSSProperties, ReactNode, RefObject } from "react";
 
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Box, Flex, Text } from "@radix-ui/themes";
+import { Box, Container, Flex, Section, Text } from "@radix-ui/themes";
 import { safeStringable } from "nfx-ui/utils";
 import { Virtuoso } from "react-virtuoso";
 
 import EmptyState from "@/components/EmptyState";
+
+import styles from "./s.module.css";
 
 type ColumnCount = 1 | 2 | 3 | 4 | 5;
 
@@ -58,13 +60,6 @@ function resolveGapToken(gap: string | undefined, fallback: string): string {
   return gap;
 }
 
-const listInsetTopStyle: CSSProperties = { height: DEFAULT_ROW_GAP, flexShrink: 0, pointerEvents: "none" };
-const footerEndLabelStyle: CSSProperties = {
-  padding: "var(--space-2) var(--space-3)",
-  backgroundColor: "var(--color-panel-solid)",
-  borderRadius: "var(--radius-3)",
-};
-const itemChildStyle: CSSProperties = { minWidth: 0 };
 
 function resolveHeight(height: string | number | undefined): string | number {
   return height ?? "100%";
@@ -182,33 +177,44 @@ function VirtuosoListComponent<T>({
     if (hasNextPage) {
       if (loadingIndicator) return <>{loadingIndicator}</>;
       return (
-        <Box py="8">
+        <Section size="1" py="8">
           <Flex align="center" justify="center">
             <Text size="2" color="gray">
               {isFetchingNextPage ? loadingMoreText : ""}
             </Text>
           </Flex>
-        </Box>
+        </Section>
       );
     }
     if (dataLength === 0) return null;
     if (endOfListIndicator) return <>{endOfListIndicator}</>;
     return (
-      <Box style={{ borderTop: "1px solid var(--gray-a7)" }}>
-        <Box mt="3">
-          <Box py="8">
+      <Box className={styles.footerRule}>
+        <Section mt="3" pt="0" pb="0">
+          <Section py="8">
             <Flex align="center" justify="center">
-              <Text as="span" size="2" color="gray" style={footerEndLabelStyle}>
-                {endOfListText}
-              </Text>
+              <Box className={styles.endLabel}>
+                <Container width="100%" maxWidth="none" px="3" >
+                  <Section py="2">
+                    <Text as="span" size="2" color="gray">
+                      {endOfListText}
+                    </Text>
+                  </Section>
+                </Container>
+              </Box>
             </Flex>
-          </Box>
-        </Box>
+          </Section>
+        </Section>
       </Box>
     );
   }, [dataLength, endOfListIndicator, endOfListText, hasNextPage, isFetchingNextPage, loadingIndicator, loadingMoreText]);
 
-  const Header = useCallback(() => <div style={listInsetTopStyle} aria-hidden />, []);
+  const Header = useCallback(
+    () => (
+      <Box className={styles.listInset} aria-hidden />
+    ),
+    [],
+  );
 
   const renderVirtualRow = useCallback(
     (rowIndex: number, row: RowChunk<T>) => {
@@ -226,7 +232,7 @@ function VirtuosoListComponent<T>({
           {row.items.map((item, colIndex) => {
             const itemIndex = rowIndex * columnCount + colIndex;
             return (
-              <div key={getItemKey(item, itemIndex)} className={itemClassName} style={itemChildStyle}>
+              <div key={getItemKey(item, itemIndex)} className={[itemClassName, styles.itemMin].filter(Boolean).join(" ")}>
                 {renderItem(item, itemIndex)}
               </div>
             );

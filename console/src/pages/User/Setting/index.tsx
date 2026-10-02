@@ -1,7 +1,7 @@
 import { GearIcon } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 
-import { Box, Flex, Heading, Section, Text } from "@radix-ui/themes";
+import { Flex, Grid, Heading, Section, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
 import { PageHeader, Suspense } from "@/components";
@@ -12,7 +12,7 @@ import { SystemSettings, ThemeSettings } from "./components";
 function SettingsSection({ id, title, description, children }: { id: string; title: string; description: string; children: ReactNode }) {
   return (
     <Section size="1" aria-labelledby={id}>
-      <Box pb="3">
+      <Section pt="0" pb="3">
       <Flex direction="column" gap="1">
         <Heading as="h2" id={id} size="4">
           {title}
@@ -21,7 +21,7 @@ function SettingsSection({ id, title, description, children }: { id: string; tit
           {description}
         </Text>
       </Flex>
-      </Box>
+      </Section>
       {children}
     </Section>
   );
@@ -34,7 +34,7 @@ export default function SettingsPage() {
     <PageFrame>
       <PageHeader icon={GearIcon} index={t("index")} title={t("title")} description={t("description")} />
 
-      <Flex direction="column" gap="6" width="100%">
+      <Grid columns={{ initial: "1", lg: "minmax(0, 1.4fr) minmax(16rem, 0.6fr)" }} gap="6" width="100%" align="start">
         <SettingsSection id="settings-theme" title={t("sections.theme.title")} description={t("sections.theme.description")}>
           <ThemeSettings />
         </SettingsSection>
@@ -44,7 +44,7 @@ export default function SettingsPage() {
             <SystemSettings />
           </Suspense>
         </SettingsSection>
-      </Flex>
+      </Grid>
     </PageFrame>
   );
 }

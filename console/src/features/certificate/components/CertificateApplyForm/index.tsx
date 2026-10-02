@@ -2,7 +2,7 @@ import type { FieldErrors } from "react-hook-form";
 import type { CertificateFormValues } from "../../schemas/certificateSchema";
 
 import { memo, useCallback, useRef } from "react";
-import { Box, Button, Flex, Grid, Text } from "@radix-ui/themes";
+import { Box, Button, Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
@@ -69,7 +69,7 @@ const CertificateApplyForm = memo(({ onSubmit, onSubmitError, isPending }: Certi
   return (
     <form onSubmit={(e) => e.preventDefault()}>
       <Box className={styles.hairline}>
-        <Box py="5">
+        <Section size="1" py="5">
           <Flex direction="column" gap="4">
             <Text className={styles.kicker}>{t("form.sectionImport")}</Text>
             <Text as="p" size="2" className={styles.lede}>
@@ -82,10 +82,10 @@ const CertificateApplyForm = memo(({ onSubmit, onSubmitError, isPending }: Certi
               </Button>
             </Flex>
           </Flex>
-        </Box>
+        </Section>
       </Box>
       <Box className={styles.hairline}>
-        <Box py="5">
+        <Section size="1" py="5">
           <Flex direction="column" gap="4">
             <Text className={styles.kicker}>{t("form.basicInfo")}</Text>
             <Grid columns={{ initial: "1", lg: "2fr 1fr" }} gap="5">
@@ -99,16 +99,16 @@ const CertificateApplyForm = memo(({ onSubmit, onSubmitError, isPending }: Certi
                 <SANsController />
               </Flex>
               <Box className={styles.sideRule}>
-                <Box px="4">
+                <Container width="100%" maxWidth="none" px="4" >
                   <NamecheapHostsHint />
-                </Box>
+                </Container>
               </Box>
             </Grid>
           </Flex>
-        </Box>
+        </Section>
       </Box>
       <Box className={styles.hairline}>
-        <Box py="5">
+        <Section size="1" py="5">
           <Flex direction="column" gap="4">
             <Text className={styles.kicker}>{t("form.verification")}</Text>
             <ForceRenewalController />
@@ -118,7 +118,7 @@ const CertificateApplyForm = memo(({ onSubmit, onSubmitError, isPending }: Certi
               </Button>
             </Flex>
           </Flex>
-        </Box>
+        </Section>
       </Box>
     </form>
   );

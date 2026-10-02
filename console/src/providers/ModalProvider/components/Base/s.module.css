@@ -1,18 +1,21 @@
-.shell {
+.shellClip {
   overflow: hidden;
-  padding: 0;
+}
+
+.shellPy {
+  padding-block: 0;
 }
 
 .log {
-  overflow-y: auto;
   max-height: min(48vh, 22rem);
   width: 100%;
+  overflow-y: auto;
 }
 
 .logText {
   margin: 0;
-  white-space: pre-wrap;
   overflow-wrap: anywhere;
+  white-space: pre-wrap;
   word-break: break-word;
 }
 

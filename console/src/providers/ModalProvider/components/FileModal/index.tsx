@@ -1,6 +1,6 @@
 import { DownloadIcon, XIcon } from "nfx-ui/icons";
 import { memo, useEffect, useState } from "react";
-import { Box, Button, Dialog, Flex, IconButton, Text } from "@radix-ui/themes";
+import { Box, Button, Container, Dialog, Flex, IconButton, Section, Text } from "@radix-ui/themes";
 import { getApiErrorMessage } from "nfx-ui/utils";
 
 import { useDownloadFile, useFetchFileContent } from "@/hooks/file";
@@ -71,19 +71,19 @@ const FileModal = memo(() => {
     >
       <Dialog.Content maxWidth="50rem" style={{ padding: 0 }}>
         <Box className={styles.hairline}>
-          <Box py="4">
-            <Box px="5">
+          <Section py="4">
+            <Container width="100%" maxWidth="none" px="5" >
               <Flex align="center" justify="between" gap="3">
                 <Dialog.Title mb="0">{fileName || "File"}</Dialog.Title>
                 <IconButton type="button" variant="ghost" aria-label="Close" onClick={handleClose}>
                   <XIcon size={18} />
                 </IconButton>
               </Flex>
-            </Box>
-          </Box>
+            </Container>
+          </Section>
         </Box>
-        <Box py="4">
-          <Box px="4">
+        <Section py="4">
+          <Container width="100%" maxWidth="none" px="4"
             {loading ? (
               <Text color="gray">Loading...</Text>
             ) : error ? (
@@ -96,19 +96,17 @@ const FileModal = memo(() => {
                     Download
                   </Button>
                 </Flex>
-                <Box className={styles.edge}>
-                  <Box className={`${styles.fill} ${styles.radius} ${styles.clip}`}>
-                    <Box py="4">
-                      <Box px="4">
-                        <pre className={styles.pre}>{fileContent}</pre>
-                      </Box>
-                    </Box>
-                  </Box>
+                <Box className={styles.sheet}>
+                  <Section py="4">
+                    <Container width="100%" maxWidth="none" px="4" >
+                      <pre className={styles.pem}>{fileContent}</pre>
+                    </Container>
+                  </Section>
                 </Box>
               </Flex>
             )}
-          </Box>
-        </Box>
+          </Container>
+        </Section>
       </Dialog.Content>
     </Dialog.Root>
   );

@@ -1,35 +1,71 @@
-.scene {
+.sceneGrow {
+  flex-shrink: 0;
+}
+
+.sceneMy {
+  margin-bottom: var(--space-3);
+}
+
+.scenePos {
   position: relative;
+}
+
+.sceneSize {
   width: min(11.5rem, 42vw);
   height: min(11.5rem, 42vw);
-  flex-shrink: 0;
-  margin-bottom: var(--space-3);
+}
+
+.sceneFx {
   isolation: isolate;
 }
 
-.glow {
+
+
+.glowPos {
   position: absolute;
   inset: 8%;
+}
+
+.glowRadius {
   border-radius: var(--radius-full);
-  background:
-    radial-gradient(circle at 35% 30%, color-mix(in oklab, var(--accent-9) 18%, transparent), transparent 62%),
-    radial-gradient(circle at 70% 75%, color-mix(in oklab, var(--gray-11) 8%, transparent), transparent 55%);
+}
+
+.glowFill {
+  background: color-mix(in oklab, var(--accent-9) 14%, var(--color-background));
+}
+
+.glowHit {
   pointer-events: none;
 }
 
-.stage {
+
+
+.stagePos {
   position: absolute;
   inset: 0;
+}
+
+.stageLayout {
   display: grid;
   place-items: center;
 }
 
-.art {
+
+
+.artSize {
   width: 78%;
   height: 78%;
+}
+
+.artClip {
   overflow: visible;
+}
+
+.artType {
   color: color-mix(in oklab, var(--accent-9) 88%, var(--gray-12));
 }
+
+
 
 .orbit {
   fill: none;

@@ -50,20 +50,19 @@ function Logo({ to = ROUTES.HOME, alt = `${APP_NAME} logo`, title, subtitle, var
           onClick?.();
         }}
       >
-        <Box className={sizeClass}>
-          <Box className={variant === "glassCircle" ? styles.radiusFull : variant === "glassSquare" ? styles.radiusIcon : styles.radiusChip}>
-            <Box className={variant === "glassCircle" ? styles.edgeCircle : variant === "glassSquare" ? styles.edgeSquare : undefined}>
-              <Box className={variant === "glassCircle" ? styles.fillCircle : variant === "glassSquare" ? styles.fillSquare : undefined}>
-                <Box className={variant === "plain" ? styles.shadowPlain : variant === "glassSquare" ? styles.shadowSquare : styles.shadowCircle}>
-                  <Box asChild className={styles.mark}>
-                    <span>
-                      <img src={getLogoSrc(appearance)} alt={alt} />
-                    </span>
-                  </Box>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
+        <Box
+          className={[
+            styles.mark,
+            sizeClass,
+            variant === "glassCircle" ? styles.radiusFull : variant === "glassSquare" ? styles.radiusIcon : styles.radiusChip,
+            variant === "glassCircle" ? styles.edgeCircle : variant === "glassSquare" ? styles.edgeSquare : "",
+            variant === "glassCircle" ? styles.fillCircle : variant === "glassSquare" ? styles.fillSquare : "",
+            variant === "plain" ? styles.shadowPlain : variant === "glassSquare" ? styles.shadowSquare : styles.shadowCircle,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <img src={getLogoSrc(appearance)} alt={alt} />
         </Box>
 
         {(title || subtitle) && (

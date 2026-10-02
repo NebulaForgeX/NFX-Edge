@@ -1,6 +1,6 @@
 import { FileDescriptionIcon, HomeIcon, MagnifierIcon, RouterIcon, ShieldCheck, StackIcon, XIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Box, Button as RadixButton, Dialog, Flex, Text } from "@radix-ui/themes";
+import { Box, Button as RadixButton, Container, Dialog, Flex, Section, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { Input } from "@/components";
 
@@ -160,10 +160,10 @@ const SearchModal = memo(() => {
       <Dialog.Content maxWidth="40rem" style={{ padding: 0 }} onKeyDown={handleKeyDown}>
         <Dialog.Title className={styles.srOnly}>{t("search.placeholder", { ns: "common" })}</Dialog.Title>
         <Box className={styles.hairline}>
-          <Box py="4">
-            <Box px="5">
+          <Section py="4">
+            <Container width="100%" maxWidth="none" px="5" >
               <Flex align="center" gap="3">
-                <Box className={styles.searchField}>
+                <Flex direction="column" className={styles.searchField} minWidth="0" >
                   <Input
                     ref={inputRef}
                     fullWidth
@@ -175,63 +175,59 @@ const SearchModal = memo(() => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={handleKeyDown}
                   />
-                </Box>
+                </Flex>
                 {searchQuery ? (
-                  <RadixButton type="button" variant="ghost" className={styles.clearBtn} aria-label="Clear search" onClick={() => setSearchQuery("")}>
+                  <RadixButton type="button" variant="ghost" className={styles.resultButton} aria-label="Clear search" onClick={() => setSearchQuery("")}>
                     <XIcon size={16} />
                   </RadixButton>
                 ) : null}
               </Flex>
-            </Box>
-          </Box>
+            </Container>
+          </Section>
         </Box>
 
         <Box className={styles.results}>
-          <Box py="2">
-            <Box px="2">
+          <Section py="2">
+            <Container width="100%" maxWidth="none" px="2"
               {results.length > 0 ? (
                 results.map((item, index) => {
                   const Icon = item.icon;
                   const selected = index === selectedIndex;
                   return (
-                    <Box key={item.id} mb="1">
-                      <Box className={selected ? styles.resultEdgeSelected : styles.resultEdge}>
-                        <Box className={selected ? styles.resultFillSelected : styles.resultFill}>
-                          <Box py="2">
-                            <Box px="3">
-                              <RadixButton type="button" variant="ghost" onClick={() => handleSelect(item)} onMouseEnter={() => setSelectedIndex(index)}>
-                                <Flex align="center" gap="3" width="100%">
-                                  <Box className={styles.iconSize}>
-                                    <Flex align="center" justify="center" className={`${styles.iconFill} ${styles.iconInk}`}>
-                                      <Icon size={20} />
-                                    </Flex>
-                                  </Box>
-                                  <Box>
-                                    <Text as="div" size="3" weight="medium">
-                                      {item.title}
-                                    </Text>
-                                    <Text as="div" size="2" color="gray">
-                                      {item.description}
-                                    </Text>
-                                  </Box>
+                    <Section key={item.id} mb="1" pt="0" pb="0">
+                      <Box className={styles.result} data-selected={selected ? "true" : "false"}>
+                        <Section py="2">
+                          <Container width="100%" maxWidth="none" px="3" >
+                            <RadixButton type="button" variant="ghost" className={styles.resultButton} onClick={() => handleSelect(item)} onMouseEnter={() => setSelectedIndex(index)}>
+                              <Flex align="center" gap="3" width="100%">
+                                <Flex align="center" justify="center" className={styles.icon}>
+                                  <Icon size={20} />
                                 </Flex>
-                              </RadixButton>
-                            </Box>
-                          </Box>
-                        </Box>
+                                <Box minWidth="0" >
+                                  <Text as="div" size="3" weight="medium">
+                                    {item.title}
+                                  </Text>
+                                  <Text as="div" size="2" color="gray">
+                                    {item.description}
+                                  </Text>
+                                </Box>
+                              </Flex>
+                            </RadixButton>
+                          </Container>
+                        </Section>
                       </Box>
-                    </Box>
+                    </Section>
                   );
                 })
               ) : (
-                <Box py="6">
+                <Section py="6">
                   <Text align="center" color="gray">
                     {t("search.noResults", { ns: "modal", query: searchQuery }) || `No results found for "${searchQuery}"`}
                   </Text>
-                </Box>
+                </Section>
               )}
-            </Box>
-          </Box>
+            </Container>
+          </Section>
         </Box>
       </Dialog.Content>
     </Dialog.Root>

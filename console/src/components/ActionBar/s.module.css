@@ -1,0 +1,4 @@
+.bar {
+  border: 1px solid var(--gray-6);
+  background: var(--color-panel-solid);
+}

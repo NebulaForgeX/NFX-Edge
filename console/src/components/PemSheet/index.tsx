@@ -2,7 +2,7 @@ import { UploadIcon } from "nfx-ui/icons";
 import type { ChangeEvent, DragEvent } from "react";
 
 import { useRef, useState } from "react";
-import { Button, Text, TextArea } from "@radix-ui/themes";
+import { Box, Button, Container, Flex, Grid, Section, Text, TextArea } from "@radix-ui/themes";
 
 import styles from "./s.module.css";
 
@@ -69,8 +69,10 @@ export default function PemSheet({
   };
 
   return (
-    <div
-      className={`${styles.sheet} ${styles.sheetEdge} ${styles.sheetFill} ${dragging ? styles.dragging : ""} ${error ? styles.invalid : ""}`}
+    <Box
+      className={styles.sheet}
+      data-drag={dragging ? "true" : "false"}
+      data-invalid={error ? "true" : undefined}
       onDragOver={(event) => {
         event.preventDefault();
         setDragging(true);
@@ -78,45 +80,50 @@ export default function PemSheet({
       onDragLeave={() => setDragging(false)}
       onDrop={onDrop}
     >
-      <span className={`${styles.corner} ${styles.cornerTl}`} />
-      <span className={`${styles.corner} ${styles.cornerTr}`} />
-      <span className={`${styles.corner} ${styles.cornerBl}`} />
-      <span className={`${styles.corner} ${styles.cornerBr}`} />
-
-      <div className={styles.sheetPx}>
-        <div className={styles.sheetPy}>
-          <div className={styles.sheetGrid}>
-      <div className={styles.head}>
-        <Text as="label" htmlFor={id} className={styles.label}>
-          {label}
-          {optional ? <span className={styles.optional}>{optionalLabel}</span> : null}
-        </Text>
-        <span className={styles.kind}>{kind}</span>
-      </div>
-
-      <TextArea
-        id={id}
-        size="3"
-        rows={rows}
-        value={value}
-        placeholder={placeholder}
-        spellCheck={false}
-        className={styles.body}
-        onBlur={onBlur}
-        onChange={(event) => onChange(event.target.value)}
-      />
-
-      <div className={styles.foot}>
-        <input ref={inputRef} type="file" accept={accept} className={styles.file} onChange={onFile} />
-        <Button type="button" size="1" variant="outline" onClick={() => inputRef.current?.click()}>
-          <UploadIcon size={14} />
-          {browseLabel}
-        </Button>
-        <span className={styles.meta}>{fileName || dropLabel}</span>
-      </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <Box className={`${styles.corner} ${styles.cornerTl}`} />
+      <Box className={`${styles.corner} ${styles.cornerTr}`} />
+      <Box className={`${styles.corner} ${styles.cornerBl}`} />
+      <Box className={`${styles.corner} ${styles.cornerBr}`} />
+      <Container width="100%" maxWidth="none" className={styles.sheetInset} >
+        <Section className={styles.sheetPad}>
+          <Grid className={styles.sheetGrid}>
+            <Section className={styles.head}>
+              <Flex align="baseline" justify="between" gap="3">
+                <Flex align="baseline" className={styles.labelRow}>
+                  <Text as="label" htmlFor={id} className={styles.label}>
+                    {label}
+                  </Text>
+                  {optional ? <Text className={styles.optional}>{optionalLabel}</Text> : null}
+                </Flex>
+                <span className={styles.kind}>{kind}</span>
+              </Flex>
+            </Section>
+            <TextArea
+              id={id}
+              size="3"
+              rows={rows}
+              value={value}
+              placeholder={placeholder}
+              spellCheck={false}
+              className={styles.body}
+              onBlur={onBlur}
+              onChange={(event) => onChange(event.target.value)}
+            />
+            <Section className={styles.foot}>
+              <Flex align="center" gap="3">
+                <input ref={inputRef} type="file" accept={accept} className={styles.file} onChange={onFile} />
+                <Button type="button" size="1" variant="outline" onClick={() => inputRef.current?.click()}>
+                  <UploadIcon size={14} />
+                  {browseLabel}
+                </Button>
+                <Box className={styles.meta}>
+                  <span>{fileName || dropLabel}</span>
+                </Box>
+              </Flex>
+            </Section>
+          </Grid>
+        </Section>
+      </Container>
+    </Box>
   );
 }

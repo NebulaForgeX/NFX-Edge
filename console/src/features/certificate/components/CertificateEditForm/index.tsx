@@ -2,7 +2,7 @@ import type { FieldErrors } from "react-hook-form";
 import type { EditCertificateFormValues } from "../../schemas/certificateSchema";
 
 import { memo } from "react";
-import { Box, Button, Flex, Grid, Text } from "@radix-ui/themes";
+import { Box, Button, Flex, Grid, Section, Text } from "@radix-ui/themes";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -29,7 +29,7 @@ const CertificateEditForm = memo(({ onSubmit, onSubmitError, isPending }: Certif
   return (
     <form onSubmit={(e) => e.preventDefault()}>
       <Box className={styles.hairline}>
-        <Box py="5">
+        <Section size="1" py="5">
           <Flex direction="column" gap="4">
             <Text className={styles.kicker}>{t("form.basicInfo")}</Text>
             <Text as="p" size="2" className={styles.lede}>
@@ -42,10 +42,10 @@ const CertificateEditForm = memo(({ onSubmit, onSubmitError, isPending }: Certif
               <IssuerController record />
             </Grid>
           </Flex>
-        </Box>
+        </Section>
       </Box>
       <Box className={styles.hairline}>
-        <Box py="5">
+        <Section size="1" py="5">
           <Flex direction="column" gap="4">
             <SANsController />
             <Flex justify="end">
@@ -54,7 +54,7 @@ const CertificateEditForm = memo(({ onSubmit, onSubmitError, isPending }: Certif
               </Button>
             </Flex>
           </Flex>
-        </Box>
+        </Section>
       </Box>
     </form>
   );

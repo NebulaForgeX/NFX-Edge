@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from "react";
-import { Box, Button, Flex, Text } from "@radix-ui/themes";
+import { Box, Button, Flex, Section, Text } from "@radix-ui/themes";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
@@ -73,7 +73,7 @@ function NamecheapHostsHint() {
         {hosts.length === 0 ? (
           <Text className={styles.hint}>{t("hostsHint.noHosts")}</Text>
         ) : (
-          <div className={styles.scroll}>
+          <Flex direction="column" className={styles.scroll}>
             <DataTable
               empty={t("hostsHint.noHosts")}
               rows={hosts}
@@ -86,7 +86,7 @@ function NamecheapHostsHint() {
                 { key: "ttl", header: t("hostsHint.colTtl"), render: (host) => formatNamecheapTtl(host.ttl, t("hostsHint.ttlAutomatic")) },
               ]}
             />
-          </div>
+          </Flex>
         )}
       </Flex>
     );
@@ -95,11 +95,11 @@ function NamecheapHostsHint() {
   return (
     <Flex direction="column" gap="3" width="100%" height="100%" className={styles.panel}>
       <Box className={styles.titleHairline}>
-        <Box pb="3">
+        <Section pt="0" pb="3">
           <Text size="2" weight="bold">
             {t("hostsHint.title")}
           </Text>
-        </Box>
+        </Section>
       </Box>
       <Text className={styles.hint}>{t("hostsHint.clickToAdd")}</Text>
       {body}

@@ -1,5 +1,7 @@
+import type { ReactNode } from "react";
+
 import { AnimatedIcon, ArrowNarrowRightIcon } from "nfx-ui/icons";
-import { Button, Flex, Heading, Link, Text } from "@radix-ui/themes";
+import { Button, Flex, Grid, Heading, Link, Section, Text } from "@radix-ui/themes";
 import { AuthSignupPlatformEnum, LanguageEnum } from "nfx-ui/enums";
 import { useSendVerificationCode, useSignupWithEmail } from "nfx-ui/hooks";
 import { SignupFormData, useInitSignupForm } from "nfx-ui/schemas";
@@ -19,6 +21,19 @@ import { ROUTES } from "@/navigations";
 
 import SignupShell from "./SignupShell";
 import styles from "./s.module.css";
+
+function LedgerField({ n, children }: { n: string; children: ReactNode }) {
+  return (
+    <Section size="1" mb="4" pt="0" pb="0">
+      <Grid columns="2.2rem 1fr" gap="2">
+        <Section size="1" pt="6px" pb="0">
+          <span className={styles.fieldNum}>{n}</span>
+        </Section>
+        {children}
+      </Grid>
+    </Section>
+  );
+}
 
 export default function SignupPage() {
   const { t } = useTranslation("pages.Account.Signup");
@@ -43,7 +58,7 @@ export default function SignupPage() {
 
   return (
     <SignupShell>
-      <div className={styles.sheetHead}>
+      <Section size="1" mb="5" pb="4" pt="0" className={styles.sheetHead}>
         <Text as="p" size="1" weight="bold" className={styles.kicker}>
           {t("ledger.kicker")}
         </Text>
@@ -53,17 +68,15 @@ export default function SignupPage() {
         <Text as="p" size="2" color="gray">
           {t("ledger.subtitle")}
         </Text>
-      </div>
+      </Section>
 
       <FormProvider {...form}>
         <form noValidate onSubmit={form.handleSubmit(onSubmit)}>
-          <div className={styles.field}>
-            <span className={styles.fieldNum}>{t("steps.verifyNum")}</span>
+          <LedgerField n={t("steps.verifyNum")}>
             <SignupEmailController helperText={t("emailHint")} />
-          </div>
+          </LedgerField>
 
-          <div className={styles.field}>
-            <span className={styles.fieldNum}>{t("steps.verifyNum")}</span>
+          <LedgerField n={t("steps.verifyNum")}>
             <Flex direction="column" gap="2">
               <SignupVerificationCodeController />
               <Button
@@ -83,20 +96,17 @@ export default function SignupPage() {
                 {t("sendCode")}
               </Button>
             </Flex>
-          </div>
+          </LedgerField>
 
-          <div className={styles.field}>
-            <span className={styles.fieldNum}>{t("steps.passphraseNum")}</span>
+          <LedgerField n={t("steps.passphraseNum")}>
             <SignupPasswordController />
-          </div>
+          </LedgerField>
 
-          <div className={styles.field}>
-            <span className={styles.fieldNum}>{t("steps.passphraseNum")}</span>
+          <LedgerField n={t("steps.passphraseNum")}>
             <SignupConfirmPasswordController />
-          </div>
+          </LedgerField>
 
-          <div className={styles.field}>
-            <span className={styles.fieldNum}>{t("steps.issueNum")}</span>
+          <LedgerField n={t("steps.issueNum")}>
             <Flex direction="column" gap="3">
               <SignupRememberController />
               <Button type="submit" size="3" loading={signup.isPending}>
@@ -104,7 +114,7 @@ export default function SignupPage() {
                 <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
               </Button>
             </Flex>
-          </div>
+          </LedgerField>
         </form>
       </FormProvider>
 

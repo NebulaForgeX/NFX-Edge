@@ -1,0 +1,17 @@
+.footerRule {
+  border-top: 1px solid var(--gray-a7);
+}
+
+.endLabel {
+  border-radius: var(--radius-3);
+  background-color: var(--color-panel-solid);
+}
+
+.listInset {
+  height: var(--space-3);
+  pointer-events: none;
+}
+
+.itemMin {
+  min-width: 0;
+}

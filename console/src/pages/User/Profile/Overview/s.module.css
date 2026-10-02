@@ -1,23 +1,33 @@
-.cover {
-  width: 100%;
-  height: 180px;
+.identity {
   overflow: hidden;
-  border-bottom: 1px solid var(--gray-a4);
+  border: 1px solid var(--gray-6);
+  background: var(--color-panel-solid);
+}
+
+.cover {
+  height: 11.25rem;
+  overflow: hidden;
   background: var(--gray-3);
 }
 
 .coverImage {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
 .galleryItem {
-  width: 100%;
   aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: var(--radius-2);
-  border: 1px solid var(--gray-a5);
+  overflow: hidden;
+  border: 1px solid var(--gray-6);
+  border-radius: var(--radius-3);
   background: var(--gray-3);
+}
+
+.galleryImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

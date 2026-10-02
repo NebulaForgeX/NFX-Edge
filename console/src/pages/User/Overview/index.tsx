@@ -1,8 +1,8 @@
-import { LayoutDashboardIcon, MagnifierIcon, RouterIcon, ShieldCheck, StackIcon } from "nfx-ui/icons";
+import { LayoutDashboardIcon, ShieldCheck } from "nfx-ui/icons";
 import { memo, useMemo } from "react";
-import { Button, Flex, Text } from "@radix-ui/themes";
+import { Box, Button, Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
-import { DataTable, PageHeader, Suspense } from "@/components";
+import { ActionBar, DataTable, PageHeader, Suspense } from "@/components";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 
@@ -32,35 +32,31 @@ const DashboardBody = memo(() => {
 
   return (
     <Flex direction="column" gap="5">
-      <div className={styles.stamps}>
-        <div className={styles.stamp}>
-          <div className={styles.stampFill}>
-          <div className={styles.stampPx}>
-            <div className={styles.stampPy}>
-              <div className={styles.stampStack}>
+      <Grid columns={{ initial: "1", sm: "2" }} gap="4" width="100%">
+        <Box className={styles.stamp}>
+          <Container width="100%" maxWidth="100%" px="4">
+            <Section py="4">
+              <Flex direction="column" gap="2">
                 <span className={styles.stampKey}>{t("dashboard.totalCerts")}</span>
                 <span className={styles.stampVal}>{certificates.length}</span>
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
-        <div className={styles.stamp}>
-          <div className={styles.stampFill}>
-          <div className={styles.stampPx}>
-            <div className={styles.stampPy}>
-              <div className={styles.stampStack}>
+              </Flex>
+            </Section>
+          </Container>
+        </Box>
+        <Box className={styles.stamp}>
+          <Container width="100%" maxWidth="100%" px="4">
+            <Section py="4">
+              <Flex direction="column" gap="2">
                 <span className={styles.stampKey}>{t("dashboard.expiringSoon")}</span>
-                <span className={`${styles.stampVal} ${expiring.length ? styles.stampWarn : ""}`}>{expiring.length}</span>
-              </div>
-            </div>
-          </div>
-          </div>
-        </div>
-      </div>
+                <span className={styles.stampWarn}>{expiring.length}</span>
+              </Flex>
+            </Section>
+          </Container>
+        </Box>
+      </Grid>
 
-      <div className={styles.ledgerBlock}>
-        <Text as="p" className={styles.ledgerTitle}>
+      <Flex direction="column" gap="3">
+        <Text as="p" className={styles.ledgerTitleText}>
           {t("dashboard.expiringTable")}
         </Text>
         <DataTable
@@ -79,7 +75,7 @@ const DashboardBody = memo(() => {
             { key: "status", header: t("dashboard.colStatus"), render: (row) => <ExpiringRowLabel cert={row} /> },
           ]}
         />
-      </div>
+      </Flex>
     </Flex>
   );
 });
@@ -92,43 +88,12 @@ const DashboardPage = memo(() => {
 
   return (
     <PageFrame>
-      <PageHeader
-        icon={LayoutDashboardIcon}
-        index={t("dashboard.index")}
-        title={t("title")}
-        description={t("subtitle")}
-        actions={
-          <Flex gap="2" wrap="wrap">
-            <Button asChild variant="outline">
-              <Link to={ROUTES.CERT_ADD}>{tNav("addCert")}</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link to={ROUTES.CERTS_OVERVIEW}>
-                <ShieldCheck size={16} />
-                {t("dashboard.certs")}
-              </Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link to={ROUTES.NAMECHEAP_OVERVIEW}>
-                <RouterIcon size={16} />
-                {t("dashboard.dns")}
-              </Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link to={ROUTES.FILE_FOLDER}>
-                <StackIcon size={16} />
-                {t("dashboard.files")}
-              </Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link to={ROUTES.ANALYSIS_TLS}>
-                <MagnifierIcon size={16} />
-                {t("dashboard.analysis")}
-              </Link>
-            </Button>
-          </Flex>
-        }
-      />
+      <PageHeader icon={LayoutDashboardIcon} index={t("dashboard.index")} title={t("title")} description={t("subtitle")} />
+      <ActionBar>
+        <Button asChild>
+          <Link to={ROUTES.CERT_ADD}>{tNav("addCert")}</Link>
+        </Button>
+      </ActionBar>
       <Suspense>
         <DashboardBody />
       </Suspense>

@@ -1,10 +1,9 @@
 .stage {
-  overflow: hidden;
   width: 100%;
+  overflow: hidden;
 }
 
 .track {
-  display: flex;
   width: 200%;
   will-change: transform;
 }
@@ -38,15 +37,15 @@
 }
 
 .pick {
-  width: 100%;
   margin: 0;
   padding: 0;
+  width: 100%;
   border: 0;
   background: transparent;
+  cursor: pointer;
   color: inherit;
   font: inherit;
   text-align: left;
-  cursor: pointer;
 }
 
 .pick:hover {

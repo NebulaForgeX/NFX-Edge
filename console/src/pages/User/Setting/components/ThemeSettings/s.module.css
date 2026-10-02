@@ -1,0 +1,160 @@
+.controlFit {
+  width: max-content;
+  max-width: 100%;
+}
+
+.controlFit :global(.rt-SegmentedControlRoot) {
+  width: max-content;
+  max-width: 100%;
+}
+
+.swatch:global(.rt-BaseButton) {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-chip);
+  border: 1px solid var(--gray-a6);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.swatch:global(.rt-BaseButton)[data-active="true"] {
+  outline: 2px solid var(--gray-12);
+  outline-offset: 2px;
+}
+
+.swatchSize {
+  width: 22px;
+  height: 22px;
+}
+
+.swatchRadius {
+  border-radius: var(--radius-chip);
+}
+
+.swatchEdge {
+  border: 1px solid var(--gray-a6);
+}
+
+.swatchHit {
+  cursor: pointer;
+}
+
+.swatchLayout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.swatchActive {
+  outline: 2px solid var(--gray-12);
+  outline-offset: 2px;
+}
+
+.previewTheme {
+  width: 100%;
+}
+
+.positionPreviewPos {
+  position: relative;
+}
+
+.positionPreviewSize {
+  width: 56px;
+  height: 40px;
+}
+
+.positionPreviewRadius {
+  border-radius: var(--radius-chip);
+}
+
+.positionPreviewEdge {
+  border: 1px solid var(--gray-a5);
+}
+
+.positionPreviewFill {
+  background: var(--gray-3);
+}
+
+
+
+.positionDotPos {
+  position: absolute;
+}
+
+.positionDotSize {
+  width: 10px;
+  height: 10px;
+}
+
+.positionDotRadius {
+  border-radius: 999px;
+}
+
+.positionDotFill {
+  background: var(--accent-9);
+}
+
+
+
+.preview_bottom_right .positionDotPos {
+  right: 6px;
+  bottom: 6px;
+}
+.preview_bottom_left .positionDotPos {
+  left: 6px;
+  bottom: 6px;
+}
+.preview_top_right .positionDotPos {
+  right: 6px;
+  top: 6px;
+}
+.preview_top_left .positionDotPos {
+  left: 6px;
+  top: 6px;
+}
+
+.colorRowSize {
+  width: 100%;
+}
+
+.colorRowEdge {
+  border-bottom: 1px solid var(--gray-a3);
+}
+
+
+
+.colorRowSize:last-child {
+  border-bottom: none;
+}
+
+.colorInputSize {
+  width: 36px;
+  height: 28px;
+}
+
+.colorInputRadius {
+  border-radius: var(--radius-chip);
+}
+
+.colorInputEdge {
+  border: 1px solid var(--gray-a5);
+}
+
+.colorInputFill {
+  background: transparent;
+}
+
+.colorInputHit {
+  cursor: pointer;
+}
+
+.colorInputPy {
+  padding-block: 0;
+}
+
+

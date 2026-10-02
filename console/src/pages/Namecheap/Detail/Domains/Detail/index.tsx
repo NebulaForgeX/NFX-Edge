@@ -1,8 +1,8 @@
 import { ArrowNarrowLeftIcon, RouterIcon } from "nfx-ui/icons";
 import { memo, useMemo, useState } from "react";
-import { Button, Box, Flex, Text, TextArea } from "@radix-ui/themes";
+import { Button, Box, Container, Flex, Grid, Section, Text, TextArea } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
-import { DataTable, Dropdown, EmptyState, Input, PageHeader } from "@/components";
+import { ActionBar, DataTable, Dropdown, EmptyState, Input, PageHeader } from "@/components";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { getApiError } from "nfx-ui/utils";
@@ -310,13 +310,13 @@ const NamecheapDomainDetailPage = memo(() => {
         </Text>
         {selectedHosts.length ? (
           <Flex gap="3" wrap="wrap" width="100%" align="end">
-            <Box className={styles.field}>
+            <Flex direction="column" className={styles.field}>
               <Flex direction="column" gap="1">
                 <Text size="1">{t("address")}</Text>
                 <Input size="2" value={patchAddress} placeholder={t("keep")} onChange={(event) => setPatchAddress(event.target.value)} />
               </Flex>
-            </Box>
-            <Box className={styles.field}>
+            </Flex>
+            <Flex direction="column" className={styles.field}>
               <Flex direction="column" gap="1">
                 <Text size="1">{t("ttl")}</Text>
                 <TtlDropdown
@@ -328,13 +328,13 @@ const NamecheapDomainDetailPage = memo(() => {
                   onChange={setPatchTtl}
                 />
               </Flex>
-            </Box>
-            <Box className={styles.field}>
+            </Flex>
+            <Flex direction="column" className={styles.field}>
               <Flex direction="column" gap="1">
                 <Text size="1">{t("mxPref")}</Text>
                 <Input size="2" value={patchMx} placeholder={t("keep")} onChange={(event) => setPatchMx(event.target.value)} />
               </Flex>
-            </Box>
+            </Flex>
             <Button type="button" onClick={applySelectedPatch} disabled={!canPatch}>
               {patchHosts.isPending ? t("loading") : t("patchSelected")}
             </Button>
@@ -358,21 +358,37 @@ const NamecheapDomainDetailPage = memo(() => {
         index={t("index")}
         title={domain}
         description={t("subtitle")}
-        actions={
-          <Button variant="outline" onClick={() => routerEventEmitter.navigate({ to: backPath })}>
-            <ArrowNarrowLeftIcon size={16} />
-            {t("back")}
-          </Button>
-        }
       />
-      <Flex direction="column" gap="4" width="100%">
-        {info ? (
-          <Text className={styles.hint}>
-            {t("expires", { at: info.expires || "—" })} · {t("locked", { value: info.isLocked || info.status || "—" })} · {t("ourDns", { value: String(info.isOurDns) })}
-          </Text>
-        ) : null}
-        {hostBody}
-      </Flex>
+      <ActionBar>
+        <Button variant="outline" onClick={() => routerEventEmitter.navigate({ to: backPath })}>
+          <ArrowNarrowLeftIcon size={16} />
+          {t("back")}
+        </Button>
+      </ActionBar>
+      <Grid columns={{ initial: "1", lg: "minmax(0, 1fr) 16rem" }} gap="6" align="start">
+        <Flex direction="column" gap="4" width="100%" minWidth="0">
+          {hostBody}
+        </Flex>
+        <Section size="1" py="4" className={styles.side}>
+          <Container size="2" px="4" width="100%">
+            <Flex direction="column" gap="3">
+              <Flex direction="column" gap="1">
+                <Text size="1" color="gray">{t("host")}</Text>
+                <Text size="7" className={styles.count}>{hosts.length}</Text>
+              </Flex>
+              {info ? (
+                <Text size="2" color="gray">
+                  {t("expires", { at: info.expires || "—" })}
+                  {" · "}
+                  {t("locked", { value: info.isLocked || info.status || "—" })}
+                  {" · "}
+                  {t("ourDns", { value: String(info.isOurDns) })}
+                </Text>
+              ) : null}
+            </Flex>
+          </Container>
+        </Section>
+      </Grid>
     </PageFrame>
   );
 });

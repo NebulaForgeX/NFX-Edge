@@ -1,6 +1,6 @@
 import { CopyIcon } from "nfx-ui/icons";
 import { memo } from "react";
-import { Button, Text } from "@radix-ui/themes";
+import { Box, Button, Container, Flex, Section, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
 import styles from "./s.module.css";
@@ -14,28 +14,32 @@ const CertificateContent = memo(({ certificate, onCopy }: CertificateContentProp
   const { t } = useTranslation("certDetail");
 
   return (
-    <div className={styles.sheet}>
-      <span className={`${styles.corner} ${styles.cornerTl}`} />
-      <span className={`${styles.corner} ${styles.cornerTr}`} />
-      <span className={`${styles.corner} ${styles.cornerBl}`} />
-      <span className={`${styles.corner} ${styles.cornerBr}`} />
-      <div className={styles.sheetPx}>
-        <div className={styles.sheetPy}>
-          <div className={styles.sheetStack}>
-      <div className={styles.head}>
-        <Text as="span" className={styles.kind}>
-          {t("certificate.content")}
-        </Text>
-        <Button size="1" variant="outline" onClick={onCopy}>
-          <CopyIcon size={14} />
-          {t("copy.certificate")}
-        </Button>
-      </div>
-      <pre className={styles.body}>{certificate}</pre>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Box className={styles.sheet}>
+      <Box className={`${styles.corner} ${styles.cornerTl}`} />
+      <Box className={`${styles.corner} ${styles.cornerTr}`} />
+      <Box className={`${styles.corner} ${styles.cornerBl}`} />
+      <Box className={`${styles.corner} ${styles.cornerBr}`} />
+      <Container width="100%" maxWidth="none" className={styles.sheetInset} >
+        <Section className={styles.sheetPad}>
+          <Flex direction="column" className={styles.stack}>
+            <Section className={styles.head}>
+              <Flex align="center" justify="between" gap="3">
+                <Text as="span" className={styles.kind}>
+                  {t("certificate.content")}
+                </Text>
+                <Button size="1" variant="outline" onClick={onCopy}>
+                  <CopyIcon size={14} />
+                  {t("copy.certificate")}
+                </Button>
+              </Flex>
+            </Section>
+            <Flex direction="column" className={styles.body} >
+              <pre className={styles.pem}>{certificate}</pre>
+            </Flex>
+          </Flex>
+        </Section>
+      </Container>
+    </Box>
   );
 });
 

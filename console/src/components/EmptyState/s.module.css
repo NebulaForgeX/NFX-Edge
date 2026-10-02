@@ -1,32 +1,19 @@
-.frameSize {
+.frame {
   min-height: 14rem;
-}
-
-.frameEdge {
   border: 1px dashed var(--gray-6);
-}
-
-.frameFill {
   background: var(--color-panel-solid);
 }
 
-.stampSize {
+.stamp {
   width: 40px;
   height: 40px;
-}
-
-.stampEdge {
   border: 1px solid color-mix(in oklab, var(--accent-9) 45%, var(--gray-6));
-}
-
-.stampInk {
   color: var(--accent-9);
 }
 
 .title {
   max-width: 28ch;
   font-family: var(--heading-font-family), sans-serif;
-  letter-spacing: -0.03em;
 }
 
 .lede {

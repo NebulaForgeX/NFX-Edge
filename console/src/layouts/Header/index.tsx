@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Button, DropdownMenu, Flex, IconButton, Text } from "@radix-ui/themes";
+import { Avatar, Box, Button, Container, DropdownMenu, Flex, IconButton, Section, Text } from "@radix-ui/themes";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { APP_NAME } from "nfx-ui/config";
 import { useCurrentProfile } from "nfx-ui/hooks";
@@ -53,85 +53,85 @@ function Header() {
   }, []);
 
   return (
-    <Flex asChild className={styles.header}>
+    <Box asChild className={styles.header}>
       <header ref={headerRef}>
-        <Flex
-          align="center"
-          justify="between"
-          gap="3"
-          className={styles.bar}
-          style={
-            elevated
-              ? {
-                  boxShadow: "0 14px 40px color-mix(in oklab, var(--gray-12) 10%, transparent)",
-                }
-              : undefined
-          }
-        >
-            <Logo variant="glassSquare" size="small" title={<Text className={styles.brandWord}>{APP_NAME}</Text>} subtitle="Edge" />
+        <Container size="4" width="100%" maxWidth="100%" px="4">
+          <Section size="1" py="3">
+            <Flex justify="center" width="100%">
+              <Box width="100%" maxWidth="1120px" className={styles.bar} data-elevated={elevated ? "true" : "false"}>
+                <Container size="4" width="100%" maxWidth="100%" px="3">
+                  <Section size="1" py="2">
+                    <Flex align="center" justify="between" gap="3">
+                      <Logo variant="glassSquare" size="small" title={<Text className={styles.brandWord}>{APP_NAME}</Text>} subtitle="Edge" />
 
-            <Flex align="center" gap="2" flexShrink="0">
-              <IconButton
-                id="header-mobile-menu-button"
-                variant="outline"
-                size="2"
-                aria-label={t("header.openMenu")}
-                aria-expanded={isAsiderOpen}
-                aria-controls="mobile-asider"
-                onClick={openAsider}
-              >
-                <HamburgerMenuIcon width={20} height={20} />
-              </IconButton>
-              <PreferencesPopover />
+                      <Flex align="center" gap="2" flexShrink="0">
+                        <IconButton
+                          id="header-mobile-menu-button"
+                          variant="outline"
+                          size="2"
+                          aria-label={t("header.openMenu")}
+                          aria-expanded={isAsiderOpen}
+                          aria-controls="mobile-asider"
+                          onClick={openAsider}
+                        >
+                          <HamburgerMenuIcon width={20} height={20} />
+                        </IconButton>
+                        <PreferencesPopover />
 
-              {isAuthValid ? (
-                <DropdownMenu.Root modal={false}>
-                  <DropdownMenu.Trigger>
-                    <Button variant="outline" color="gray" highContrast>
-                      <Avatar size="1" radius="full" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
-                      <Text size="2" truncate style={{ maxWidth: 120 }}>
-                        {displayName}
-                      </Text>
-                    </Button>
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Content align="end" sideOffset={8} size="2" className={styles.accountMenu}>
-                    <DropdownMenu.Label>
-                      <Text size="1" color="gray" truncate style={{ maxWidth: 200 }}>
-                        {displayName}
-                      </Text>
-                    </DropdownMenu.Label>
-                    <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: ROUTES.USER_OVERVIEW })}>
-                      {t("header.panel")}
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
-                      {t("header.profile")}
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: ROUTES.USER_SETTINGS })}>
-                      {t("sidebar.settingsItem")}
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Separator />
-                    <DropdownMenu.Item
-                      color="red"
-                      onSelect={() => {
-                        void logoutSession().then(() => routerEventEmitter.navigate({ to: ROUTES.LOGIN }));
-                      }}
-                    >
-                      {t("header.logout")}
-                    </DropdownMenu.Item>
-                  </DropdownMenu.Content>
-                </DropdownMenu.Root>
-              ) : (
-                <>
-                  <Button variant="outline" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.LOGIN })}>
-                    {t("header.login")}
-                  </Button>
-                  <Button onClick={() => routerEventEmitter.navigate({ to: ROUTES.SIGNUP })}>{t("header.signup")}</Button>
-                </>
-              )}
+                        {isAuthValid ? (
+                          <DropdownMenu.Root modal={false}>
+                            <DropdownMenu.Trigger>
+                              <Button variant="outline" color="gray" highContrast>
+                                <Avatar size="1" radius="full" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
+                                <Text size="2" truncate className={styles.nameLimit}>
+                                  {displayName}
+                                </Text>
+                              </Button>
+                            </DropdownMenu.Trigger>
+                            <DropdownMenu.Content align="end" sideOffset={8} size="2" className={styles.accountMenu}>
+                              <DropdownMenu.Label>
+                                <Text size="1" color="gray" truncate className={styles.menuNameLimit}>
+                                  {displayName}
+                                </Text>
+                              </DropdownMenu.Label>
+                              <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: ROUTES.USER_OVERVIEW })}>
+                                {t("header.panel")}
+                              </DropdownMenu.Item>
+                              <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
+                                {t("header.profile")}
+                              </DropdownMenu.Item>
+                              <DropdownMenu.Item onSelect={() => routerEventEmitter.navigate({ to: ROUTES.USER_SETTINGS })}>
+                                {t("sidebar.settingsItem")}
+                              </DropdownMenu.Item>
+                              <DropdownMenu.Separator />
+                              <DropdownMenu.Item
+                                color="red"
+                                onSelect={() => {
+                                  void logoutSession().then(() => routerEventEmitter.navigate({ to: ROUTES.LOGIN }));
+                                }}
+                              >
+                                {t("header.logout")}
+                              </DropdownMenu.Item>
+                            </DropdownMenu.Content>
+                          </DropdownMenu.Root>
+                        ) : (
+                          <>
+                            <Button variant="outline" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.LOGIN })}>
+                              {t("header.login")}
+                            </Button>
+                            <Button onClick={() => routerEventEmitter.navigate({ to: ROUTES.SIGNUP })}>{t("header.signup")}</Button>
+                          </>
+                        )}
+                      </Flex>
+                    </Flex>
+                  </Section>
+                </Container>
+              </Box>
             </Flex>
-        </Flex>
+          </Section>
+        </Container>
       </header>
-    </Flex>
+    </Box>
   );
 }
 

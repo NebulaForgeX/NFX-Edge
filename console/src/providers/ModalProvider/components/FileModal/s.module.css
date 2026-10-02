@@ -1,21 +1,16 @@
-.clip {
+.hairline {
+  border-bottom: 1px solid var(--gray-6);
+}
+
+.sheet {
   max-height: min(60vh, 32rem);
   overflow: auto;
-}
-
-.edge {
   border: 1px solid var(--gray-6);
-}
-
-.fill {
+  border-radius: var(--radius-3);
   background: var(--color-panel-solid);
 }
 
-.radius {
-  border-radius: var(--radius-3);
-}
-
-.pre {
+.pem {
   margin: 0;
   color: var(--gray-12);
   white-space: pre-wrap;

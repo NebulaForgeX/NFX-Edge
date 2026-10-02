@@ -4,6 +4,7 @@ export { default as LucideIcon } from "./LucideIcon";
 export type { LucideIconProps } from "./LucideIcon";
 export { default as Suspense } from "./Suspense";
 export type { SuspenseProps } from "./Suspense";
+export { default as ActionBar } from "./ActionBar";
 export { default as PageHeader } from "./PageHeader";
 export type { PageHeaderProps } from "./PageHeader";
 export { default as PemSheet } from "./PemSheet";

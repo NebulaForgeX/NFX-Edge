@@ -1,17 +1,27 @@
 .root {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.875rem 1rem;
   border-radius: var(--radius-card);
   border: 1px solid color-mix(in srgb, var(--orange-11) 35%, var(--gray-6));
   background: color-mix(in srgb, var(--orange-11) 10%, var(--color-panel-solid));
+}
+
+.rootPad.rootPad {
+  padding-block: 0.875rem;
+}
+
+.rootInset.rootInset {
+  padding-inline: 1rem;
+}
+
+.row {
+  gap: 0.75rem;
   color: var(--gray-12);
 }
 
-.icon {
+.icon.icon {
   flex-shrink: 0;
   margin-top: 0.05rem;
+  padding-top: 0;
+  padding-bottom: 0;
   color: var(--orange-11);
 }
 

@@ -1,7 +1,7 @@
 import { AnimatedIcon, HomeIcon, LogoutIcon, RightChevron, UserIcon } from "nfx-ui/icons";
 
-import { useEffect, useRef } from "react";
-import { Avatar, Box, Button, Flex, IconButton, Text } from "@radix-ui/themes";
+import { useEffect, useRef, useState } from "react";
+import { Avatar, Box, Button, Container, Flex, IconButton, Section, Text } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
 import { useCurrentProfile } from "nfx-ui/hooks";
 import { closeAsider, useAuthStore, useLayoutStore } from "nfx-ui/stores";
@@ -22,6 +22,7 @@ function Asider() {
   const isAsiderOpen = useLayoutStore((state) => state.isAsiderOpen);
   const sidebarRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia("(min-width: 981px)").matches);
   const { data: accountInfo, profile } = useCurrentProfile();
 
   const accountId = safeNullable(accountInfo?.account.id);
@@ -31,12 +32,13 @@ function Asider() {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 981px)");
-    const handleDesktop = (event: MediaQueryListEvent) => {
-      if (event.matches) closeAsider();
+    const sync = () => {
+      setIsDesktop(mediaQuery.matches);
+      if (mediaQuery.matches) closeAsider();
     };
-
-    mediaQuery.addEventListener("change", handleDesktop);
-    return () => mediaQuery.removeEventListener("change", handleDesktop);
+    sync();
+    mediaQuery.addEventListener("change", sync);
+    return () => mediaQuery.removeEventListener("change", sync);
   }, [closeAsider]);
 
   useEffect(() => {
@@ -73,30 +75,41 @@ function Asider() {
     routerEventEmitter.navigate({ to });
   };
 
+  const open = isAsiderOpen ? "true" : "false";
+
+  if (isDesktop) return null;
+
   return (
     <>
-      <div className={`${styles.overlay} ${isAsiderOpen ? styles.overlayOpen : ""}`} role="presentation" onClick={closeAsider} aria-hidden={!isAsiderOpen} />
-
-      <Box asChild className={`${styles.sidebar} ${isAsiderOpen ? styles.sidebarOpen : ""}`}>
-        <aside
-          id="mobile-asider"
-          ref={sidebarRef}
-          role="dialog"
-          aria-modal={isAsiderOpen}
-          aria-label={t("header.openMenu")}
+      <Box>
+        <Box
+          className={styles.overlay}
+          data-open={open}
+          onClick={closeAsider}
+          role="presentation"
           aria-hidden={!isAsiderOpen}
-          inert={!isAsiderOpen ? true : undefined}
-        >
-          <Box className={styles.sidebarPx}>
-            <Box className={styles.sidebarPy}>
-              <Flex direction="column" gap="6" height="100%">
-                <Box className={styles.sidebarHeader}>
-                  <Box className={styles.sidebarHeaderPy}>
+        />
+      </Box>
+
+      <Box inert={!isAsiderOpen ? true : undefined}>
+        <Box asChild className={styles.sidebar} data-open={open} height="100%">
+          <aside
+            id="mobile-asider"
+            ref={sidebarRef}
+            role="dialog"
+            aria-modal={isAsiderOpen}
+            aria-label={t("header.openMenu")}
+            aria-hidden={!isAsiderOpen}
+          >
+            <Container size="4" width="100%" maxWidth="100%" height="100%" px="20px" className={styles.sidebarInset}>
+              <Section size="1" height="100%" py="20px">
+                <Flex direction="column" gap="6" height="100%">
+                  <Section size="1" pt="0" pb="22px" position="relative" minHeight="64px" className={styles.headerBand}>
                     <Flex align="center" justify="between" gap="3">
                       {isAuthValid ? (
-                        <Flex align="center" gap="3" className={styles.accountCard}>
+                        <Flex align="center" gap="3" width="100%">
                           <Avatar size="3" radius="medium" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} aria-hidden />
-                          <Box>
+                          <Box className={styles.accountText}>
                             <Text as="p" size="2" weight="bold">
                               {displayName}
                             </Text>
@@ -112,85 +125,88 @@ function Asider() {
                         <AnimatedIcon icon={RightChevron} size={14} />
                       </IconButton>
                     </Flex>
-                  </Box>
-                </Box>
+                  </Section>
 
-                <Box className={styles.navHairline}>
-                  <Box pb="5">
-                    <Flex asChild direction="column" gap="3" className={styles.nav}>
-                      <nav>
-                        <Button type="button" variant="ghost" className={styles.navLink} onClick={() => navigateFromMenu(ROUTES.HOME)}>
-                          <AnimatedIcon icon={HomeIcon} size={18} aria-hidden="true" />
-                          <Text as="span" size="3">
-                            {t("header.home")}
-                          </Text>
-                        </Button>
-                      </nav>
+                  <Section size="1" pb="5" pt="0" className={styles.navHairline}>
+                    <Box className={styles.navScroll}>
+                      <Flex asChild direction="column" gap="3">
+                        <nav>
+                          <Button type="button" variant="ghost" className={styles.navLink} onClick={() => navigateFromMenu(ROUTES.HOME)}>
+                            <AnimatedIcon icon={HomeIcon} size={18} aria-hidden="true" />
+                            <Text as="span" size="3">
+                              {t("header.home")}
+                            </Text>
+                          </Button>
+                        </nav>
+                      </Flex>
+                    </Box>
+                  </Section>
+
+                  <Section size="1" pt="0" pb="0" mt="auto">
+                    <Flex direction="column" gap="3">
+                      {isAuthValid ? (
+                        <>
+                          <Button
+                            className={styles.wideButton}
+                            variant="outline"
+                            size="2"
+                            onClick={() => {
+                              closeAsider();
+                              routerEventEmitter.navigate({ to: ROUTES.PROFILE });
+                            }}
+                          >
+                            <AnimatedIcon icon={UserIcon} size={18} aria-hidden="true" />
+                            {t("header.profile")}
+                          </Button>
+                          <Button
+                            className={styles.wideButton}
+                            data-tone="danger"
+                            variant="outline"
+                            size="2"
+                            onClick={() => {
+                              closeAsider();
+                              void logoutSession().then(() => routerEventEmitter.navigate({ to: ROUTES.LOGIN }));
+                            }}
+                          >
+                            <AnimatedIcon icon={LogoutIcon} size={18} aria-hidden="true" />
+                            {t("header.logout")}
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <PreferencesPopover triggerVariant="outline" />
+
+                          <Button
+                            className={styles.wideButton}
+                            variant="outline"
+                            size="2"
+                            onClick={() => {
+                              closeAsider();
+                              routerEventEmitter.navigate({ to: ROUTES.LOGIN });
+                            }}
+                          >
+                            {t("header.login")}
+                          </Button>
+                          <Button
+                            className={styles.wideButton}
+                            variant="solid"
+                            size="2"
+                            onClick={() => {
+                              closeAsider();
+                              routerEventEmitter.navigate({ to: ROUTES.SIGNUP });
+                            }}
+                          >
+                            {t("header.signup")}
+                          </Button>
+                        </>
+                      )}
                     </Flex>
-                  </Box>
-                </Box>
-
-                <Flex direction="column" gap="3" className={styles.actions}>
-                  {isAuthValid ? (
-                    <>
-                      <Button
-                        className={styles.wideButton}
-                        variant="outline"
-                        size="2"
-                        onClick={() => {
-                          closeAsider();
-                          routerEventEmitter.navigate({ to: ROUTES.PROFILE });
-                        }}
-                      >
-                        <AnimatedIcon icon={UserIcon} size={18} aria-hidden="true" />
-                        {t("header.profile")}
-                      </Button>
-                      <Button
-                        className={`${styles.wideButton} ${styles.logout}`}
-                        variant="outline"
-                        size="2"
-                        onClick={() => {
-                          closeAsider();
-                          void logoutSession().then(() => routerEventEmitter.navigate({ to: ROUTES.LOGIN }));
-                        }}
-                      >
-                        <AnimatedIcon icon={LogoutIcon} size={18} aria-hidden="true" />
-                        {t("header.logout")}
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <PreferencesPopover triggerVariant="outline" />
-
-                      <Button
-                        className={styles.wideButton}
-                        variant="outline"
-                        size="2"
-                        onClick={() => {
-                          closeAsider();
-                          routerEventEmitter.navigate({ to: ROUTES.LOGIN });
-                        }}
-                      >
-                        {t("header.login")}
-                      </Button>
-                      <Button
-                        className={styles.wideButton}
-                        variant="solid"
-                        size="2"
-                        onClick={() => {
-                          closeAsider();
-                          routerEventEmitter.navigate({ to: ROUTES.SIGNUP });
-                        }}
-                      >
-                        {t("header.signup")}
-                      </Button>
-                    </>
-                  )}
+                  </Section>
                 </Flex>
-              </Flex>
-            </Box>
-          </Box>
-        </aside>
+              </Section>
+            </Container>
+          </aside>
+        </Box>
       </Box>
     </>
   );

@@ -4,7 +4,7 @@ import gsap from "gsap";
 
 import { EmptySceneVariantEnum } from "@/enums";
 
-import campfireStyles from "./campfire.module.css";
+import { Campfire } from "./Campfire";
 import styles from "./s.module.css";
 
 gsap.registerPlugin(useGSAP);
@@ -19,31 +19,9 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function CampfireArt() {
-  return (
-    <div className={campfireStyles.campfire}>
-      <div className={campfireStyles.fireContainer}>
-        <div className={`${campfireStyles.flame} ${campfireStyles.flameMain}`} />
-        <div className={`${campfireStyles.flame} ${campfireStyles.flameLeft}`} />
-        <div className={`${campfireStyles.flame} ${campfireStyles.flameRight}`} />
-      </div>
-      <div className={campfireStyles.logs}>
-        <div className={campfireStyles.log} />
-        <div className={campfireStyles.log} />
-      </div>
-      <div className={campfireStyles.embers}>
-        <div className={campfireStyles.ember} style={{ ["--delay" as string]: 0 }} />
-        <div className={campfireStyles.ember} style={{ ["--delay" as string]: 0.3 }} />
-        <div className={campfireStyles.ember} style={{ ["--delay" as string]: 0.6 }} />
-      </div>
-      <div className={campfireStyles.sparkles} />
-    </div>
-  );
-}
-
 function AbstractArt() {
   return (
-    <svg className={styles.art} viewBox="0 0 120 120" aria-hidden>
+    <svg className={styles.artType} viewBox="0 0 120 120" aria-hidden>
       <circle className={styles.orbit} cx="60" cy="60" r="40" data-ring="outer" />
       <circle className={styles.orbitSoft} cx="60" cy="60" r="26" data-ring="inner" />
       <circle className={styles.blob} cx="48" cy="52" r="14" data-blob="a" />
@@ -64,7 +42,7 @@ export function EmptyScene({ variant = EmptySceneVariantEnum.ABSTRACT, className
     () => {
       if (!rootRef.current || prefersReducedMotion() || isCampfire) return;
 
-      const glow = rootRef.current.querySelector(`.${styles.glow}`);
+      const glow = rootRef.current.querySelector(`.${styles.glowFill}`);
       if (glow) {
         gsap.fromTo(glow, { opacity: 0.5, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.7, ease: "power2.out" });
         gsap.to(glow, { opacity: 0.7, duration: 2.6, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 0.7 });
@@ -89,9 +67,37 @@ export function EmptyScene({ variant = EmptySceneVariantEnum.ABSTRACT, className
   );
 
   return (
-    <div ref={rootRef} className={[styles.scene, isCampfire ? styles.campfireScene : "", className].filter(Boolean).join(" ")} aria-hidden>
-      {!isCampfire ? <div className={styles.glow} /> : null}
-      <div className={styles.stage}>{isCampfire ? <CampfireArt /> : <AbstractArt />}</div>
+    <div className={styles.sceneGrow}>
+      <div className={styles.sceneMy}>
+        <div className={styles.scenePos}>
+          <div className={styles.sceneSize}>
+            <div ref={rootRef} className={[styles.sceneFx, isCampfire ? styles.campfireScene : "", className].filter(Boolean).join(" ")} aria-hidden>
+              {!isCampfire ? (
+                <div className={styles.glowHit}>
+                  <div className={styles.glowPos}>
+                    <div className={styles.glowRadius}>
+                      <div className={styles.glowFill} />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+              <div className={styles.stagePos}>
+                <div className={styles.stageLayout}>
+                  {isCampfire ? (
+                    <Campfire />
+                  ) : (
+                    <div className={styles.artSize}>
+                      <div className={styles.artClip}>
+                        <AbstractArt />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

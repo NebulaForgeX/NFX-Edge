@@ -1,50 +1,32 @@
 .crumbs {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.15rem 0.2rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 12px;
-  letter-spacing: 0.04em;
-}
-
-.crumb {
-  display: inline-flex;
-  align-items: center;
-}
-
-.sep {
-  margin: 0 0.35rem;
-  color: var(--gray-9);
 }
 
 .list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.listEdge {
   border: 1px solid var(--gray-6);
-}
-
-.listFill {
   background: var(--color-background);
 }
 
+.listReset {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.side {
+  background: var(--color-panel-solid);
+  border: 1px solid var(--gray-6);
+  border-radius: var(--radius-3);
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
+}
+
 .row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-3);
-  align-items: center;
-}
-
-.rowPad {
-  padding-inline: 0.65rem;
-}
-
-.rowRule {
   border-bottom: 1px solid var(--gray-6);
+  cursor: pointer;
 }
 
 .row:last-child {
@@ -55,26 +37,24 @@
   background: color-mix(in oklab, var(--accent-9) 5%, transparent);
 }
 
-.open {
-  display: grid;
-  grid-template-columns: 1.6rem minmax(0, 1fr) 4.5rem 5.5rem minmax(8rem, auto);
-  gap: 0.65rem;
-  align-items: center;
-  min-width: 0;
-  padding-block: 0.85rem;
+.markButton,
+.nameButton {
+  appearance: none;
+  margin: 0;
+  padding: 0;
   border: 0;
   background: transparent;
   color: inherit;
+  font: inherit;
   text-align: left;
   cursor: pointer;
 }
 
 .mark {
-  display: flex;
   color: var(--accent-9);
 }
 
-.name {
+.nameButton {
   min-width: 0;
   overflow: hidden;
   font-weight: 550;
@@ -82,37 +62,15 @@
   white-space: nowrap;
 }
 
-.kind,
-.size,
-.date {
+.meta {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 11px;
   color: var(--gray-10);
   white-space: nowrap;
 }
 
-.empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 12rem;
-  border: 1px dashed var(--gray-6);
-  color: var(--gray-10);
-  background: var(--color-panel-solid);
-}
-
-.ops {
-  flex-shrink: 0;
-}
-
-@media (max-width: 800px) {
-  .open {
-    grid-template-columns: 1.6rem minmax(0, 1fr) auto;
-  }
-
-  .kind,
-  .size,
-  .date {
+@media (max-width: 767px) {
+  .meta {
     display: none;
   }
 }

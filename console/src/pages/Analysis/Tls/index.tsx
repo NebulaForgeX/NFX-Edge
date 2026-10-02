@@ -1,6 +1,6 @@
 import { MagnifierIcon, ShieldCheck } from "nfx-ui/icons";
 import { memo, useMemo, useState } from "react";
-import { Badge, Box, Button, Flex, Heading, Text } from "@radix-ui/themes";
+import { Badge, Box, Button, Container, Flex, Grid, Heading, Section, Text } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
 import { PageHeader, PemSheet } from "@/components";
 import { useTranslation } from "react-i18next";
@@ -67,8 +67,8 @@ const TLSAnalysisPage = memo(() => {
   return (
     <PageFrame>
       <PageHeader icon={ShieldCheck} index={t("index")} title={t("title")} description={t("subtitle")} />
-      <Flex align="start" gap="5" width="100%" wrap="wrap">
-        <Flex direction="column" gap="4" className={styles.intake}>
+      <Grid columns={{ initial: "minmax(0, 1fr)", md: "26rem minmax(0, 1fr)" }} gap="5" width="100%" align="start">
+        <Flex direction="column" gap="4" minWidth="0">
           <PemSheet
             id="tls-cert"
             label={t("pemCert")}
@@ -101,25 +101,24 @@ const TLSAnalysisPage = memo(() => {
             <Button size="3" variant="outline" onClick={handleClear} disabled={pending}>
               {t("clear")}
             </Button>
-            {error ? (
-              <Text size="2" color="red">
-                {error}
-              </Text>
-            ) : null}
           </Flex>
+          {error ? (
+            <Text size="2" color="red">
+              {error}
+            </Text>
+          ) : null}
         </Flex>
 
-        <Box className={styles.stage} flexGrow="1" minWidth="0">
-          <Box className={styles.sheet}>
-            <span className={`${styles.corner} ${styles.cornerTl}`} />
-            <span className={`${styles.corner} ${styles.cornerTr}`} />
-            <span className={`${styles.corner} ${styles.cornerBl}`} />
-            <span className={`${styles.corner} ${styles.cornerBr}`} />
-            <Box className={styles.sheetPx}>
-              <Box className={styles.sheetPy}>
+        <Box className={styles.sheet} minWidth="0">
+            <Box className={`${styles.corner} ${styles.cornerTl}`} />
+            <Box className={`${styles.corner} ${styles.cornerTr}`} />
+            <Box className={`${styles.corner} ${styles.cornerBl}`} />
+            <Box className={`${styles.corner} ${styles.cornerBr}`} />
+            <Container width="100%" maxWidth="100%" px="5">
+              <Section py="5">
                 <Flex direction="column" gap="4">
                   <Box className={styles.hairline}>
-                    <Box pb="3">
+                    <Section pt="0" pb="3">
                       <Flex align="center" justify="between" gap="3">
                         <Text className={styles.kicker}>{t("specimen")}</Text>
                         {specimen ? (
@@ -130,24 +129,26 @@ const TLSAnalysisPage = memo(() => {
                           <Text className={styles.kicker}>{t("awaiting")}</Text>
                         )}
                       </Flex>
-                    </Box>
+                    </Section>
                   </Box>
                   {specimen ? (
                     <Flex direction="column" gap="4">
                       <Heading as="h2" size="6" className={styles.subject}>
                         {specimen.certificate.commonName || t("na")}
                       </Heading>
-                      <dl className={styles.meta}>
+                      <Grid asChild columns={{ initial: "1", sm: "2" }} gap="4" className={styles.meta}>
+                        <dl>
                         {fields.map((field) => (
-                          <div key={field.key} className={styles.metaItem}>
+                          <Flex key={field.key} direction="column" className={styles.metaItem}>
                             <dt>{field.label}</dt>
                             <dd>{field.value}</dd>
-                          </div>
+                          </Flex>
                         ))}
-                      </dl>
+                        </dl>
+                      </Grid>
                       {specimen.certificate.allDomains?.length ? (
                         <Box className={styles.sansHairline}>
-                          <Box pt="4">
+                          <Section pt="4" pb="0">
                             <Flex gap="2" wrap="wrap">
                               {specimen.certificate.allDomains.map((domain) => (
                                 <Badge key={domain} variant="outline" color="gray">
@@ -155,7 +156,7 @@ const TLSAnalysisPage = memo(() => {
                                 </Badge>
                               ))}
                             </Flex>
-                          </Box>
+                          </Section>
                         </Box>
                       ) : null}
                     </Flex>
@@ -168,11 +169,10 @@ const TLSAnalysisPage = memo(() => {
                     </Box>
                   )}
                 </Flex>
-              </Box>
-            </Box>
-          </Box>
+              </Section>
+            </Container>
         </Box>
-      </Flex>
+      </Grid>
     </PageFrame>
   );
 });

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import type { MenuItemProps, SubMenuProps } from "react-pro-sidebar";
 
 import { createContext, isValidElement, useContext, useEffect, useRef, useState } from "react";
-import { IconButton, Popover, Tooltip } from "@radix-ui/themes";
+import { Box, IconButton, Popover, Section, Tooltip } from "@radix-ui/themes";
 import { Menu, MenuItem as ProMenuItem, SubMenu as ProSubMenu } from "react-pro-sidebar";
 
 import styles from "./s.module.css";
@@ -21,6 +21,10 @@ function labelText(node: ReactNode): string {
   return "";
 }
 
+function MenuDot() {
+  return <Box className={styles.menuDot} />;
+}
+
 export function MenuItem(props: MenuItemProps) {
   const collapsed = useContext(CollapsedContext);
   const nested = useContext(NestedContext);
@@ -29,7 +33,7 @@ export function MenuItem(props: MenuItemProps) {
   const item = (
     <ProMenuItem
       {...props}
-      suffix={props.suffix ?? (hasUnread ? <span className={styles.menuDot} /> : undefined)}
+      suffix={props.suffix ?? (hasUnread ? <MenuDot /> : undefined)}
       aria-label={props["aria-label"] ?? label}
       aria-current={props.active ? "page" : undefined}
     />
@@ -56,6 +60,7 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
     closeTimer.current = setTimeout(() => setOpen(false), 180);
   };
   useEffect(() => () => clearTimeout(closeTimer.current), []);
+  const state = active ? "current" : open ? "active" : "idle";
   return (
     <li className="ps-menuitem-root">
       <Popover.Root open={open} onOpenChange={setOpen}>
@@ -64,7 +69,8 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
             ref={trigger}
             type="button"
             variant="ghost"
-            className={`${styles.collapsedSubmenuTrigger} ${active ? styles.collapsedSubmenuCurrent : open ? styles.collapsedSubmenuActive : ""}`}
+            className={styles.triggerHit}
+            data-state={state}
             aria-label={labelText(label)}
             aria-expanded={open}
             onPointerEnter={() => {
@@ -91,7 +97,7 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
           align="start"
           sideOffset={12}
           collisionPadding={12}
-          className={styles.flyout}
+          className={styles.flyoutReset}
           aria-label={labelText(label)}
           onPointerEnter={cancelClose}
           onPointerLeave={scheduleClose}
@@ -102,35 +108,19 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
             if (pointerOpened.current) event.preventDefault();
           }}
         >
-          <NestedContext.Provider value={true}>
-            <Menu
-              menuItemStyles={{
-                button: ({ active }) => ({
-                  height: "34px",
-                  margin: "3px 7px",
-                  padding: "0 11px",
-                  borderRadius: "var(--radius-chip)",
-                  font: "14px Arial, sans-serif",
-                  color: active ? "var(--accent-11)" : "var(--gray-11)",
-                  backgroundColor: active ? "var(--accent-a3)" : "transparent",
-                  "&:hover": {
-                    backgroundColor: active ? "var(--accent-a3)" : "var(--gray-a3)",
-                    color: active ? "var(--accent-11)" : "var(--gray-12)",
-                  },
-                  "&:focus-visible": {
-                    outline: "2px solid var(--accent-8)",
-                    outlineOffset: "-2px",
-                  },
-                }),
-                icon: { display: "none" },
-              }}
-              onClick={(event) => {
-                if ((event.target as HTMLElement).closest("a[href]")) setOpen(false);
-              }}
-            >
-              {children}
-            </Menu>
-          </NestedContext.Provider>
+          <Box className={styles.flyout}>
+            <Section size="1" py="5px">
+              <NestedContext.Provider value={true}>
+                <Menu
+                  onClick={(event) => {
+                    if ((event.target as HTMLElement).closest("a[href]")) setOpen(false);
+                  }}
+                >
+                  {children}
+                </Menu>
+              </NestedContext.Provider>
+            </Section>
+          </Box>
         </Popover.Content>
       </Popover.Root>
     </li>

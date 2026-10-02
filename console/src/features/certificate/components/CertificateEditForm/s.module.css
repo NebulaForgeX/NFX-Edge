@@ -9,7 +9,6 @@
 .kicker {
   font-size: 10px;
   font-weight: 650;
-  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent-9);
 }
@@ -18,3 +17,5 @@
   max-width: 52ch;
   color: var(--gray-11);
 }
+
+

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import { useMemo, useState } from "react";
 
-import { Badge, Box, Button, Flex, Heading, Link, Spinner, Table, Tabs, Text } from "@radix-ui/themes";
+import { Badge, Box, Button, Flex, Heading, Link, Section, Spinner, Tabs, Text } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
 import { ProfileKind, ProfileKindEnum } from "nfx-ui/enums";
 import { useLoginWithEmail, useLoginWithPhone, useSelectProfile } from "nfx-ui/hooks";
@@ -23,11 +23,11 @@ import styles from "./s.module.css";
 function ProtocolStep({ n, children }: { n: string; children: ReactNode }) {
   return (
     <Flex align="start" gap="4" width="100%">
-      <Box className={styles.stepNumPad}>
-        <Text as="span" className={styles.stepNum}>
+      <Section size="1" pt="1.45rem" pb="0">
+        <Flex className={styles.stepNum} align="center" justify="center" flexShrink="0" width="2rem" height="2rem">
           {n}
-        </Text>
-      </Box>
+        </Flex>
+      </Section>
       <Box width="100%" minWidth="0">
         {children}
       </Box>
@@ -92,61 +92,46 @@ export default function LoginPage() {
             <Text as="span" size="1" weight="bold" className={styles.index}>
               {t("selectProfile.eyebrow")}
             </Text>
-            <Heading as="h1" size="8" className={styles.title}>
+            <Heading as="h1" size="8" m="0" className={styles.title}>
               {t("selectProfile.title")}
             </Heading>
-            <Text as="p" className={styles.lede}>
+            <Text as="p" m="0" className={styles.lede}>
               {t("selectProfile.subtitle")}
             </Text>
           </Flex>
-          <Table.Root variant="surface" size="2">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeaderCell>{t("selectProfile.colKind")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>{t("selectProfile.colName")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>{t("selectProfile.colId")}</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell />
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {rows.map((profile) => {
-                const kind = ProfileKind(profile.kind);
-                const isAuthority = kind === ProfileKindEnum.AUTHORITY;
-                const name = resolveAccountDisplayName(profile.displayName, profile.profileId);
-                const kindLabel = t(`selectProfile.kind.${kind}`);
-                const place = [safeStringable(profile.city), safeStringable(profile.country)].filter(Boolean).join(", ");
-                return (
-                  <Table.Row key={`${kind}:${profile.profileId}`} className={styles.profileRow}>
-                    <Table.Cell>
-                      <Badge color={isAuthority ? "amber" : undefined} variant="outline" size="1">
+          <Flex direction="column">
+            {rows.map((profile) => {
+              const kind = ProfileKind(profile.kind);
+              const isAuthority = kind === ProfileKindEnum.AUTHORITY;
+              const name = resolveAccountDisplayName(profile.displayName, profile.profileId);
+              const kindLabel = t(`selectProfile.kind.${kind}`);
+              const place = [safeStringable(profile.city), safeStringable(profile.country)].filter(Boolean).join(", ");
+              return (
+                <Section key={`${kind}:${profile.profileId}`} size="1" py="3" className={styles.profileRule}>
+                  <Flex align="center" justify="between" gap="3">
+                    <Flex align="center" gap="3" minWidth="0">
+                      <Badge color={isAuthority ? "amber" : "gray"} variant="outline" size="1">
                         {kindLabel}
                       </Badge>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Text size="2" weight="bold">
-                        {name}
-                      </Text>
-                      {place ? (
-                        <Text as="p" size="1" color="gray">
-                          {place}
+                      <Flex direction="column" gap="1" minWidth="0">
+                        <Text size="2" weight="bold">
+                          {name}
                         </Text>
-                      ) : null}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Text as="span" className={styles.profileId}>
-                        {profile.profileId}
-                      </Text>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Button size="1" variant="outline" disabled={selectProfile.isPending} onClick={() => void chooseProfile(profile)}>
-                        {selectProfile.isPending ? <Spinner size="1" /> : <AnimatedIcon icon={RightChevron} size={14} />}
-                      </Button>
-                    </Table.Cell>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table.Root>
+                        {place ? (
+                          <Text size="1" color="gray">
+                            {place}
+                          </Text>
+                        ) : null}
+                      </Flex>
+                    </Flex>
+                    <Button size="1" variant="outline" disabled={selectProfile.isPending} onClick={() => void chooseProfile(profile)}>
+                      {selectProfile.isPending ? <Spinner size="1" /> : <AnimatedIcon icon={RightChevron} size={14} />}
+                    </Button>
+                  </Flex>
+                </Section>
+              );
+            })}
+          </Flex>
           <Button type="button" variant="ghost" color="gray" size="2" onClick={() => setProfiles([])} disabled={selectProfile.isPending}>
             {t("selectProfile.back")}
           </Button>
@@ -157,10 +142,10 @@ export default function LoginPage() {
             <Text as="span" size="1" weight="bold" className={styles.index}>
               {t("protocol.kicker")}
             </Text>
-            <Heading as="h1" size="8" className={styles.title}>
+            <Heading as="h1" size="8" m="0" className={styles.title}>
               {t("protocol.title")}
             </Heading>
-            <Text as="p" className={styles.lede}>
+            <Text as="p" m="0" className={styles.lede}>
               {t("protocol.subtitle")}
             </Text>
           </Flex>
@@ -170,7 +155,7 @@ export default function LoginPage() {
               <Tabs.Trigger value="email">{t("form.channelEmail")}</Tabs.Trigger>
               <Tabs.Trigger value="phone">{t("form.channelPhone")}</Tabs.Trigger>
             </Tabs.List>
-            <Box className={styles.fieldsPt}>
+            <Section size="1" pt="5" pb="0">
               <Tabs.Content value="email">
                 <FormProvider {...emailForm}>
                   <Flex asChild direction="column" gap="5">
@@ -217,7 +202,7 @@ export default function LoginPage() {
                   </Flex>
                 </FormProvider>
               </Tabs.Content>
-            </Box>
+            </Section>
           </Tabs.Root>
 
           <Text as="p" size="2" color="gray">

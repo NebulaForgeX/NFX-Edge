@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import { Upload } from "lucide-react";
 import { useRef, useState } from "react";
-import { Avatar, Box, Button, Dialog, Flex, Grid, Select, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Avatar, Box, Button, Dialog, Flex, Grid, Section, Select, Text, TextArea, TextField } from "@radix-ui/themes";
 import { LanguageEnum } from "nfx-ui/enums";
 import { systemEventEmitter } from "nfx-ui/events";
 import { useConfirmImageUpload, useConfirmProfileAvatar, useCurrentProfile, useDeleteImage, usePatchProfile, usePrepareImageUpload } from "nfx-ui/hooks";
@@ -84,7 +84,7 @@ function AvatarSection() {
 
   return (
     <Box className={styles.hairline}>
-      <Box py="5">
+      <Section size="1" py="5">
         <Flex direction="column" gap="4">
           <Text className={styles.kicker}>{t("avatar.title")}</Text>
           <Text as="p" size="2" className={styles.lede}>
@@ -92,13 +92,9 @@ function AvatarSection() {
           </Text>
           <Flex align="center" justify="between" gap="4" wrap="wrap">
             <Flex align="center" gap="4" minWidth="0">
-              <div className={styles.portrait}>
-                <div className={styles.portraitEdge}>
-                  <div className={`${styles.portraitFill} ${styles.portraitClip}`}>
+              <Flex flexShrink="0" className={styles.portrait}>
                 <Avatar size="5" radius="none" src={src} fallback={initial} />
-                  </div>
-                </div>
-              </div>
+              </Flex>
               <Text size="2" color="gray">
                 {t("avatar.pickHint")}
               </Text>
@@ -117,7 +113,7 @@ function AvatarSection() {
             ref={fileRef}
             type="file"
             accept="image/*"
-            className={styles.hidden}
+            className={styles.hiddenFile}
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (file) void handleFile(file);
@@ -125,7 +121,7 @@ function AvatarSection() {
             }}
           />
         </Flex>
-      </Box>
+      </Section>
     </Box>
   );
 }
@@ -175,7 +171,7 @@ function BirthdayField({ value, onChange }: { value: string; onChange: (value: s
       <TextField.Root size="2" readOnly value={parsed ? value : ""} placeholder={t("datePicker.placeholder")} onClick={() => setOpen(true)} />
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Content maxWidth="24rem">
-          <Box py="2">
+          <Section size="1" py="2">
             <Flex direction="column" gap="4">
               <Dialog.Title>{t("datePicker.title")}</Dialog.Title>
               <Grid columns="3" gap="3">
@@ -235,7 +231,7 @@ function BirthdayField({ value, onChange }: { value: string; onChange: (value: s
                 </Button>
               </Flex>
             </Flex>
-          </Box>
+          </Section>
         </Dialog.Content>
       </Dialog.Root>
     </>
@@ -254,7 +250,7 @@ function ProfileForm({ profile }: { profile: Profile.Response.ProfileBase }) {
   return (
     <>
       <Box className={styles.hairline}>
-        <Box py="5">
+        <Section size="1" py="5">
           <Flex direction="column" gap="4">
             <Text className={styles.kicker}>{t("sections.identity.title")}</Text>
             <Text as="p" size="2" className={styles.lede}>{t("sections.identity.description")}</Text>
@@ -280,10 +276,10 @@ function ProfileForm({ profile }: { profile: Profile.Response.ProfileBase }) {
               <Field label={t("labels.lastName")}><TextControl name="lastName" control={form.control} /></Field>
             </Grid>
           </Flex>
-        </Box>
+        </Section>
       </Box>
       <Box className={styles.hairline}>
-        <Box py="5">
+        <Section size="1" py="5">
           <Flex direction="column" gap="4">
             <Text className={styles.kicker}>{t("sections.place.title")}</Text>
             <Text as="p" size="2" className={styles.lede}>{t("sections.place.description")}</Text>
@@ -311,10 +307,10 @@ function ProfileForm({ profile }: { profile: Profile.Response.ProfileBase }) {
               </Field>
             </Grid>
           </Flex>
-        </Box>
+        </Section>
       </Box>
       <Box className={styles.hairline}>
-        <Box py="5">
+        <Section size="1" py="5">
           <Flex direction="column" gap="4">
             <Text className={styles.kicker}>{t("sections.personal.title")}</Text>
             <Text as="p" size="2" className={styles.lede}>{t("sections.personal.description")}</Text>
@@ -357,7 +353,7 @@ function ProfileForm({ profile }: { profile: Profile.Response.ProfileBase }) {
               </Button>
             </Flex>
           </Flex>
-        </Box>
+        </Section>
       </Box>
     </>
   );
@@ -373,15 +369,15 @@ export default function ProfileEditPage() {
       <AvatarSection />
       {profile ? (
         <Box className={styles.hairline}>
-          <Box py="5">
+          <Section size="1" py="5">
             <BackgroundGallery profile={profile} />
-          </Box>
+          </Section>
         </Box>
       ) : null}
       {profile ? <ProfileForm profile={profile} /> : (
-        <Box py="5">
+        <Section size="1" py="5">
           <Text size="2" color="gray">{t("empty.description")}</Text>
-        </Box>
+        </Section>
       )}
     </PageFrame>
   );

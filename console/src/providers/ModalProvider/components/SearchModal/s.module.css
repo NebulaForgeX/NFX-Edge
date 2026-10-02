@@ -15,131 +15,54 @@
 }
 
 .searchField {
-    flex: 1;
-    min-width: 0;
-}
-
-.clearBtn {
-    flex-shrink: 0;
-    color: var(--gray-10);
+  flex: 1;
+  min-width: 0;
 }
 
 .results {
-    max-height: 25rem;
-    overflow-y: auto;
+  max-height: 25rem;
+  overflow-y: auto;
 }
 
 .results::-webkit-scrollbar {
-    width: 0.5rem;
+  width: 0.5rem;
 }
 
 .results::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
 
 .results::-webkit-scrollbar-thumb {
-    background: var(--gray-6);
-    border-radius: 0.25rem;
+  background: var(--gray-6);
+  border-radius: 0.25rem;
 }
 
-.resultEdge {
+.result {
   border: 1px solid var(--gray-6);
-}
-
-.resultFill {
   background: var(--color-panel-solid);
 }
 
-.resultEdgeSelected {
+.result[data-selected="true"] {
   border-color: var(--accent-9);
-}
-
-.resultFillSelected {
   background: color-mix(in srgb, var(--accent-9) 12%, var(--color-panel-solid));
 }
 
-.iconSize {
+.icon {
   width: 2.5rem;
   height: 2.5rem;
-}
-
-.iconFill {
   background: color-mix(in srgb, var(--accent-9) 10%, var(--gray-3));
-}
-
-.iconInk {
   color: var(--accent-9);
 }
 
-.resultContent {
-    flex: 1;
-    min-width: 0;
-}
-
-.resultTitle {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--gray-12);
-    margin-bottom: 0.2rem;
-    letter-spacing: -0.01em;
-}
-
-.resultDescription {
-    font-size: 0.8125rem;
-    color: var(--gray-10, var(--gray-11));
-    line-height: 1.35;
-}
-
-.noResults {
-    padding: 3rem 1.5rem;
-    text-align: center;
-    color: var(--gray-10);
-}
-
-.footerEdge {
-  border-top: 1px solid var(--gray-6);
-}
-
-.footerFill {
-  background: var(--color-background);
-}
-
-.hint {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    font-size: 0.75rem;
-    color: var(--gray-10);
-}
-
-.hint kbd {
-    display: inline-block;
-    padding: 0.125rem 0.375rem;
-    background: var(--gray-3);
-    border: 0.0625rem solid var(--gray-6);
-    border-radius: 0.25rem;
-    font-family: monospace;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    color: var(--gray-12);
+.resultButton {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  color: inherit;
 }
 
 @media (max-width: 768px) {
-    .modal {
-        top: 10%;
-        width: 95%;
-    }
-
-    .searchBox {
-        padding: 0.75rem 1rem;
-    }
-
-    .results {
-        max-height: 20rem;
-    }
-
-    .footer {
-        display: none;
-    }
+  .results {
+    max-height: 20rem;
+  }
 }
-

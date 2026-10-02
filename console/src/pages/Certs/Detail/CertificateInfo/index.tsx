@@ -1,3 +1,4 @@
+import { Box, Container, Flex, Grid, Section } from "@radix-ui/themes";
 import { TriangleAlertIcon } from "nfx-ui/icons";
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,75 +9,58 @@ interface CertificateInfoProps {
   certDetail: CertificateDetailResponse;
 }
 
+function InfoItem({ label, value }: { label: string; value: string }) {
+  return (
+    <Flex direction="column" className={styles.infoItem}>
+      <label>{label}</label>
+      <span>{value}</span>
+    </Flex>
+  );
+}
+
 const CertificateInfo = memo(({ certDetail }: CertificateInfoProps) => {
   const { t } = useTranslation("certDetail");
 
   return (
-    <div className={styles.section}>
-      <div className={styles.sectionPx}>
-        <div className={styles.sectionPy}>
-      <h2 className={styles.sectionTitle}>{t("certificate.info") || "Certificate Information"}</h2>
-      <div className={styles.infoGrid}>
-        <div className={styles.infoItem}>
-          <label>{t("certificate.domain") || "Domain"}</label>
-          <span>{certDetail.domain}</span>
-        </div>
-        <div className={styles.infoItem}>
-          <label>{t("certificate.email") || "Contact email"}</label>
-          <span>{certDetail.email?.trim() ? certDetail.email : "—"}</span>
-        </div>
-        {certDetail.folderName && (
-          <div className={styles.infoItem}>
-            <label>{t("certificate.folderName") || "Folder Name"}</label>
-            <span>{certDetail.folderName}</span>
-          </div>
-        )}
-        {certDetail.status && (
-          <div className={styles.infoItem}>
-            <label>{t("certificate.status") || "Status"}</label>
-            <span>{certDetail.status}</span>
-          </div>
-        )}
-        <div className={styles.infoItem}>
-          <label>{t("certificate.issuer") || "Issuer"}</label>
-          <span>{certDetail.issuer || t("certificate.unknown") || "Unknown"}</span>
-        </div>
-        {certDetail.notBefore && (
-          <div className={styles.infoItem}>
-            <label>{t("certificate.validFrom") || "Valid From"}</label>
-            <span>{new Date(certDetail.notBefore).toLocaleString()}</span>
-          </div>
-        )}
-        {certDetail.notAfter && (
-          <div className={styles.infoItem}>
-            <label>{t("certificate.expiryDate") || "Expiry Date"}</label>
-            <span>{new Date(certDetail.notAfter).toLocaleString()}</span>
-          </div>
-        )}
-        {certDetail.lastErrorMessage && (
-          <div className={styles.errorSection}>
-            <div className={styles.errorSectionPx}>
-              <div className={styles.errorSectionPy}>
-            <div className={styles.errorHeader}>
-              <TriangleAlertIcon size={18} className={styles.errorIcon} />
-              <label>{t("certificate.lastError") || "Last Error"}</label>
-            </div>
-            <div className={styles.errorContent}>
-              <p className={styles.errorMessage}>{certDetail.lastErrorMessage}</p>
-              {certDetail.lastErrorTime && (
-                <p className={styles.errorTime}>
-                  {t("certificate.errorTime") || "Error Time"}: {new Date(certDetail.lastErrorTime).toLocaleString()}
-                </p>
-              )}
-            </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-        </div>
-      </div>
-    </div>
+    <Box className={styles.section}>
+      <Container width="100%" maxWidth="none" className={styles.sectionInset} >
+        <Section className={styles.sectionPad}>
+          <Section className={styles.title}>
+            <h2 className={styles.titleText}>{t("certificate.info") || "Certificate Information"}</h2>
+          </Section>
+          <Grid columns="repeat(auto-fit, minmax(12rem, 1fr))" gap="4">
+            <InfoItem label={t("certificate.email") || "Contact email"} value={certDetail.email?.trim() ? certDetail.email : "—"} />
+            {certDetail.folderName ? <InfoItem label={t("certificate.folderName") || "Folder Name"} value={certDetail.folderName} /> : null}
+            {certDetail.status ? <InfoItem label={t("certificate.status") || "Status"} value={certDetail.status} /> : null}
+            <InfoItem label={t("certificate.issuer") || "Issuer"} value={certDetail.issuer || t("certificate.unknown") || "Unknown"} />
+            {certDetail.notBefore ? <InfoItem label={t("certificate.validFrom") || "Valid From"} value={new Date(certDetail.notBefore).toLocaleString()} /> : null}
+            {certDetail.notAfter ? <InfoItem label={t("certificate.expiryDate") || "Expiry Date"} value={new Date(certDetail.notAfter).toLocaleString()} /> : null}
+            {certDetail.lastErrorMessage ? (
+              <Section className={styles.error}>
+                <Container width="100%" maxWidth="none" className={styles.errorInset} >
+                  <Section className={styles.errorPad}>
+                    <Section className={styles.errorHeader}>
+                      <Flex align="center" className={styles.errorHeaderRow}>
+                        <TriangleAlertIcon size={18} className={styles.errorIcon} />
+                        <label>{t("certificate.lastError") || "Last Error"}</label>
+                      </Flex>
+                    </Section>
+                    <p className={styles.errorMessage}>{certDetail.lastErrorMessage}</p>
+                    {certDetail.lastErrorTime ? (
+                      <Section className={styles.errorTime}>
+                        <p className={styles.errorTimeText}>
+                          {t("certificate.errorTime") || "Error Time"}: {new Date(certDetail.lastErrorTime).toLocaleString()}
+                        </p>
+                      </Section>
+                    ) : null}
+                  </Section>
+                </Container>
+              </Section>
+            ) : null}
+          </Grid>
+        </Section>
+      </Container>
+    </Box>
   );
 });
 

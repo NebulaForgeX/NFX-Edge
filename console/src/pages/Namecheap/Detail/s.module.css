@@ -1,45 +1,23 @@
-.hairline {
-  width: 100%;
-  border-bottom: 1px solid var(--gray-6);
+.panel {
+  border: 1px solid var(--gray-6);
+  background: var(--color-panel-solid);
 }
 
-.hairline:last-of-type {
-  border-bottom: 0;
+.sideRule {
+  border-top: 1px solid var(--gray-6);
 }
 
-.kicker {
-  font-size: 10px;
-  font-weight: 650;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent-9);
-}
-
-.hint {
-  font-size: 0.8rem;
-  color: var(--gray-11);
-}
-
-.rowOk {
-  color: var(--green-11);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 12px;
+.balance {
+  font-variant-numeric: tabular-nums;
 }
 
 .errFrame {
+  overflow-wrap: anywhere;
   border: 1px solid color-mix(in oklab, var(--red-8) 55%, var(--gray-6));
-  background: color-mix(in oklab, var(--red-9) 8%, var(--color-background));
+  background: var(--color-background);
   color: var(--red-11);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 12px;
   line-height: 1.5;
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.meta {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--gray-10);
 }

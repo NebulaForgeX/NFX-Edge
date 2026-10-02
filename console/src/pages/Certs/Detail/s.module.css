@@ -1,12 +1,8 @@
-.pemPair {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-  align-items: stretch;
+.side {
+  border: 1px solid var(--gray-6);
+  background: var(--color-panel-solid);
 }
 
-@media (max-width: 960px) {
-  .pemPair {
-    grid-template-columns: 1fr;
-  }
+.sideRule {
+  border-top: 1px solid var(--gray-6);
 }

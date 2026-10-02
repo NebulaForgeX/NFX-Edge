@@ -2,7 +2,7 @@ import { XIcon } from "nfx-ui/icons";
 import type { CertificateFormSharedValues } from "../../schemas/certificateSchema";
 
 import { memo, useEffect, useRef, useState } from "react";
-import { Box, Button, Flex, IconButton, Text } from "@radix-ui/themes";
+import { Box, Button, Container, Flex, IconButton, Section, Text } from "@radix-ui/themes";
 import { Controller, useFormContext, type ControllerRenderProps } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -96,7 +96,7 @@ const SANsController = memo(({ disabled = false, readOnly = false }: SANsControl
         render={({ field }) => (
           <Flex direction="column" gap="3">
             <Flex gap="2" align="end" wrap="wrap">
-              <Box className={styles.inputWrapper}>
+              <Flex direction="column" className={styles.inputWrap}>
                 <Input
                   ref={inputRef}
                   value={inputValue}
@@ -113,20 +113,20 @@ const SANsController = memo(({ disabled = false, readOnly = false }: SANsControl
                   placeholder={t("form.sansPlaceholder")}
                   disabled={locked}
                 />
-              </Box>
+              </Flex>
               {!locked ? (
                 <Button type="button" variant="outline" onClick={() => commitPrefix(field)}>
                   {t("form.sansAdd")}
                 </Button>
               ) : null}
             </Flex>
-            <div className={styles.itemsWrapper}>
+            <Box className={styles.items}>
               {items.length > 0 ? (
                 <Flex direction="column">
                   {items.map((item, index) => (
                     <Box key={`${item}-${index}`} className={styles.item}>
-                      <Box px="3">
-                        <Box py="2">
+                      <Container width="100%" maxWidth="none" px="3" >
+                        <Section py="2">
                           <Flex align="center" justify="between" gap="2">
                             <span className={styles.itemText}>{item}</span>
                             {!locked && (
@@ -146,21 +146,21 @@ const SANsController = memo(({ disabled = false, readOnly = false }: SANsControl
                               </IconButton>
                             )}
                           </Flex>
-                        </Box>
-                      </Box>
+                        </Section>
+                      </Container>
                     </Box>
                   ))}
                 </Flex>
               ) : (
-                <Box px="3">
-                  <Box py="4">
+                <Container width="100%" maxWidth="none" px="3" >
+                  <Section py="4">
                     <Text size="2" color="gray" align="center">
                       {readOnly ? t("form.sansReadOnly") : t("form.sansHelp")}
                     </Text>
-                  </Box>
-                </Box>
+                  </Section>
+                </Container>
               )}
-            </div>
+            </Box>
           </Flex>
         )}
       />

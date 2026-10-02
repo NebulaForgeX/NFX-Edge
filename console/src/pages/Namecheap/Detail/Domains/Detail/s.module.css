@@ -1,3 +1,13 @@
+.side {
+  background: var(--color-panel-solid);
+  border: 1px solid var(--gray-6);
+  border-radius: var(--radius-3);
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
+}
+
 .hint {
   font-size: 0.8rem;
   color: var(--gray-11);
@@ -10,9 +20,11 @@
 
 .addressField {
   width: 100%;
-  resize: none;
   overflow: auto;
   overflow-wrap: anywhere;
   word-break: break-word;
+  resize: none;
   field-sizing: content;
 }
+
+

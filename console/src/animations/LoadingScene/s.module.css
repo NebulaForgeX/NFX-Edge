@@ -1,9 +1,30 @@
-.scene {
-  position: relative;
-  display: grid;
-  place-items: center;
-  padding: var(--space-8) var(--space-7);
+.sceneSizing {
   box-sizing: content-box;
+}
+
+.sceneGrow {
   flex-shrink: 0;
+}
+
+.scenePos {
+  position: relative;
+}
+
+.sceneClip {
   overflow: visible;
 }
+
+.scenePy {
+  padding-block: var(--space-8);
+}
+
+.scenePx {
+  padding-inline: var(--space-7);
+}
+
+.sceneLayout {
+  display: grid;
+  place-items: center;
+}
+
+

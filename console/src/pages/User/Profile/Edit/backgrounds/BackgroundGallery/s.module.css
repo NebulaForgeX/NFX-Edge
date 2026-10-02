@@ -1,28 +1,29 @@
 .tile {
+  position: relative;
   width: 160px;
   height: 120px;
-  border: 1px solid var(--gray-a5);
-  border-radius: var(--radius-3);
   overflow: hidden;
+  border-radius: var(--radius-3);
+  border: 1px solid var(--gray-a5);
   background: var(--gray-3);
-  flex: 0 0 auto;
 }
 
 .tileImage {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
-.orderBadge {
+.orderBadge.orderBadge {
   position: absolute;
   top: 6px;
   left: 6px;
+  width: auto;
+  padding-inline: 6px;
+  border-radius: var(--radius-2);
   background: color-mix(in oklab, var(--gray-12) 70%, transparent);
   color: var(--gray-1);
-  border-radius: var(--radius-2);
-  padding: 0 6px;
   line-height: 1.4;
 }
 
@@ -31,13 +32,17 @@
 }
 
 .busyOverlay {
+  position: absolute;
+  inset: 0;
   background: color-mix(in oklab, var(--gray-1) 45%, transparent);
   color: var(--gray-12);
 }
 
 .failedOverlay {
+  position: absolute;
+  inset: 0;
   background: color-mix(in oklab, var(--red-9) 35%, transparent);
-  color: white;
+  color: var(--gray-1);
 }
 
 .hiddenInput {

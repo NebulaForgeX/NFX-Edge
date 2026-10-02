@@ -2,24 +2,17 @@
   border-bottom: 1px solid var(--gray-6);
 }
 
-.copy {
-  min-width: 0;
-}
-
 .index {
   font-size: 11px;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--accent-9);
 }
 
 .title {
-  margin: 0;
   font-family: var(--heading-font-family), sans-serif;
   font-weight: 650;
-  letter-spacing: -0.04em;
   color: var(--gray-12);
 }
 
@@ -28,23 +21,10 @@
   color: var(--gray-11);
 }
 
-.stampSize {
+.stamp {
   width: 32px;
   height: 32px;
-}
-
-.stampEdge {
-  border: 1px solid color-mix(in oklab, var(--accent-9) 55%, var(--gray-6));
-}
-
-.stampFill {
+  border: 1px solid var(--gray-a6);
   background: var(--color-background);
-}
-
-.stampInk {
   color: var(--accent-9);
-}
-
-.actions {
-  min-width: 0;
 }

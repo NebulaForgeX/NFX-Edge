@@ -1,3 +1,4 @@
+import { Container, Flex, Section } from "@radix-ui/themes";
 import { TriangleAlertIcon } from "nfx-ui/icons";
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,12 +15,18 @@ const SansChangedBanner = memo(({ visible }: SansChangedBannerProps) => {
   if (!visible) return null;
 
   return (
-    <div className={styles.root} role="status">
-      <span className={styles.icon} aria-hidden>
-        <TriangleAlertIcon size={22} strokeWidth={2} />
-      </span>
-      <p className={styles.text}>{t("sansChanged.banner")}</p>
-    </div>
+    <Section className={styles.root}>
+      <Section className={styles.rootPad}>
+        <Container width="100%" maxWidth="none" className={styles.rootInset} >
+          <Flex align="start" className={styles.row} role="status">
+            <Section className={styles.icon} aria-hidden>
+              <TriangleAlertIcon size={22} strokeWidth={2} />
+            </Section>
+            <p className={styles.text}>{t("sansChanged.banner")}</p>
+          </Flex>
+        </Container>
+      </Section>
+    </Section>
   );
 });
 

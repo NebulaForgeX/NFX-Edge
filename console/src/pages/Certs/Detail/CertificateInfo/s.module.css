@@ -1,43 +1,41 @@
 .section {
   position: relative;
-  
   border: 1px solid var(--gray-6);
   background: var(--color-background);
 }
-.sectionPx {
+
+.sectionInset.sectionInset {
   padding-inline: 1.2rem;
 }
-.sectionPy {
-  padding-block: 1.15rem 1rem;
+
+.sectionPad.sectionPad {
+  padding-top: 1.15rem;
+  padding-bottom: 1rem;
 }
 
+.title.title {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-top: 0;
+  padding-bottom: 0;
+}
 
-.sectionTitle {
-  margin: 0 0 1rem;
+.titleText {
+  margin: 0;
   font-size: 11px;
   font-weight: 650;
-  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--gray-10);
 }
 
-.infoGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem 1.5rem;
-}
-
 .infoItem {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
   min-width: 0;
+  gap: 0.3rem;
 }
 
 .infoItem label {
   font-size: 10px;
   font-weight: 650;
-  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gray-10);
 }
@@ -49,38 +47,42 @@
   overflow-wrap: anywhere;
 }
 
-.errorSection {
+.error.error {
   grid-column: 1 / -1;
   margin-top: 0.5rem;
-  
+  padding-top: 0;
+  padding-bottom: 0;
   border: 1px solid var(--red-8);
 }
-.errorSectionPx {
+
+.errorInset.errorInset {
   padding-inline: 1rem;
 }
-.errorSectionPy {
+
+.errorPad.errorPad {
   padding-block: 0.9rem;
 }
 
-
-.errorHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.errorHeader.errorHeader {
   margin-bottom: 0.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-.errorHeader label {
+.errorHeaderRow {
+  gap: 0.5rem;
+}
+
+.errorHeaderRow label {
   font-size: 10px;
   font-weight: 650;
-  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--red-11);
 }
 
 .errorIcon {
-  color: var(--red-11);
   flex-shrink: 0;
+  color: var(--red-11);
 }
 
 .errorMessage,
@@ -90,7 +92,15 @@
   font-size: 12px;
 }
 
-.errorTime {
+.errorTime.errorTime {
   margin-top: 0.35rem;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.errorTimeText {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
   color: var(--gray-10);
 }

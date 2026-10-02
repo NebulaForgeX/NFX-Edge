@@ -1,38 +1,37 @@
 .sheet {
   position: relative;
   min-height: 0;
-}
-
-.sheetEdge {
+  height: 100%;
   border: 1px solid var(--gray-6);
-}
-
-.sheetFill {
   background: var(--color-background);
 }
-.sheetPx {
-  padding-inline: 1rem;
-}
-.sheetPy {
-  padding-block: 0.9rem 0.75rem;
-  height: 100%;
-  min-height: 0;
-}
-.sheetGrid {
-  display: grid;
-  grid-template-rows: auto minmax(10rem, 1fr) auto;
-  min-height: 0;
-  height: 100%;
-}
 
-
-.dragging {
+.sheet[data-drag="true"] {
   border-color: var(--accent-9);
   background: color-mix(in oklab, var(--accent-9) 6%, var(--color-background));
 }
 
-.invalid {
+.sheet[data-invalid="true"] {
   border-color: var(--red-8);
+}
+
+.sheetInset.sheetInset {
+  padding-inline: 1rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.sheetPad.sheetPad {
+  padding-top: 0.9rem;
+  padding-bottom: 0.75rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.sheetGrid {
+  min-height: 0;
+  height: 100%;
+  grid-template-rows: auto minmax(10rem, 1fr) auto;
 }
 
 .corner {
@@ -68,25 +67,24 @@
   border-width: 0 1px 1px 0;
 }
 
-.head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-3);
+.head.head {
   margin-bottom: 0.55rem;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .label {
   font-size: 11px;
   font-weight: 650;
-  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gray-12);
 }
 
+.labelRow {
+  gap: 0.5rem;
+}
+
 .optional {
-  margin-left: 0.5rem;
-  letter-spacing: 0.08em;
   color: var(--gray-10);
   font-weight: 500;
 }
@@ -94,7 +92,6 @@
 .kind {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 10px;
-  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent-9);
 }
@@ -102,21 +99,19 @@
 .body {
   width: 100%;
   min-height: 10rem;
-  resize: none;
+  box-shadow: none !important;
+  background: transparent !important;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
   font-size: 11px !important;
   line-height: 1.65 !important;
   color: var(--gray-12);
-  background: transparent !important;
-  box-shadow: none !important;
+  resize: none;
 }
 
-.foot {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+.foot.foot {
   margin-top: 0.65rem;
   padding-top: 0.55rem;
+  padding-bottom: 0;
   border-top: 1px dashed var(--gray-6);
 }
 
@@ -133,7 +128,6 @@
   overflow: hidden;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 11px;
-  letter-spacing: 0.04em;
   color: var(--gray-10);
   text-overflow: ellipsis;
   white-space: nowrap;

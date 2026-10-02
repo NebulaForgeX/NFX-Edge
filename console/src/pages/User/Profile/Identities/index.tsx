@@ -2,7 +2,7 @@ import { UsersIcon } from "nfx-ui/icons";
 import type { Profile } from "nfx-ui/types";
 
 import { useState } from "react";
-import { Avatar, Badge, Box, Button, Flex, Grid, Select, Text, TextField } from "@radix-ui/themes";
+import { Avatar, Badge, Box, Button, Container, Flex, Grid, Section, Select, Text, TextField } from "@radix-ui/themes";
 import { LanguageEnum, ProfileKindEnum } from "nfx-ui/enums";
 import {
   useChangePassword,
@@ -63,8 +63,8 @@ function toAuthorityRow(item: Profile.Response.AuthorityProfileItem): IdentityRo
 
 function EmptyBlock({ title, description }: { title: string; description: string }) {
   return (
-    <Box px="4">
-      <Box py="6">
+    <Container size="4" width="100%" px="4">
+      <Section size="1" py="6">
         <Flex direction="column" align="center" justify="center" gap="1">
           <Text size="2" weight="medium">
             {title}
@@ -73,8 +73,8 @@ function EmptyBlock({ title, description }: { title: string; description: string
             {description}
           </Text>
         </Flex>
-      </Box>
-    </Box>
+      </Section>
+    </Container>
   );
 }
 
@@ -108,9 +108,11 @@ function EmailRow({
             {item.email}
           </Text>
           {hint ? (
-            <Text size="1" color="gray" mt="1">
-              {hint}
-            </Text>
+            <Section mt="1" pt="0" pb="0">
+              <Text size="1" color="gray">
+                {hint}
+              </Text>
+            </Section>
           ) : null}
         </Box>
         <Flex gap="2" wrap="wrap" align="center">
@@ -138,7 +140,7 @@ function EmailRow({
               {t("labels.newEmail")}
             </Text>
             <Flex align="center" justify="between" gap="3" wrap="wrap">
-              <Box minWidth="0" flexGrow="1">
+              <Box minWidth="0" >
                 <TextField.Root size="2" value={nextEmail} onChange={(e) => setNextEmail(e.target.value)} />
               </Box>
               <Button size="1"
@@ -158,7 +160,7 @@ function EmailRow({
               {t("labels.verificationCode")}
             </Text>
             <Flex align="center" justify="between" gap="3" wrap="wrap">
-              <Box minWidth="0" flexGrow="1">
+              <Box minWidth="0" >
                 <TextField.Root size="2" value={code} onChange={(e) => setCode(e.target.value)} placeholder={t("labels.verificationCode")} />
               </Box>
               <Button size="1"
@@ -191,9 +193,11 @@ function EmailsSection() {
             <Text size="2" weight="bold">
               {t("sections.emails.title")}
             </Text>
-            <Text size="1" color="gray" mt="1">
-              {t("sections.emails.description")}
-            </Text>
+            <Section mt="1" pt="0" pb="0">
+              <Text size="1" color="gray">
+                {t("sections.emails.description")}
+              </Text>
+            </Section>
           </Box>
           {emailItems.length ? null : <EmptyBlock title={t("empty.emails.title")} description={t("empty.emails.description")} />}
           <Flex direction="column" gap="2">
@@ -201,7 +205,7 @@ function EmailsSection() {
               {t("labels.emailPlaceholder")}
             </Text>
             <Flex align="center" justify="between" gap="3" wrap="wrap">
-              <Box minWidth="0" flexGrow="1">
+              <Box minWidth="0" >
                 <TextField.Root size="2" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder={t("labels.emailPlaceholder")} />
               </Box>
               <Button size="2" onClick={() => createEmail.mutate({ email: newEmail }, { onSuccess: () => setNewEmail("") })}>
@@ -247,9 +251,11 @@ function PhoneRow({
           {item.phone}
         </Text>
         {hint ? (
-          <Text size="1" color="gray" mt="1">
-            {hint}
-          </Text>
+          <Section mt="1" pt="0" pb="0">
+            <Text size="1" color="gray">
+              {hint}
+            </Text>
+          </Section>
         ) : null}
       </Box>
       <Flex gap="2" wrap="wrap" align="center">
@@ -276,7 +282,7 @@ function PhoneRow({
             {t("labels.newPhone")}
           </Text>
           <Flex align="center" gap="3" wrap="wrap">
-            <Box minWidth="0" flexGrow="1">
+            <Box minWidth="0" >
               <TextField.Root size="2" value={nextPhone} onChange={(e) => setNextPhone(e.target.value)} />
             </Box>
             <Button
@@ -296,7 +302,7 @@ function PhoneRow({
             {t("labels.verificationCode")}
           </Text>
           <Flex align="center" gap="3" wrap="wrap">
-            <Box minWidth="0" flexGrow="1">
+            <Box minWidth="0" >
               <TextField.Root
                 size="2"
                 value={code}
@@ -332,9 +338,11 @@ function PhonesSection() {
         <Text size="2" weight="bold">
           {t("sections.phones.title")}
         </Text>
-        <Text size="1" color="gray" mt="1">
-          {t("sections.phones.description")}
-        </Text>
+        <Section mt="1" pt="0" pb="0">
+          <Text size="1" color="gray">
+            {t("sections.phones.description")}
+          </Text>
+        </Section>
       </Box>
       {items.length ? null : <EmptyBlock title={t("empty.phones.title")} description={t("empty.phones.description")} />}
       <Flex direction="column" gap="2">
@@ -342,7 +350,7 @@ function PhonesSection() {
           {t("labels.phonePlaceholder")}
         </Text>
         <Flex align="center" gap="3" wrap="wrap">
-          <Box minWidth="0" flexGrow="1">
+          <Box minWidth="0" >
             <TextField.Root size="2" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder={t("labels.phonePlaceholder")} />
           </Box>
           <Button size="2" onClick={() => createPhone.mutate({ phone: newPhone }, { onSuccess: () => setNewPhone("") })}>
@@ -378,9 +386,11 @@ function PasswordSection() {
           <Text size="2" weight="bold">
             {t("sections.password.title")}
           </Text>
-          <Text size="1" color="gray" mt="1">
-            {t("sections.password.description")}
-          </Text>
+          <Section mt="1" pt="0" pb="0">
+            <Text size="1" color="gray">
+              {t("sections.password.description")}
+            </Text>
+          </Section>
         </Box>
         <Flex direction="column" gap="2">
           <Text size="1" weight="medium" color="gray">
@@ -409,7 +419,7 @@ function PasswordSection() {
             {primaryEmail ? t("labels.passwordSendCodeHint", { email: primaryEmail }) : t("labels.passwordSendCodeHintNoEmail")}
           </Text>
           <Flex gap="2" align="center">
-            <Box minWidth="0" flexGrow="1">
+            <Box minWidth="0" >
               <TextField.Root
                 size="2"
                 autoComplete="one-time-code"
@@ -435,7 +445,7 @@ function PasswordSection() {
             </Button>
           </Flex>
         </Flex>
-        <Box py="2">
+        <Section size="1" py="2">
           <Flex align="center" justify="end" gap="3">
           <Button size="2"
             loading={changePassword.isPending}
@@ -457,7 +467,7 @@ function PasswordSection() {
             {t("actions.updatePassword")}
           </Button>
         </Flex>
-        </Box>
+        </Section>
       </Flex>
     </Flex>
   );
@@ -505,9 +515,11 @@ function ProfilesSection() {
             <Text size="2" weight="bold">
               {t("sections.profiles.title")}
             </Text>
-            <Text size="1" color="gray" mt="1">
-              {t("sections.profiles.description")}
-            </Text>
+            <Section mt="1" pt="0" pb="0">
+              <Text size="1" color="gray">
+                {t("sections.profiles.description")}
+              </Text>
+            </Section>
           </Box>
           {rows.length ? (
             rows.map((row) => {
@@ -519,7 +531,7 @@ function ProfilesSection() {
               const initials = name.slice(0, 2).toUpperCase();
 
               return (
-                <Box py="2" key={`${row.kind}-${row.profileId}`}>
+                <Section size="1" py="2" key={`${row.kind}-${row.profileId}`}>
                 <Flex align="center" justify="between" gap="3">
                   <Flex align="center" gap="3" minWidth="0" flexGrow="1">
                     <Avatar size="2" src={row.avatarImageId ? buildAvatarImageSrc(row.avatarImageId) : undefined} fallback={initials} />
@@ -561,7 +573,7 @@ function ProfilesSection() {
                     ) : null}
                   </Flex>
                 </Flex>
-                </Box>
+                </Section>
               );
             })
           ) : (
@@ -576,9 +588,11 @@ function ProfilesSection() {
             <Text size="2" weight="bold">
               {t("labels.newCommunityProfile")}
             </Text>
-            <Text size="1" color="gray" mt="1">
-              {t("sections.forgerProfiles.description")}
-            </Text>
+            <Section mt="1" pt="0" pb="0">
+              <Text size="1" color="gray">
+                {t("sections.forgerProfiles.description")}
+              </Text>
+            </Section>
           </Box>
           <Flex direction="column" gap="2">
             <Text size="1" weight="medium" color="gray">
@@ -591,7 +605,7 @@ function ProfilesSection() {
               {t("labels.profileLanguage")}
             </Text>
             <Flex align="center" justify="between" gap="3" wrap="wrap">
-              <Box minWidth="0" flexGrow="1">
+              <Box minWidth="0" >
                 <Select.Root value={profileLanguage} onValueChange={(v) => setProfileLanguage(v as LanguageEnum)}>
                   <Select.Trigger />
                   <Select.Content>

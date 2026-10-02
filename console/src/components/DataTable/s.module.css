@@ -33,20 +33,24 @@
 }
 
 .head {
+  background: var(--color-panel-solid);
+}
+
+.head span {
   font-size: 10px !important;
   font-weight: 650 !important;
-  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gray-10) !important;
-  background: var(--color-panel-solid);
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
 }
 
-.cell,
-.mono {
+.cellMin {
   min-width: 0;
+}
+
+.cellType {
   vertical-align: middle;
   white-space: normal;
   overflow-wrap: anywhere;
@@ -54,25 +58,35 @@
   color: var(--gray-12);
 }
 
-.cell :global(.rt-TextFieldRoot),
-.cell :global(.rt-TextAreaRoot),
-.mono :global(.rt-TextFieldRoot),
-.mono :global(.rt-TextAreaRoot) {
+.cellMin :global(.rt-TextFieldRoot),
+.cellMin :global(.rt-TextAreaRoot) {
   width: 100%;
   max-width: 100%;
 }
 
 .mono {
+  vertical-align: middle;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 12px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: var(--gray-12);
 }
 
 .clickable {
   cursor: pointer;
 }
 
-.clickable:hover {
+.clickable:hover,
+.clickable[data-picked="true"]:hover,
+.clickable[data-picked="true"] {
   background: color-mix(in oklab, var(--accent-9) 6%, transparent);
+}
+
+.clickable[data-picked="true"],
+.clickable[data-picked="true"]:hover {
+  background: color-mix(in oklab, var(--accent-9) 10%, transparent);
 }
 
 .picked {
