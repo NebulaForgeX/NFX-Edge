@@ -90,6 +90,7 @@
     "filesHint": "Exported certificate files",
     "analysisHint": "Parse PEM certificate and private key",
     "index": "01 — Cabinet",
-    "certs": "Certificates"
+    "certs": "Certificates",
+    "addCert": "Add Certificate"
   }
 }

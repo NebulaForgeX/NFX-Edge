@@ -9,6 +9,8 @@
     "domain": "Domaine",
     "folderName": "Dossier",
     "status": "Statut",
+    "valid": "Valide",
+    "expired": "Expiré",
     "issuer": "Émetteur",
     "unknown": "Inconnu",
     "email": "E-mail de contact",

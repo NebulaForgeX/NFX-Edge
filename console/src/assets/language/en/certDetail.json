@@ -9,6 +9,8 @@
     "domain": "Domain",
     "folderName": "Folder name",
     "status": "Status",
+    "valid": "Valid",
+    "expired": "Expired",
     "issuer": "Issuer",
     "unknown": "Unknown",
     "email": "Contact email",

@@ -90,6 +90,7 @@
     "filesHint": "Fichiers de certificats exportés",
     "analysisHint": "Analyser un certificat PEM et une clé privée",
     "index": "01 — Coffre",
-    "certs": "Certificats"
+    "certs": "Certificats",
+    "addCert": "Ajouter un certificat"
   }
 }

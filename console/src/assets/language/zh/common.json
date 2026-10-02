@@ -87,6 +87,7 @@
     "filesHint": "已导出的证书文件",
     "analysisHint": "解析 PEM 证书和私钥",
     "index": "01 — 柜",
-    "certs": "证书"
+    "certs": "证书",
+    "addCert": "添加证书"
   }
 }

@@ -9,6 +9,8 @@
     "domain": "域名",
     "folderName": "文件夹",
     "status": "状态",
+    "valid": "有效",
+    "expired": "已过期",
     "issuer": "颁发者",
     "unknown": "未知",
     "email": "联系邮箱",

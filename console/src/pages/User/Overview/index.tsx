@@ -84,14 +84,13 @@ DashboardBody.displayName = "DashboardBody";
 
 const DashboardPage = memo(() => {
   const { t } = useTranslation("common");
-  const { t: tNav } = useTranslation("navigation");
 
   return (
     <PageFrame>
       <PageHeader icon={LayoutDashboardIcon} index={t("dashboard.index")} title={t("title")} description={t("subtitle")} />
       <ActionBar>
         <Button asChild>
-          <Link to={ROUTES.CERT_ADD}>{tNav("addCert")}</Link>
+          <Link to={ROUTES.CERT_ADD}>{t("dashboard.addCert")}</Link>
         </Button>
       </ActionBar>
       <Suspense>

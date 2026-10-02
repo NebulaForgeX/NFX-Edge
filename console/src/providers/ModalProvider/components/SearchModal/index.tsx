@@ -27,7 +27,7 @@ const SearchModal = memo(() => {
   const inputRef = useRef<HTMLInputElement>(null);
   const searchMutation = useSearchCertificate();
 
-  const { t } = useTranslation(["common", "modal", "navigation"]);
+  const { t } = useTranslation("common");
 
   const navItems: SearchItem[] = useMemo(
     () => [
@@ -47,7 +47,7 @@ const SearchModal = memo(() => {
       },
       {
         id: "add",
-        title: t("addCert", { ns: "navigation" }),
+        title: t("dashboard.addCert"),
         description: t("dashboard.addHint", { ns: "common" }),
         icon: FileDescriptionIcon,
         onSelect: () => routerEventEmitter.navigate({ to: ROUTES.CERT_ADD }),
@@ -222,7 +222,7 @@ const SearchModal = memo(() => {
               ) : (
                 <Section py="6">
                   <Text align="center" color="gray">
-                    {t("search.noResults", { ns: "modal", query: searchQuery }) || `No results found for "${searchQuery}"`}
+                    {t("search.noResults", { query: searchQuery })}
                   </Text>
                 </Section>
               )}

@@ -24,7 +24,6 @@ import styles from "./s.module.css";
 
 const CertDetailContent = memo(() => {
   const { t } = useTranslation("certDetail");
-  const { t: tStatus } = useTranslation("certCheck");
   const { certificateId } = useParams<{ certificateId: string }>();
   const { data: certDetail } = useCertificateDetailById(safeStringable(certificateId));
   const { countdown, isExpired } = useCertificateCountdown(certDetail.notAfter);
@@ -45,7 +44,7 @@ const CertDetailContent = memo(() => {
       <ActionBar
         status={
           <Badge color={isExpired ? "red" : "gray"} variant="outline">
-            {isExpired ? tStatus("status.expired") : tStatus("status.valid")}
+            {isExpired ? t("certificate.expired") : t("certificate.valid")}
           </Badge>
         }
       >
