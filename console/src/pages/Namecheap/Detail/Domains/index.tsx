@@ -50,7 +50,16 @@ const NamecheapDomainsPage = memo(() => {
       {domainsQuery.isLoading ? (
         <EmptyState icon={RouterIcon} title={t("loading")} />
       ) : domainsQuery.isError ? (
-        <EmptyState icon={RouterIcon} title={t("domains.loadError")} description={getApiError(domainsQuery.error)?.message} />
+        <EmptyState
+          icon={RouterIcon}
+          title={t("domains.loadError")}
+          description={getApiError(domainsQuery.error)?.message}
+          action={
+            <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_DETAIL.replace(":credentialId", credentialId))}>
+              {t("accounts.back")}
+            </Button>
+          }
+        />
       ) : domains.length === 0 ? (
         <EmptyState
           icon={RouterIcon}

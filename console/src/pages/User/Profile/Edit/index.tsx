@@ -12,7 +12,7 @@ import type { Profile } from "nfx-ui/types";
 import { Controller, type Control, type FieldPath } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { EmptyState, LucideIcon, PageHeader } from "@/components";
+import { ActionBar, EmptyState, LucideIcon, PageHeader } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
 import { ROUTES } from "@/navigations";
@@ -368,6 +368,11 @@ export default function ProfileEditPage() {
   return (
     <PageFrame>
       <PageHeader icon={PenIcon} index={t("index")} title={t("title")} description={t("description")} />
+      <ActionBar>
+        <Button size="2" variant="outline" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
+          {t("actions.openProfile")}
+        </Button>
+      </ActionBar>
       <AvatarSection />
       {profile ? (
         <Box className={styles.hairline}>

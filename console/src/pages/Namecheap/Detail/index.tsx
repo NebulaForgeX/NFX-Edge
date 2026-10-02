@@ -2,7 +2,7 @@ import { RouterIcon } from "nfx-ui/icons";
 import { memo } from "react";
 import { Box, Button, Container, Flex, Grid, Heading, Section, Text } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
-import { EmptyState, PageHeader } from "@/components";
+import { ActionBar, EmptyState, PageHeader } from "@/components";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 import { getApiError } from "nfx-ui/utils";
@@ -62,6 +62,11 @@ const NamecheapDetailPage = memo(() => {
   return (
     <PageFrame>
       <PageHeader icon={RouterIcon} index={t("index")} title={credential.label || credential.apiUser} description={t("accounts.detailHint")} />
+      <ActionBar>
+        <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_OVERVIEW)}>
+          {t("accounts.back")}
+        </Button>
+      </ActionBar>
       <Grid columns={{ initial: "1", md: "minmax(0, 1fr) 18rem" }} gap="5" width="100%" align="start">
         <Box className={styles.panel}>
           <Container width="100%" maxWidth="100%" px="5">

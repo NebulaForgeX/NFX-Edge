@@ -1,8 +1,8 @@
 import { RouterIcon } from "nfx-ui/icons";
 import { memo } from "react";
-import { Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
+import { Button, Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
-import { PageHeader } from "@/components";
+import { ActionBar, PageHeader } from "@/components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
@@ -23,6 +23,11 @@ const NamecheapNewPage = memo(() => {
   return (
     <PageFrame>
       <PageHeader icon={RouterIcon} index={t("index")} title={t("accounts.add")} description={t("credential.pageHint")} />
+      <ActionBar>
+        <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_OVERVIEW)}>
+          {t("accounts.back")}
+        </Button>
+      </ActionBar>
       <Grid columns={{ initial: "1", lg: "minmax(0, 1fr) 18rem" }} gap="6" align="start">
         <CredentialForm
           pending={create.isPending}

@@ -46,7 +46,16 @@ const NamecheapSslPage = memo(() => {
       {sslQuery.isLoading ? (
         <EmptyState icon={RouterIcon} title={t("loading")} />
       ) : sslQuery.isError ? (
-        <EmptyState icon={RouterIcon} title={t("ssl.loadError")} description={getApiError(sslQuery.error)?.message} />
+        <EmptyState
+          icon={RouterIcon}
+          title={t("ssl.loadError")}
+          description={getApiError(sslQuery.error)?.message}
+          action={
+            <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_DETAIL.replace(":credentialId", credentialId))}>
+              {t("accounts.back")}
+            </Button>
+          }
+        />
       ) : (
         <DataTable
           emptyIcon={RouterIcon}
