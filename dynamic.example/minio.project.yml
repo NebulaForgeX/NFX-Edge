@@ -1,0 +1,24 @@
+# NFX-Stack MinIO S3 API on NAS1 host port 10012.
+# DNS name uses MINIO_PUBLIC_URL. LAN PathPrefix /nfx-identity-images uses MINIO_LAN_URL.
+
+http:
+  routers:
+    minio-s3:
+      rule: "Host(`minio.nebulaforgex.com`)"
+      entryPoints: [websecure]
+      service: minio-s3-svc
+      tls: {}
+      priority: 200
+    minio-s3-lan:
+      rule: "PathPrefix(`/nfx-identity-images`)"
+      entryPoints: [websecure]
+      service: minio-s3-svc
+      tls: {}
+      priority: 40
+
+  services:
+    minio-s3-svc:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10012'
+

@@ -1,0 +1,165 @@
+# Secure /nfx-storages and /console/nfx-storages → 10091–10101.
+# Public Host s3.nebulaforgex.com stays on the secure S3 port.
+# Dev /dev/nfx-storages and /dev/console/nfx-storages → 10080–10090, Host(NAS1_IP) only.
+
+http:
+  middlewares:
+    storages-strip:
+      stripPrefix:
+        prefixes:
+          - "/nfx-storages"
+    storages-strip-dev:
+      stripPrefix:
+        prefixes:
+          - "/dev/nfx-storages"
+    storages-console-root:
+      redirectRegex:
+        regex: "^https?://[^/]+/?$"
+        replacement: "https://storages.nebulaforgex.com/console/nfx-storages/"
+        permanent: true
+
+  routers:
+    storages-s3:
+      rule: "Host(`s3.nebulaforgex.com`)"
+      entryPoints: [websecure]
+      service: storages-s3
+      tls: {}
+      priority: 200
+    storages-admin:
+      rule: "PathPrefix(`/nfx-storages/admin`)"
+      entryPoints: [websecure]
+      middlewares: [storages-strip]
+      service: storages-admin
+      tls: {}
+      priority: 20
+    storages-object:
+      rule: "PathPrefix(`/nfx-storages/object`)"
+      entryPoints: [websecure]
+      middlewares: [storages-strip]
+      service: storages-object
+      tls: {}
+      priority: 20
+    storages-iam:
+      rule: "PathPrefix(`/nfx-storages/iam`)"
+      entryPoints: [websecure]
+      middlewares: [storages-strip]
+      service: storages-iam
+      tls: {}
+      priority: 20
+    storages-notify:
+      rule: "PathPrefix(`/nfx-storages/notify`)"
+      entryPoints: [websecure]
+      middlewares: [storages-strip]
+      service: storages-notify
+      tls: {}
+      priority: 20
+    storages-admin-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-storages/admin`)'
+      entryPoints: [websecure]
+      middlewares: [storages-strip-dev]
+      service: storages-admin-dev
+      tls: {}
+      priority: 40
+    storages-object-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-storages/object`)'
+      entryPoints: [websecure]
+      middlewares: [storages-strip-dev]
+      service: storages-object-dev
+      tls: {}
+      priority: 40
+    storages-iam-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-storages/iam`)'
+      entryPoints: [websecure]
+      middlewares: [storages-strip-dev]
+      service: storages-iam-dev
+      tls: {}
+      priority: 40
+    storages-notify-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-storages/notify`)'
+      entryPoints: [websecure]
+      middlewares: [storages-strip-dev]
+      service: storages-notify-dev
+      tls: {}
+      priority: 40
+    storages-s3-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-storages/s3`)'
+      entryPoints: [websecure]
+      middlewares: [storages-strip-dev]
+      service: storages-s3-dev
+      tls: {}
+      priority: 40
+    storages-console-lan:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/console/nfx-storages`)'
+      entryPoints: [websecure]
+      service: storages-console
+      tls: {}
+      priority: 25
+    storages-console-host:
+      rule: "Host(`storages.nebulaforgex.com`) && PathPrefix(`/console/nfx-storages`)"
+      entryPoints: [websecure]
+      service: storages-console
+      tls: {}
+      priority: 200
+    storages-console-root:
+      rule: "Host(`storages.nebulaforgex.com`) && Path(`/`)"
+      entryPoints: [websecure]
+      middlewares: [storages-console-root]
+      service: storages-console
+      tls: {}
+      priority: 210
+    storages-console-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/console/nfx-storages`)'
+      entryPoints: [websecure]
+      service: storages-console-dev
+      tls: {}
+      priority: 40
+
+  services:
+    storages-s3:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10091'
+    storages-admin:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10093'
+    storages-object:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10095'
+    storages-iam:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10097'
+    storages-notify:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10099'
+    storages-console:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10101'
+    storages-s3-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10080'
+    storages-admin-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10082'
+    storages-object-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10084'
+    storages-iam-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10086'
+    storages-notify-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10088'
+    storages-console-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10090'

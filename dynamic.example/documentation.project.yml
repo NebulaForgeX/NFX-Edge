@@ -1,0 +1,37 @@
+# NFX-Documentation. Host port 10120. Public host matches the handbook: identity.nebulaforgex.com.
+# /documentation is rewritten to /nfx-documentation inside the container.
+
+http:
+  middlewares:
+    documentation-slash:
+      redirectRegex:
+        regex: "^(https?)://([^/]+)/documentation$"
+        replacement: "${1}://${2}/documentation/"
+        permanent: true
+    documentation-rewrite:
+      replacePathRegex:
+        regex: "^/documentation(/.*)"
+        replacement: "/nfx-documentation$1"
+
+  routers:
+    documentation-lan:
+      rule: 'HostRegexp(`^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$`) && (Path(`/documentation`) || PathPrefix(`/documentation/`))'
+      entryPoints: [websecure]
+      middlewares: [documentation-slash, documentation-rewrite]
+      service: documentation-frontend
+      tls: {}
+      priority: 30
+    documentation-host:
+      rule: "Host(`identity.nebulaforgex.com`) && (Path(`/documentation`) || PathPrefix(`/documentation/`))"
+      entryPoints: [websecure]
+      middlewares: [documentation-slash, documentation-rewrite]
+      service: documentation-frontend
+      tls: {}
+      priority: 200
+
+  services:
+    documentation-frontend:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10120'
+

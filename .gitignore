@@ -33,6 +33,7 @@ ssl/
 ## Traefik live routes (templates are dynamic.example/, never mount that)
 dynamic/*
 !dynamic/.gitkeep
+dynamic/*.project.yml
 
 ## Go build artifacts
 *.exe

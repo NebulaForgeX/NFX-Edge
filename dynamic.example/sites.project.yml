@@ -1,0 +1,99 @@
+# Static sites. Not NFX product blocks. Containers publish 10400 and 10401.
+
+http:
+  middlewares:
+    aquawork-www-to-apex:
+      redirectRegex:
+        regex: "^https://www\\.aquawork\\.ca/(.*)"
+        replacement: "https://aquawork.ca/${1}"
+        permanent: true
+    timetablecraft-www-to-apex:
+      redirectRegex:
+        regex: "^https://www\\.timetablecraft\\.com/(.*)"
+        replacement: "https://timetablecraft.com/${1}"
+        permanent: true
+    nebulaforgex-www-to-apex:
+      redirectRegex:
+        regex: "^https://www\\.nebulaforgex\\.com/(.*)"
+        replacement: "https://nebulaforgex.com/${1}"
+        permanent: true
+
+    lan-aquawork-to-port:
+      redirectRegex:
+        regex: "^https?://[^/]+/aquawork\\.ca/?(.*)"
+        replacement: 'http://{{ env "NAS1_IP" }}:10400/${1}'
+        permanent: false
+
+    lan-timetablecraft-to-port:
+      redirectRegex:
+        regex: "^https?://[^/]+/timetablecraft\\.com/?(.*)"
+        replacement: 'http://{{ env "NAS1_IP" }}:10401/${1}'
+        permanent: false
+
+  routers:
+    www-aquawork-www:
+      rule: "Host(`www.aquawork.ca`)"
+      entryPoints: [websecure]
+      middlewares: [aquawork-www-to-apex]
+      service: www-aquawork-svc
+      tls: {}
+      priority: 200
+    www-aquawork:
+      rule: "Host(`aquawork.ca`)"
+      entryPoints: [websecure]
+      service: www-aquawork-svc
+      tls: {}
+      priority: 200
+    www-timetablecraft-www:
+      rule: "Host(`www.timetablecraft.com`)"
+      entryPoints: [websecure]
+      middlewares: [timetablecraft-www-to-apex]
+      service: www-timetablecraft-svc
+      tls: {}
+      priority: 200
+    www-timetablecraft:
+      rule: "Host(`timetablecraft.com`)"
+      entryPoints: [websecure]
+      service: www-timetablecraft-svc
+      tls: {}
+      priority: 200
+    www-nebulaforgex-www:
+      rule: "Host(`www.nebulaforgex.com`)"
+      entryPoints: [websecure]
+      middlewares: [nebulaforgex-www-to-apex]
+      service: www-nebulaforgex-svc
+      tls: {}
+      priority: 200
+
+    lan-aquawork:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/aquawork.ca`)'
+      entryPoints: [websecure]
+      middlewares: [lan-aquawork-to-port]
+      service: www-aquawork-svc
+      tls: {}
+      priority: 100
+
+    lan-timetablecraft:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/timetablecraft.com`)'
+      entryPoints: [websecure]
+      middlewares: [lan-timetablecraft-to-port]
+      service: www-timetablecraft-svc
+      tls: {}
+      priority: 100
+
+  services:
+    www-aquawork-svc:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10400'
+
+    www-timetablecraft-svc:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10401'
+
+    www-nebulaforgex-svc:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10401'
+

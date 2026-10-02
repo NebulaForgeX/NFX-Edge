@@ -1,0 +1,109 @@
+# Both stacks stay in this file.
+# Secure: /console/nfx-identity and /nfx-identity → 10035–10039. Domain and LAN.
+# Dev:    /dev/console/nfx-identity and /dev/nfx-identity → 10030–10034.
+# Dev routers require Host(NAS1_IP). https://identity.nebulaforgex.com/dev/... does not match.
+
+http:
+  middlewares:
+    identity-auth-strip:
+      stripPrefix:
+        prefixes:
+          - "/nfx-identity"
+    identity-asset-strip:
+      stripPrefix:
+        prefixes:
+          - "/nfx-identity"
+    identity-auth-strip-dev:
+      stripPrefix:
+        prefixes:
+          - "/dev/nfx-identity"
+    identity-asset-strip-dev:
+      stripPrefix:
+        prefixes:
+          - "/dev/nfx-identity"
+    identity-console-root:
+      redirectRegex:
+        regex: "^https?://[^/]+/?$"
+        replacement: "https://identity.nebulaforgex.com/console/nfx-identity/"
+        permanent: true
+
+  routers:
+    identity-auth:
+      rule: "PathPrefix(`/nfx-identity/auth`)"
+      entryPoints: [websecure]
+      middlewares: [identity-auth-strip]
+      service: identity-auth
+      tls: {}
+      priority: 20
+    identity-asset:
+      rule: "PathPrefix(`/nfx-identity/asset`)"
+      entryPoints: [websecure]
+      middlewares: [identity-asset-strip]
+      service: identity-asset
+      tls: {}
+      priority: 20
+    identity-auth-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-identity/auth`)'
+      entryPoints: [websecure]
+      middlewares: [identity-auth-strip-dev]
+      service: identity-auth-dev
+      tls: {}
+      priority: 40
+    identity-asset-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-identity/asset`)'
+      entryPoints: [websecure]
+      middlewares: [identity-asset-strip-dev]
+      service: identity-asset-dev
+      tls: {}
+      priority: 40
+    identity-console-lan:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/console/nfx-identity`)'
+      entryPoints: [websecure]
+      service: identity-console
+      tls: {}
+      priority: 25
+    identity-console-host:
+      rule: "Host(`identity.nebulaforgex.com`) && PathPrefix(`/console/nfx-identity`)"
+      entryPoints: [websecure]
+      service: identity-console
+      tls: {}
+      priority: 200
+    identity-console-root:
+      rule: "Host(`identity.nebulaforgex.com`) && Path(`/`)"
+      entryPoints: [websecure]
+      middlewares: [identity-console-root]
+      service: identity-console
+      tls: {}
+      priority: 210
+    identity-console-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/console/nfx-identity`)'
+      entryPoints: [websecure]
+      service: identity-console-dev
+      tls: {}
+      priority: 40
+
+  services:
+    identity-auth:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10035'
+    identity-asset:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10037'
+    identity-console:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10039'
+    identity-auth-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10030'
+    identity-asset-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10032'
+    identity-console-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10034'

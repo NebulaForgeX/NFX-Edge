@@ -1,0 +1,22 @@
+# Traefik dashboard. Basic auth hash moved from the old Docker label.
+http:
+  middlewares:
+    dashboard-auth:
+      basicAuth:
+        users:
+          - "admin:$2y$05$KymEIDjaRPneTxHf1RCzruglmhsOdj2KQJhG6qKAUbtFkG0kCVJ/e"
+  routers:
+    dashboard:
+      rule: "Host(`traefik.nebulaforgex.com`)"
+      entryPoints: [websecure]
+      service: api@internal
+      middlewares: [dashboard-auth]
+      tls: {}
+      priority: 200
+    dashboard-lan:
+      rule: 'HostRegexp(`^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))'
+      entryPoints: [websecure]
+      service: api@internal
+      middlewares: [dashboard-auth]
+      tls: {}
+      priority: 50

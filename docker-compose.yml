@@ -1,9 +1,9 @@
 name: nfx-edge-secure
-
-# Secure sites-base + console. Reverse proxy is docker-compose.traefik.yml (task traefik).
-# HTTP-01 ACME is sites-base, not Traefik.
+# Publish HTTP, gRPC, and console on ${NAS_IP}:host port.
+# NFX-Edge routes to those ports. This file has no Traefik labels and no shared network.
 
 services:
+
   sites-base:
     image: nfx-edge-sites-base:secure
     container_name: NFX-Edge-Sites-Base-Secure
@@ -19,39 +19,14 @@ services:
       - "${HTTP_PORT}"
       - "${GRPC_PORT_SITES}"
     ports:
-      - "${GRPC_EXT_PORT_SITES}:${GRPC_PORT_SITES}"
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-edge"
-      traefik.docker.network: nfx-edge
-      traefik.http.services.edge-sites-base-secure.loadbalancer.server.port: "${HTTP_PORT}"
-      traefik.http.routers.edge-sites-base-secure.entrypoints: web
-      traefik.http.middlewares.nfx-edge-sites-gw-secure.stripprefix.prefixes: ${API_GATEWAY_PREFIX}
-      traefik.http.routers.edge-sites-base-secure.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_SITES}`)
-      traefik.http.routers.edge-sites-base-secure.priority: "20"
-      traefik.http.routers.edge-sites-base-secure.middlewares: nfx-edge-sites-gw-secure
-      traefik.http.routers.edge-sites-base-secure.service: edge-sites-base-secure
-      traefik.http.routers.edge-sites-base-secure-tls.entrypoints: websecure
-      traefik.http.routers.edge-sites-base-secure-tls.rule: PathPrefix(`${API_GATEWAY_PREFIX}${API_PREFIX_PATH_SITES}`)
-      traefik.http.routers.edge-sites-base-secure-tls.priority: "20"
-      traefik.http.routers.edge-sites-base-secure-tls.middlewares: nfx-edge-sites-gw-secure
-      traefik.http.routers.edge-sites-base-secure-tls.service: edge-sites-base-secure
-      traefik.http.routers.edge-sites-base-secure-tls.tls: "true"
-      traefik.http.routers.edge-sites-acme-secure.entrypoints: web
-      traefik.http.routers.edge-sites-acme-secure.rule: "PathPrefix(`/.well-known/acme-challenge`)"
-      traefik.http.routers.edge-sites-acme-secure.priority: "100"
-      traefik.http.routers.edge-sites-acme-secure.service: edge-sites-base-secure
+      - "${NAS_IP}:${HTTP_EXT_PORT_SITES}:${HTTP_PORT}"
+      - "${NAS_IP}:${GRPC_EXT_PORT_SITES}:${GRPC_PORT_SITES}"
     volumes:
       - ./websites:/app/websites:rw
       - ./acme-challenges:/acme-challenges:rw
       - ./errors/langs:/app/errors/langs
       - ./messages/langs:/app/messages/langs
     restart: always
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - nfx-edge
-      - nfx-stack
 
   console:
     image: nfx-edge-console:secure
@@ -64,51 +39,6 @@ services:
         VITE_API_URL: ${VITE_API_URL}
         VITE_IDENTITY_API_URL: ${VITE_IDENTITY_API_URL}
         VITE_BASE: ${VITE_BASE}
-    labels:
-      traefik.enable: "true"
-      traefik.project: "nfx-edge"
-      traefik.docker.network: nfx-edge
-      traefik.http.services.edge-console-secure.loadbalancer.server.port: "${CONSOLE_PORT}"
-      traefik.http.middlewares.edge-console-root-secure.redirectregex.regex: ^https?://[^/]+/?$$
-      traefik.http.middlewares.edge-console-root-secure.redirectregex.replacement: https://${TRAEFIK_CONSOLE_HOST}/console/nfx-edge/
-      traefik.http.middlewares.edge-console-root-secure.redirectregex.permanent: "true"
-      traefik.http.routers.edge-console-secure.entrypoints: web
-      traefik.http.routers.edge-console-secure.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-edge`)"
-      traefik.http.routers.edge-console-secure.service: edge-console-secure
-      traefik.http.routers.edge-console-secure.priority: "25"
-      traefik.http.routers.edge-console-secure-tls.entrypoints: websecure
-      traefik.http.routers.edge-console-secure-tls.rule: "HostRegexp(`^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$$`) && PathPrefix(`/console/nfx-edge`)"
-      traefik.http.routers.edge-console-secure-tls.service: edge-console-secure
-      traefik.http.routers.edge-console-secure-tls.tls: "true"
-      traefik.http.routers.edge-console-secure-tls.priority: "25"
-      traefik.http.routers.edge-console-host-secure.entrypoints: web
-      traefik.http.routers.edge-console-host-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-edge`)
-      traefik.http.routers.edge-console-host-secure.service: edge-console-secure
-      traefik.http.routers.edge-console-host-secure.priority: "200"
-      traefik.http.routers.edge-console-host-secure-tls.entrypoints: websecure
-      traefik.http.routers.edge-console-host-secure-tls.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && PathPrefix(`/console/nfx-edge`)
-      traefik.http.routers.edge-console-host-secure-tls.service: edge-console-secure
-      traefik.http.routers.edge-console-host-secure-tls.tls: "true"
-      traefik.http.routers.edge-console-host-secure-tls.priority: "200"
-      traefik.http.routers.edge-console-root-secure.entrypoints: web
-      traefik.http.routers.edge-console-root-secure.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
-      traefik.http.routers.edge-console-root-secure.middlewares: edge-console-root-secure
-      traefik.http.routers.edge-console-root-secure.service: edge-console-secure
-      traefik.http.routers.edge-console-root-secure.priority: "210"
-      traefik.http.routers.edge-console-root-secure-tls.entrypoints: websecure
-      traefik.http.routers.edge-console-root-secure-tls.rule: Host(`${TRAEFIK_CONSOLE_HOST}`) && Path(`/`)
-      traefik.http.routers.edge-console-root-secure-tls.middlewares: edge-console-root-secure
-      traefik.http.routers.edge-console-root-secure-tls.service: edge-console-secure
-      traefik.http.routers.edge-console-root-secure-tls.tls: "true"
-      traefik.http.routers.edge-console-root-secure-tls.priority: "210"
+    ports:
+      - "${NAS_IP}:${CONSOLE_EXTERNAL_PORT}:${CONSOLE_PORT}"
     restart: always
-    networks:
-      - nfx-edge
-
-networks:
-  nfx-edge:
-    external: true
-    name: nfx-edge
-  nfx-stack:
-    external: true
-    name: nfx-stack

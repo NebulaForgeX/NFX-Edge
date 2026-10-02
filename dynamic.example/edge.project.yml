@@ -1,0 +1,83 @@
+# Secure /nfx-edge and /console/nfx-edge → 10113 / 10115.
+# Dev /dev/nfx-edge and /dev/console/nfx-edge → 10110 / 10112, Host(NAS1_IP) only.
+# ACME HTTP-01 stays on the secure sites port.
+
+http:
+  middlewares:
+    edge-strip:
+      stripPrefix:
+        prefixes:
+          - "/nfx-edge"
+    edge-strip-dev:
+      stripPrefix:
+        prefixes:
+          - "/dev/nfx-edge"
+    edge-console-root:
+      redirectRegex:
+        regex: "^https?://[^/]+/?$"
+        replacement: "https://edge.nebulaforgex.com/console/nfx-edge/"
+        permanent: true
+
+  routers:
+    edge-acme:
+      rule: "PathPrefix(`/.well-known/acme-challenge`)"
+      entryPoints: [web]
+      service: edge-sites
+      priority: 100
+    edge-sites:
+      rule: "PathPrefix(`/nfx-edge/edge`)"
+      entryPoints: [websecure]
+      middlewares: [edge-strip]
+      service: edge-sites
+      tls: {}
+      priority: 20
+    edge-sites-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-edge/edge`)'
+      entryPoints: [websecure]
+      middlewares: [edge-strip-dev]
+      service: edge-sites-dev
+      tls: {}
+      priority: 40
+    edge-console-lan:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/console/nfx-edge`)'
+      entryPoints: [websecure]
+      service: edge-console
+      tls: {}
+      priority: 25
+    edge-console-host:
+      rule: "Host(`edge.nebulaforgex.com`) && PathPrefix(`/console/nfx-edge`)"
+      entryPoints: [websecure]
+      service: edge-console
+      tls: {}
+      priority: 200
+    edge-console-root:
+      rule: "Host(`edge.nebulaforgex.com`) && Path(`/`)"
+      entryPoints: [websecure]
+      middlewares: [edge-console-root]
+      service: edge-console
+      tls: {}
+      priority: 210
+    edge-console-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/console/nfx-edge`)'
+      entryPoints: [websecure]
+      service: edge-console-dev
+      tls: {}
+      priority: 40
+
+  services:
+    edge-sites:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10113'
+    edge-console:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10115'
+    edge-sites-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10110'
+    edge-console-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10112'

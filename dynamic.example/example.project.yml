@@ -1,0 +1,22 @@
+# Copy this file to dynamic/<name>.project.yml and fill routers.
+# Live files under dynamic/ are gitignored. Templates live in dynamic.example/.
+# Backend URLs are NAS IP + host port. Traefik does not use Docker DNS.
+#
+#   http://{{ env "NAS1_IP" }}:10030   this NAS
+#   http://{{ env "NAS2_IP" }}:10030   the other NAS, same port
+#
+# A block ends on a port whose last digit is 9. See .cursor/rules/port.mdc.
+
+http:
+  routers:
+    example-router:
+      rule: "PathPrefix(`/example`)"
+      entryPoints:
+        - websecure
+      service: example-service
+      tls: {}
+  services:
+    example-service:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10030'

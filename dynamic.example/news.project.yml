@@ -1,0 +1,187 @@
+# Secure /nfx-news and /console/nfx-news → 10063–10075.
+# Dev /dev/nfx-news and /dev/console/nfx-news → 10050–10062, Host(NAS1_IP) only.
+
+http:
+  middlewares:
+    news-strip:
+      stripPrefix:
+        prefixes:
+          - "/nfx-news"
+    news-strip-dev:
+      stripPrefix:
+        prefixes:
+          - "/dev/nfx-news"
+    news-console-root:
+      redirectRegex:
+        regex: "^https?://[^/]+/?$"
+        replacement: "https://news.nebulaforgex.com/console/nfx-news/"
+        permanent: true
+
+  routers:
+    news-source:
+      rule: "PathPrefix(`/nfx-news/source`)"
+      entryPoints: [websecure]
+      middlewares: [news-strip]
+      service: news-source
+      tls: {}
+      priority: 20
+    news-news:
+      rule: "PathPrefix(`/nfx-news/news`)"
+      entryPoints: [websecure]
+      middlewares: [news-strip]
+      service: news-news
+      tls: {}
+      priority: 20
+    news-crawl:
+      rule: "PathPrefix(`/nfx-news/crawl`)"
+      entryPoints: [websecure]
+      middlewares: [news-strip]
+      service: news-crawl
+      tls: {}
+      priority: 20
+    news-report:
+      rule: "PathPrefix(`/nfx-news/report`)"
+      entryPoints: [websecure]
+      middlewares: [news-strip]
+      service: news-report
+      tls: {}
+      priority: 20
+    news-notify:
+      rule: "PathPrefix(`/nfx-news/notify`)"
+      entryPoints: [websecure]
+      middlewares: [news-strip]
+      service: news-notify
+      tls: {}
+      priority: 20
+    news-mcp:
+      rule: "PathPrefix(`/nfx-news/mcp`)"
+      entryPoints: [websecure]
+      middlewares: [news-strip]
+      service: news-mcp
+      tls: {}
+      priority: 20
+    news-source-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-news/source`)'
+      entryPoints: [websecure]
+      middlewares: [news-strip-dev]
+      service: news-source-dev
+      tls: {}
+      priority: 40
+    news-news-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-news/news`)'
+      entryPoints: [websecure]
+      middlewares: [news-strip-dev]
+      service: news-news-dev
+      tls: {}
+      priority: 40
+    news-crawl-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-news/crawl`)'
+      entryPoints: [websecure]
+      middlewares: [news-strip-dev]
+      service: news-crawl-dev
+      tls: {}
+      priority: 40
+    news-report-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-news/report`)'
+      entryPoints: [websecure]
+      middlewares: [news-strip-dev]
+      service: news-report-dev
+      tls: {}
+      priority: 40
+    news-notify-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-news/notify`)'
+      entryPoints: [websecure]
+      middlewares: [news-strip-dev]
+      service: news-notify-dev
+      tls: {}
+      priority: 40
+    news-mcp-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/nfx-news/mcp`)'
+      entryPoints: [websecure]
+      middlewares: [news-strip-dev]
+      service: news-mcp-dev
+      tls: {}
+      priority: 40
+    news-console-lan:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/console/nfx-news`)'
+      entryPoints: [websecure]
+      service: news-console
+      tls: {}
+      priority: 25
+    news-console-host:
+      rule: "Host(`news.nebulaforgex.com`) && PathPrefix(`/console/nfx-news`)"
+      entryPoints: [websecure]
+      service: news-console
+      tls: {}
+      priority: 200
+    news-console-root:
+      rule: "Host(`news.nebulaforgex.com`) && Path(`/`)"
+      entryPoints: [websecure]
+      middlewares: [news-console-root]
+      service: news-console
+      tls: {}
+      priority: 210
+    news-console-dev:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/dev/console/nfx-news`)'
+      entryPoints: [websecure]
+      service: news-console-dev
+      tls: {}
+      priority: 40
+
+  services:
+    news-source:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10063'
+    news-news:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10065'
+    news-crawl:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10067'
+    news-report:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10069'
+    news-notify:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10071'
+    news-mcp:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10073'
+    news-console:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10075'
+    news-source-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10050'
+    news-news-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10052'
+    news-crawl-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10054'
+    news-report-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10056'
+    news-notify-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10058'
+    news-mcp-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10060'
+    news-console-dev:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10062'

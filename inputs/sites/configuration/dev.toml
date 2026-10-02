@@ -111,7 +111,7 @@
     errors_langs_path = "errors/langs"
 
 [grpc_client]
-    auth_addr = "${GRPC_HOST_AUTH}:${GRPC_PORT_AUTH}"
+    auth_addr = "${GRPC_HOST_AUTH}:${GRPC_EXT_PORT_AUTH}"
 
 
 [otel]

@@ -3,7 +3,7 @@
 # 所有与环境相关的任务都由 ENV（dev|secure）驱动。
 #   - 交互入口：task start
 #   - 直接执行：task run（默认 dev） | task atlas:pipeline:run ENV=secure -- --no-skip
-# 平台 HTTP 入口是 `task traefik`（docker-compose.traefik.yml，共享网络 nfx-edge）。
+# 平台 HTTP 入口是 `task traefik`（docker-compose.traefik.yml，文件路由，宿主机 80/443）。
 # 需本地 Go/buf 的任务会先 source /volume1/Environments/use-menv.sh
 
 version: "3"
@@ -19,7 +19,6 @@ vars:
   ENV_FILE: '{{if eq .ENV "secure"}}.secure.env{{else}}.env{{end}}'
   APP_COMPOSE: '{{if eq .ENV "secure"}}docker-compose.yml{{else}}docker-compose.dev.yml{{end}}'
   TRAEFIK_COMPOSE: docker-compose.traefik.yml
-  EDGE_NETWORK: nfx-edge
 
 tasks:
   start:
@@ -107,14 +106,13 @@ tasks:
       - rm -rf bin/
 
   traefik:
-    desc: "Start NFX-Edge-Reverse-Proxy (Traefik 80/443; creates nfx-edge if missing)"
+    desc: "Start NFX-Edge-Reverse-Proxy (Traefik 80/443)"
     cmds:
-      - mkdir -p websites
-      - sudo docker network inspect {{.EDGE_NETWORK}} >/dev/null 2>&1 || sudo docker network create {{.EDGE_NETWORK}}
+      - mkdir -p websites dynamic
       - sudo docker compose -f {{.TRAEFIK_COMPOSE}} up -d
 
   traefik:down:
-    desc: "Stop NFX-Edge-Reverse-Proxy (nfx-edge stays if apps still use it)"
+    desc: "Stop NFX-Edge-Reverse-Proxy"
     cmds:
       - sudo docker compose -f {{.TRAEFIK_COMPOSE}} down
 
@@ -130,16 +128,12 @@ tasks:
       - task: traefik
 
   run:
-    desc: "Generate langs then start sites-base + console (ENV=dev|secure). Requires task traefik."
+    desc: "Generate langs then start sites-base + console (ENV=dev|secure). Publishes NAS_IP host ports."
     cmds:
       - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "secure"}}--prod{{end}}
       - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}}
       - mkdir -p websites acme-challenges
       - |
-        if ! sudo docker network inspect "{{.EDGE_NETWORK}}" >/dev/null 2>&1; then
-          echo "network {{.EDGE_NETWORK}} is missing — start Traefik first: task traefik"
-          exit 1
-        fi
         ENV_ARGS=(--env-file "{{.ENV_FILE}}")
         echo "==> compose env: {{.ENV_FILE}}"
         svcs=(sites-base)
@@ -157,16 +151,12 @@ tasks:
         sudo docker compose "${ENV_ARGS[@]}" -f {{.APP_COMPOSE}} up {{if eq .ENV "secure"}}-d{{else}}--watch{{end}}
 
   run:rebuild:
-    desc: "Force-rebuild (--no-cache) sites-base + console (ENV=dev|secure). Requires task traefik."
+    desc: "Force-rebuild (--no-cache) sites-base + console (ENV=dev|secure). Publishes NAS_IP host ports."
     cmds:
       - go run ./errors/cmd/gen_langs/ {{.ERRORS_DIR}} {{if eq .ENV "secure"}}--prod{{end}}
       - go run ./messages/cmd/gen_langs/ {{.MESSAGES_DIR}}
       - mkdir -p websites acme-challenges
       - |
-        if ! sudo docker network inspect "{{.EDGE_NETWORK}}" >/dev/null 2>&1; then
-          echo "network {{.EDGE_NETWORK}} is missing — start Traefik first: task traefik"
-          exit 1
-        fi
         ENV_ARGS=(--env-file "{{.ENV_FILE}}")
         svcs=(sites-base)
         if [[ "{{.ENV}}" == "secure" ]]; then
@@ -196,7 +186,7 @@ tasks:
         export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
         export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
         export POSTGRES_HOST="${ATLAS_POSTGRES_HOST:-${POSTGRESQL_DATABASE_HOST:-192.168.1.64}}"
-        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10104}}"
+        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10004}}"
         if [[ "{{.ENV}}" == "secure" ]]; then
           export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
         else
@@ -219,7 +209,7 @@ tasks:
         export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
         export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
         export POSTGRES_HOST="${ATLAS_POSTGRES_HOST:-${POSTGRESQL_DATABASE_HOST:-192.168.1.64}}"
-        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10104}}"
+        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10004}}"
         if [[ "{{.ENV}}" == "secure" ]]; then
           export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
         else
@@ -242,7 +232,7 @@ tasks:
         export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
         export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
         export POSTGRES_HOST="${ATLAS_POSTGRES_HOST:-${POSTGRESQL_DATABASE_HOST:-192.168.1.64}}"
-        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10104}}"
+        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10004}}"
         if [[ "{{.ENV}}" == "secure" ]]; then
           export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
         else
@@ -273,7 +263,7 @@ tasks:
         export POSTGRES_USER="${POSTGRES_USER:-$POSTGRESQL_USER}"
         export POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$POSTGRESQL_PASSWORD}"
         export POSTGRES_HOST="${ATLAS_POSTGRES_HOST:-${POSTGRESQL_DATABASE_HOST:-192.168.1.64}}"
-        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10104}}"
+        export POSTGRES_PORT="${ATLAS_POSTGRES_PORT:-${POSTGRESQL_DATABASE_PORT:-10004}}"
         if [[ "{{.ENV}}" == "secure" ]]; then
           export POSTGRES_DB="${POSTGRES_DB:-${POSTGRESQL_NAME:-$POSTGRESQL_NAME_PROD}}"
         else

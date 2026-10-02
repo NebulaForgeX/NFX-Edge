@@ -1,5 +1,4 @@
-# Reference static config (compose command is what Traefik actually loads).
-# https://doc.traefik.io/traefik/v3.7/reference/install-configuration/entrypoints/
+# Static config. Dynamic routers live in /etc/traefik/dynamic/*.project.yml (watch reloads them).
 api:
   dashboard: true
   insecure: false
@@ -20,13 +19,15 @@ entryPoints:
       tls: {}
 
 providers:
-  docker:
-    exposedByDefault: false
-    constraints: "LabelRegex(`traefik.project`, `^(nfx-edge|nfx-identity|nfx-news|nfx-storages|nfx-documentation)$`)"
   file:
-    directory: /dynamic
+    directory: /etc/traefik/dynamic
     watch: true
 
-# TLS files: ./websites/<site>/ → /certs/websites, listed in dynamic/tls.yaml.
-# HTTP-01 is sites-base (no certificatesresolvers / certResolver).
-# allowACMEByPass + entryPoint redirect: all :80 → :443 except /.well-known/acme-challenge/.
+log:
+  level: INFO
+
+accessLog:
+  format: json
+
+metrics:
+  prometheus: {}

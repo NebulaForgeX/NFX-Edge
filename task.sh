@@ -18,9 +18,9 @@ fi
 # ── Pick the environment once; every task launched from the menu inherits it via $ENV ──
 announce_environment() {
   if [ "$ENV" = "secure" ]; then
-    printf '\n  → ENV=secure  (.secure.env · network nfx-edge · ports 10051-10100 · HTTPS)\n\n'
+    printf '\n  → ENV=secure  (.secure.env · sites 10113-10115 · HTTPS)\n\n'
   else
-    printf '\n  → ENV=dev     (.env · network nfx-edge · ports 10001-10050 · HTTP)\n\n'
+    printf '\n  → ENV=dev     (.env · sites 10110-10112 · HTTP)\n\n'
   fi
 }
 
@@ -34,8 +34,8 @@ choose_environment() {
   esac
   local choice
   printf '\n  NFX-Edge — select environment\n'
-  printf '    [D]ev    .env        · network nfx-edge        · ports 10001-10050 · HTTP\n'
-  printf '    [S]ecure .secure.env · network nfx-edge · ports 10051-10100 · HTTPS\n'
+  printf '    [D]ev    .env        · sites 10110-10112 · HTTP\n'
+  printf '    [S]ecure .secure.env · sites 10113-10115 · HTTPS\n'
   printf '  Choice [D/s]: '
   IFS= read -r choice || choice=""
   case "$choice" in
