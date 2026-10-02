@@ -1,10 +1,10 @@
 .controlFit {
-  width: max-content;
-  max-width: 100%;
+  width: 100%;
+  min-width: 0;
 }
 
 .controlFit :global(.rt-SegmentedControlRoot) {
-  width: max-content;
+  width: 100%;
   max-width: 100%;
 }
 

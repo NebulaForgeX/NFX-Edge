@@ -41,7 +41,7 @@ export default function SettingsPage() {
         </Button>
       </ActionBar>
 
-      <Grid columns={{ initial: "1", lg: "minmax(0, 1.4fr) minmax(16rem, 0.6fr)" }} gap="6" width="100%" align="start">
+      <Grid columns={{ initial: "1", xl: "minmax(0, 1.4fr) minmax(18rem, 0.6fr)" }} gap="8" width="100%" align="start">
         <SettingsSection id="settings-theme" title={t("sections.theme.title")} description={t("sections.theme.description")}>
           <ThemeSettings />
         </SettingsSection>

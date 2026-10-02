@@ -91,8 +91,8 @@ export default function ThemeSettings() {
   const previewAppearance = resolveRadixAppearance(draft.appearance);
 
   return (
-    <Flex direction="column" gap="3">
-      <Grid columns={{ initial: "1", sm: "2", md: "3" }} gap="3" width="100%">
+    <Flex direction="column" gap="6">
+      <Grid columns="1" gap="6" width="100%">
         <Tile title={t("labels.colorAndAppearance")}>
           <Flex direction="column" gap="2" width="100%" align="start">
             <Text size="1" weight="medium" color="gray">
