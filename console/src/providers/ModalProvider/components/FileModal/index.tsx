@@ -83,7 +83,7 @@ const FileModal = memo(() => {
           </Section>
         </Box>
         <Section py="4">
-          <Container width="100%" maxWidth="none" px="4"
+          <Container width="100%" maxWidth="none" px="4">
             {loading ? (
               <Text color="gray">Loading...</Text>
             ) : error ? (

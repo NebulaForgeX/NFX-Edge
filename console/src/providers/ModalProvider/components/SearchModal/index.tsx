@@ -188,7 +188,7 @@ const SearchModal = memo(() => {
 
         <Box className={styles.results}>
           <Section py="2">
-            <Container width="100%" maxWidth="none" px="2"
+            <Container width="100%" maxWidth="none" px="2">
               {results.length > 0 ? (
                 results.map((item, index) => {
                   const Icon = item.icon;
