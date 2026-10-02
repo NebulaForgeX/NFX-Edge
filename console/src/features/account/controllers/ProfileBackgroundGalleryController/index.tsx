@@ -9,7 +9,7 @@ import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, us
 import { horizontalListSortingStrategy, SortableContext, sortableKeyboardCoordinates, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ResetIcon } from "@radix-ui/react-icons";
-import { Box, Button, Container, Flex, IconButton, Section, Spinner, Text } from "@radix-ui/themes";
+import { Button, Container, Flex, IconButton, Section, Spinner, Text } from "@radix-ui/themes";
 import { useWheelHorizontalScroll } from "nfx-ui/hooks";
 import { useTranslation } from "react-i18next";
 

@@ -1,6 +1,6 @@
 import { ArrowNarrowLeftIcon, RouterIcon } from "nfx-ui/icons";
 import { memo, useMemo, useState } from "react";
-import { Button, Box, Container, Flex, Grid, Section, Text, TextArea } from "@radix-ui/themes";
+import { Button, Container, Flex, Grid, Section, Text, TextArea } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
 import { ActionBar, DataTable, Dropdown, EmptyState, Input, PageHeader } from "@/components";
 import { useTranslation } from "react-i18next";

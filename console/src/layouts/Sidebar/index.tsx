@@ -46,7 +46,7 @@ interface SectionProps {
   onMobileClose: () => void;
 }
 
-function OverviewSection({ collapsed, broken, onMobileClose }: SectionProps) {
+function OverviewSection({ broken, onMobileClose }: SectionProps) {
   const { t } = useTranslation("language");
   const location = useLocation();
   const active = location.pathname === ROUTES.USER_OVERVIEW || location.pathname.startsWith(`${ROUTES.USER_OVERVIEW}/`);

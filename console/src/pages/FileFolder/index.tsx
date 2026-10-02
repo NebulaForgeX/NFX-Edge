@@ -41,7 +41,7 @@ const FileFolderPage = memo(() => {
   const exportMutation = useExportCertificates();
 
   const items = Array.isArray(data?.items) ? data.items : [];
-  const folderCount = items.filter((item) => item.type === FileItemTypeEnum.FOLDER || item.type === "directory").length;
+  const folderCount = items.filter((item) => item.type === "directory").length;
   const currentPath = data?.path ? data.path.split("/").filter(Boolean) : [];
   const error = queryError ? getApiErrorMessage(queryError, t("loadFailed")) : data && !data.success ? getCommandMessage(data.message, t("loadFailed")) : null;
 

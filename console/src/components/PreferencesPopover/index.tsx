@@ -1,7 +1,7 @@
 import type { AccentColorEnum, GrayColorEnum } from "nfx-ui/enums";
 
 import { CheckIcon, GearIcon } from "@radix-ui/react-icons";
-import { Box, Button, Flex, IconButton, Popover, RadioCards, SegmentedControl, Separator, Text } from "@radix-ui/themes";
+import { Button, Flex, IconButton, Popover, RadioCards, SegmentedControl, Separator, Text } from "@radix-ui/themes";
 import { AccentColor, Appearance, GrayColor, Language, LANGUAGE_VALUES, PanelBackground, Radius, RadiusEnum, Scaling } from "nfx-ui/enums";
 import { useBaseLabel, useLanguageLabel, useSyncPreference } from "nfx-ui/hooks";
 import { usePreferenceStore } from "nfx-ui/stores";

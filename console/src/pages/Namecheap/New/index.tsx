@@ -1,6 +1,6 @@
 import { RouterIcon } from "nfx-ui/icons";
 import { memo } from "react";
-import { Button, Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
+import { Button, Container, Grid, Section, Text } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
 import { ActionBar, PageHeader } from "@/components";
 import { useTranslation } from "react-i18next";
