@@ -9,7 +9,8 @@
     "reset": "Reset",
     "saveTheme": "Save theme",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "openProfile": "Profile"
   },
   "labels": {
     "appearance": "Appearance",

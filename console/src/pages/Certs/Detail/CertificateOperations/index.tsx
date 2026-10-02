@@ -30,7 +30,7 @@ const CertificateOperations = memo(({ certificateId }: CertificateOperationsProp
             <IconButton onClick={handleReapply} variant="secondary" icon={<RefreshIcon size={16} />} disabled={isReapplying}>
               {isReapplying ? t("reapply.applying") : t("actions.reapply")}
             </IconButton>
-            <IconButton onClick={handleDelete} variant="secondary" icon={<TrashIcon size={16} />} disabled={isDeleting} style={{ color: "var(--red-9)" }}>
+            <IconButton onClick={handleDelete} variant="secondary" icon={<TrashIcon size={16} />} disabled={isDeleting} style={{ color: "var(--accent-9)" }}>
               {isDeleting ? t("delete.deleting") || "Deleting..." : t("actions.delete") || "Delete"}
             </IconButton>
           </Flex>

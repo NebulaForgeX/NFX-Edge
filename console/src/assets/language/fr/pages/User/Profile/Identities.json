@@ -16,6 +16,7 @@
     }
   },
   "actions": {
+    "openProfile": "Profil",
     "sendCode": "Envoyer le code",
     "setPrimary": "Définir comme principal",
     "remove": "Supprimer",

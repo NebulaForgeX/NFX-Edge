@@ -1,11 +1,13 @@
 import { GearIcon } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 
-import { Flex, Grid, Heading, Section, Text } from "@radix-ui/themes";
+import { Button, Flex, Grid, Heading, Section, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
-import { PageHeader, Suspense } from "@/components";
+import { ActionBar, PageHeader, Suspense } from "@/components";
+import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
+import { ROUTES } from "@/navigations";
 
 import { SystemSettings, ThemeSettings } from "./components";
 
@@ -33,6 +35,11 @@ export default function SettingsPage() {
   return (
     <PageFrame>
       <PageHeader icon={GearIcon} index={t("index")} title={t("title")} description={t("description")} />
+      <ActionBar>
+        <Button size="2" variant="outline" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
+          {t("actions.openProfile")}
+        </Button>
+      </ActionBar>
 
       <Grid columns={{ initial: "1", lg: "minmax(0, 1.4fr) minmax(16rem, 0.6fr)" }} gap="6" width="100%" align="start">
         <SettingsSection id="settings-theme" title={t("sections.theme.title")} description={t("sections.theme.description")}>

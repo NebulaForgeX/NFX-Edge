@@ -6,7 +6,8 @@
     "description": "Load your profile to edit public details."
   },
   "actions": {
-    "saveChanges": "Save changes"
+    "saveChanges": "Save changes",
+    "openProfile": "Profile"
   },
   "saveSuccess": "Profile updated",
   "labels": {

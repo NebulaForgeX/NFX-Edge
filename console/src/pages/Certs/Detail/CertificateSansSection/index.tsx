@@ -36,6 +36,7 @@ const CertificateSansSection = memo(({ sans }: CertificateSansSectionProps) => {
                 </Section>
               </div>
             </Flex>
+            <Flex flexShrink="0" className={styles.countItem}>
             <Container width="auto" maxWidth="none" className={styles.count} >
               <Flex align="center" justify="center" width="100%" height="100%">
                 <span className={styles.countText} title={t("certificate.sansCountTitle", { count: list.length })}>
@@ -43,6 +44,7 @@ const CertificateSansSection = memo(({ sans }: CertificateSansSectionProps) => {
                 </span>
               </Flex>
             </Container>
+            </Flex>
           </Flex>
         </Container>
       </Section>

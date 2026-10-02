@@ -15,7 +15,7 @@ gsap.registerPlugin(useGSAP);
 
 function IssueStep({ n, label, hint }: { n: string; label: string; hint: string }) {
   return (
-    <Section asChild size="1" mb="6" pt="0" pb="0" className={`${styles.stepItem} js-issue-step`}>
+    <Flex asChild flexGrow="1" className={`${styles.stepItem} js-issue-step`}>
       <li>
         <Flex gap="3" className={styles.step}>
           <Flex className={styles.stepNum} align="center" justify="center" flexShrink="0" width="2.3rem" height="2.3rem">
@@ -29,7 +29,7 @@ function IssueStep({ n, label, hint }: { n: string; label: string; hint: string 
           </Section>
         </Flex>
       </li>
-    </Section>
+    </Flex>
   );
 }
 
@@ -74,7 +74,7 @@ export default function SignupShell({ children }: { children: ReactNode }) {
             <Grid className={styles.bodyGrid} columns="11rem minmax(0, 32rem)" justify="center" gap="6" width="100%">
               <Section size="1" pt="8" pb="0" position="relative" className={styles.stepRail}>
                 <Box className={styles.stepLine} />
-                <Flex asChild direction="column" className={styles.steps}>
+                <Flex asChild direction="column" gap="6" className={styles.steps}>
                   <ol aria-label={t("steps.aria")}>
                     <IssueStep n={t("steps.verifyNum")} label={t("steps.verify")} hint={t("steps.verifyHint")} />
                     <IssueStep n={t("steps.passphraseNum")} label={t("steps.passphrase")} hint={t("steps.passphraseHint")} />

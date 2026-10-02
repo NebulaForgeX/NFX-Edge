@@ -16,6 +16,7 @@
     }
   },
   "actions": {
+    "openProfile": "个人资料",
     "sendCode": "发送验证码",
     "setPrimary": "设为主要",
     "remove": "移除",

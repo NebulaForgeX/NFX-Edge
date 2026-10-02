@@ -9,7 +9,8 @@
     "reset": "Réinitialiser",
     "saveTheme": "Enregistrer le thème",
     "cancel": "Annuler",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "openProfile": "Profil"
   },
   "labels": {
     "appearance": "Apparence",

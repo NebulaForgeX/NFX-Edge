@@ -2,7 +2,7 @@ import { MagnifierIcon, ShieldCheck } from "nfx-ui/icons";
 import { memo, useMemo, useState } from "react";
 import { Badge, Box, Button, Container, Flex, Grid, Heading, Section, Text } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
-import { PageHeader, PemSheet } from "@/components";
+import { ActionBar, PageHeader, PemSheet } from "@/components";
 import { useTranslation } from "react-i18next";
 
 import { getApiErrorMessage } from "nfx-ui/utils";
@@ -67,6 +67,15 @@ const TLSAnalysisPage = memo(() => {
   return (
     <PageFrame>
       <PageHeader icon={ShieldCheck} index={t("index")} title={t("title")} description={t("subtitle")} />
+      <ActionBar>
+        <Button size="2" onClick={() => void handleAnalyze()} disabled={!certificate.trim() || pending} loading={pending}>
+          <MagnifierIcon size={16} />
+          {pending ? t("analyzing") : t("analyze")}
+        </Button>
+        <Button size="2" variant="outline" onClick={handleClear} disabled={pending}>
+          {t("clear")}
+        </Button>
+      </ActionBar>
       <Grid columns={{ initial: "minmax(0, 1fr)", md: "26rem minmax(0, 1fr)" }} gap="5" width="100%" align="start">
         <Flex direction="column" gap="4" minWidth="0">
           <PemSheet
@@ -93,15 +102,6 @@ const TLSAnalysisPage = memo(() => {
             browseLabel={t("browse")}
             dropLabel={t("drop")}
           />
-          <Flex gap="2" wrap="wrap" align="center">
-            <Button size="3" onClick={() => void handleAnalyze()} disabled={!certificate.trim() || pending} loading={pending}>
-              <MagnifierIcon size={16} />
-              {pending ? t("analyzing") : t("analyze")}
-            </Button>
-            <Button size="3" variant="outline" onClick={handleClear} disabled={pending}>
-              {t("clear")}
-            </Button>
-          </Flex>
           {error ? (
             <Text size="2" color="red">
               {error}

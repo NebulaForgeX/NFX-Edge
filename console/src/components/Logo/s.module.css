@@ -100,13 +100,13 @@
 }
 
 .shadowPlain {
-  box-shadow: 0 14px 30px color-mix(in oklab, var(--black-a3) 75%, transparent);
+  box-shadow: 0 14px 30px color-mix(in oklab, var(--gray-a8) 75%, transparent);
 }
 
 .shadowSquare {
-  box-shadow: 0 12px 34px color-mix(in srgb, var(--black-a6) 72%, transparent);
+  box-shadow: 0 12px 34px color-mix(in srgb, var(--gray-a8) 72%, transparent);
 }
 
 .shadowCircle {
-  box-shadow: 0 16px 36px color-mix(in srgb, var(--black-a6) 54%, transparent);
+  box-shadow: 0 16px 36px color-mix(in srgb, var(--gray-a8) 54%, transparent);
 }

@@ -54,10 +54,6 @@
   font-family: var(--heading-font-family), sans-serif;
 }
 
-.meta {
-  margin: 0;
-}
-
 .metaItem {
   gap: 0.2rem;
 }

@@ -13,9 +13,9 @@
 
 .errFrame {
   overflow-wrap: anywhere;
-  border: 1px solid color-mix(in oklab, var(--red-8) 55%, var(--gray-6));
+  border: 1px solid color-mix(in oklab, var(--accent-8) 55%, var(--gray-6));
   background: var(--color-background);
-  color: var(--red-11);
+  color: var(--accent-11);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 12px;
   line-height: 1.5;

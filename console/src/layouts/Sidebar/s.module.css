@@ -144,7 +144,7 @@
   padding: 0 !important;
   justify-content: flex-start !important;
   background: transparent !important;
-  color: var(--red-11) !important;
+  color: var(--gray-12) !important;
   font-size: 15px !important;
   font-weight: 400 !important;
   border-radius: var(--radius-chip) !important;
@@ -157,7 +157,7 @@
 }
 
 .logout:global(.rt-BaseButton):hover:not(:disabled) {
-  background: var(--red-a3) !important;
+  background: var(--gray-a3) !important;
 }
 
 .mobileToggle:global(.rt-IconButton) {

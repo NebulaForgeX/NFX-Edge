@@ -6,7 +6,8 @@
     "description": "Chargez votre profil pour modifier les détails publics."
   },
   "actions": {
-    "saveChanges": "Enregistrer"
+    "saveChanges": "Enregistrer",
+    "openProfile": "Profil"
   },
   "saveSuccess": "Profil mis à jour",
   "labels": {

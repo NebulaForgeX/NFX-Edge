@@ -12,7 +12,7 @@
 }
 
 .sheet[data-invalid="true"] {
-  border-color: var(--red-8);
+  border-color: var(--accent-8);
 }
 
 .sheetInset.sheetInset {

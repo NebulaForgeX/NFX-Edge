@@ -41,7 +41,7 @@
 .failedOverlay {
   position: absolute;
   inset: 0;
-  background: color-mix(in oklab, var(--red-9) 35%, transparent);
+  background: color-mix(in oklab, var(--accent-9) 35%, transparent);
   color: var(--gray-1);
 }
 

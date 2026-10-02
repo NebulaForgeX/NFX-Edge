@@ -232,6 +232,11 @@ const CertsOverviewPage = memo(() => {
           <DataTable
             emptyIcon={LockIcon}
             empty={t("certificate.empty")}
+            emptyAction={
+              <Button size="2" onClick={() => navigate(ROUTES.CERT_ADD)}>
+                {t("actions.add")}
+              </Button>
+            }
             loading={searchMutation.isPending}
             rows={searchRows}
             rowKey={(cert) => cert.id || cert.domain}

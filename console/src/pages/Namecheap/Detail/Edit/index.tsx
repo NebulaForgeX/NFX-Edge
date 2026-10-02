@@ -1,6 +1,6 @@
 import { RouterIcon } from "nfx-ui/icons";
 import { memo } from "react";
-import { Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
+import { Button, Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
 import { EmptyState, PageHeader } from "@/components";
 import { useTranslation } from "react-i18next";
@@ -33,7 +33,15 @@ const NamecheapEditPage = memo(() => {
   if (!credential) {
     return (
       <PageFrame>
-        <EmptyState icon={RouterIcon} title={t("accounts.missing")} />
+        <EmptyState
+          icon={RouterIcon}
+          title={t("accounts.missing")}
+          action={
+            <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_OVERVIEW)}>
+              {t("accounts.back")}
+            </Button>
+          }
+        />
       </PageFrame>
     );
   }

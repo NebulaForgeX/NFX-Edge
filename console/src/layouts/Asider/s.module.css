@@ -4,7 +4,7 @@
   z-index: 49;
   width: 100%;
   height: 100%;
-  background: var(--black-a6);
+  background: var(--gray-a8);
   opacity: 0;
   transition: opacity 180ms ease;
 }
@@ -121,7 +121,7 @@
 }
 
 .wideButton:global(.rt-BaseButton)[data-tone="danger"] {
-  color: var(--red-11) !important;
+  color: var(--gray-12) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

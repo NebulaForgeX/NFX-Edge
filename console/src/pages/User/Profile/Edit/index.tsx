@@ -12,8 +12,10 @@ import type { Profile } from "nfx-ui/types";
 import { Controller, type Control, type FieldPath } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { LucideIcon, PageHeader } from "@/components";
+import { EmptyState, LucideIcon, PageHeader } from "@/components";
+import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
+import { ROUTES } from "@/navigations";
 import { buildImageUrl, buildProfilePatch, compressImage, getApiErrorMessage, getCommandMessage, isEmptyPatch, resolveAccountInitial, safeNullable } from "@/utils";
 
 import BackgroundGallery from "./backgrounds/BackgroundGallery";
@@ -375,9 +377,16 @@ export default function ProfileEditPage() {
         </Box>
       ) : null}
       {profile ? <ProfileForm profile={profile} /> : (
-        <Section size="1" py="5">
-          <Text size="2" color="gray">{t("empty.description")}</Text>
-        </Section>
+        <EmptyState
+          icon={PenIcon}
+          title={t("empty.title")}
+          description={t("empty.description")}
+          action={
+            <Button size="2" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
+              {t("actions.openProfile")}
+            </Button>
+          }
+        />
       )}
     </PageFrame>
   );

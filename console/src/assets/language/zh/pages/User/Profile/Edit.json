@@ -6,7 +6,8 @@
     "description": "请先加载资料后再编辑公开信息。"
   },
   "actions": {
-    "saveChanges": "保存更改"
+    "saveChanges": "保存更改",
+    "openProfile": "个人资料"
   },
   "saveSuccess": "资料已更新",
   "labels": {

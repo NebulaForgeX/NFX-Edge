@@ -93,7 +93,15 @@ export default function ProfileOverviewPage() {
               ))}
             </Grid>
           ) : (
-            <EmptyState icon={UserIcon} title={t("labels.noBackgrounds")} />
+            <EmptyState
+              icon={UserIcon}
+              title={t("labels.noBackgrounds")}
+              action={
+                <Button size="2" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_EDIT })}>
+                  {t("actions.edit")}
+                </Button>
+              }
+            />
           )}
         </Flex>
       </Flex>

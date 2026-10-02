@@ -30,8 +30,10 @@ import { useAuthStore, usePreferenceStore } from "nfx-ui/stores";
 import { isVerificationCodeComplete, normalizeVerificationCode } from "nfx-ui/utils";
 import { useTranslation } from "react-i18next";
 
-import { PageHeader, Suspense } from "@/components";
+import { ActionBar, PageHeader, Suspense } from "@/components";
+import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
+import { ROUTES } from "@/navigations";
 import { buildAvatarImageSrc, safeArray, safeStringable } from "@/utils";
 
 type SectionId = "emails" | "phones" | "password" | "profiles";
@@ -667,6 +669,11 @@ export default function ProfileIdentitiesPage() {
   return (
     <PageFrame>
       <PageHeader icon={UsersIcon} index={t("index")} title={t("title")} description={t("description")} />
+      <ActionBar>
+        <Button size="2" variant="outline" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
+          {t("actions.openProfile")}
+        </Button>
+      </ActionBar>
       <Suspense loadingText={t("labels.loading")}>
         <IdentitiesBody />
       </Suspense>

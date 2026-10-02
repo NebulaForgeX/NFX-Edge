@@ -61,7 +61,7 @@
   border-radius: 999px;
   background: var(--color-panel-solid);
   color: var(--accent-9);
-  box-shadow: 0 8px 18px color-mix(in srgb, var(--black-a3) 14%, transparent);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--gray-a8) 14%, transparent);
 }
 
 .addIcon svg {
@@ -107,7 +107,7 @@
 }
 
 .tile[data-failed="true"] {
-  border-color: color-mix(in srgb, var(--red-9) 45%, var(--gray-a5) 55%);
+  border-color: color-mix(in srgb, var(--accent-9) 45%, var(--gray-a5) 55%);
 }
 
 .tileImage {
@@ -136,7 +136,7 @@
   height: 21px;
   padding-inline: 6px;
   border-radius: 999px;
-  background: var(--black-a8);
+  background: var(--gray-a11);
   color: var(--white-a12);
 }
 
@@ -183,7 +183,7 @@
   padding-inline: 7px;
   border-radius: 999px;
   overflow: hidden;
-  background: color-mix(in srgb, var(--red-9) 86%, var(--black-a12) 14%);
+  background: color-mix(in srgb, var(--accent-9) 86%, var(--gray-a12) 14%);
   color: var(--white-a12);
 }
 

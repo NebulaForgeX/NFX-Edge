@@ -16,6 +16,7 @@
     }
   },
   "actions": {
+    "openProfile": "Profile",
     "sendCode": "Send code",
     "setPrimary": "Set primary",
     "remove": "Remove",

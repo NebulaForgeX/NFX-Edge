@@ -60,7 +60,6 @@
 }
 
 .count.count {
-  flex-shrink: 0;
   width: auto;
   min-width: 2.25rem;
   height: 2.25rem;
@@ -125,7 +124,7 @@
     flex-direction: column;
   }
 
-  .count {
+  .countItem {
     align-self: flex-start;
   }
 }

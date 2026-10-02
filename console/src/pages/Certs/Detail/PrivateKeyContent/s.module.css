@@ -28,7 +28,7 @@
   position: absolute;
   width: 12px;
   height: 12px;
-  border-color: var(--red-9);
+  border-color: var(--accent-9);
   border-style: solid;
   pointer-events: none;
 }

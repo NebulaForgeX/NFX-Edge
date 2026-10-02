@@ -56,7 +56,7 @@
 .error {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 11px;
-  color: var(--red-11);
+  color: var(--accent-11);
 }
 
 .helper {

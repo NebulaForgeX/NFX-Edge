@@ -35,8 +35,9 @@ const CertificateInfo = memo(({ certDetail }: CertificateInfoProps) => {
             <InfoItem label={t("certificate.issuer") || "Issuer"} value={certDetail.issuer || t("certificate.unknown") || "Unknown"} />
             {certDetail.notBefore ? <InfoItem label={t("certificate.validFrom") || "Valid From"} value={new Date(certDetail.notBefore).toLocaleString()} /> : null}
             {certDetail.notAfter ? <InfoItem label={t("certificate.expiryDate") || "Expiry Date"} value={new Date(certDetail.notAfter).toLocaleString()} /> : null}
-            {certDetail.lastErrorMessage ? (
-              <Section className={styles.error}>
+          </Grid>
+          {certDetail.lastErrorMessage ? (
+              <Section mt="2" className={styles.error}>
                 <Container width="100%" maxWidth="none" className={styles.errorInset} >
                   <Section className={styles.errorPad}>
                     <Section className={styles.errorHeader}>
@@ -47,7 +48,7 @@ const CertificateInfo = memo(({ certDetail }: CertificateInfoProps) => {
                     </Section>
                     <p className={styles.errorMessage}>{certDetail.lastErrorMessage}</p>
                     {certDetail.lastErrorTime ? (
-                      <Section className={styles.errorTime}>
+                      <Section mt="2" pt="0" pb="0">
                         <p className={styles.errorTimeText}>
                           {t("certificate.errorTime") || "Error Time"}: {new Date(certDetail.lastErrorTime).toLocaleString()}
                         </p>
@@ -57,7 +58,6 @@ const CertificateInfo = memo(({ certDetail }: CertificateInfoProps) => {
                 </Container>
               </Section>
             ) : null}
-          </Grid>
         </Section>
       </Container>
     </Box>

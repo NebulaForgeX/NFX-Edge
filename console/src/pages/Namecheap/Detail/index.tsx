@@ -45,7 +45,16 @@ const NamecheapDetailPage = memo(() => {
   if (!credential) {
     return (
       <PageFrame>
-        <EmptyState icon={RouterIcon} title={t("accounts.missing")} description={getApiError(credentialQuery.error)?.message} />
+        <EmptyState
+          icon={RouterIcon}
+          title={t("accounts.missing")}
+          description={getApiError(credentialQuery.error)?.message}
+          action={
+            <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_OVERVIEW)}>
+              {t("accounts.back")}
+            </Button>
+          }
+        />
       </PageFrame>
     );
   }

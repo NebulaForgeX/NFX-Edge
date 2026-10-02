@@ -90,11 +90,6 @@
     height: 0;
   }
 
-  .stepItem {
-    flex: 1;
-    margin-bottom: 0;
-  }
-
   .step {
     flex-direction: column;
     align-items: center;
