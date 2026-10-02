@@ -1,30 +1,18 @@
-# NFX-Documentation. Host port 10120. Public host matches the handbook: identity.nebulaforgex.com.
-# /documentation is rewritten to /nfx-documentation inside the container.
+# NFX-Documentation. Host port 10120.
+# Same path as the other consoles: /console/nfx-documentation.
+# nginx serves that path. No rewrite.
 
 http:
-  middlewares:
-    documentation-slash:
-      redirectRegex:
-        regex: "^(https?)://([^/]+)/documentation$"
-        replacement: "${1}://${2}/documentation/"
-        permanent: true
-    documentation-rewrite:
-      replacePathRegex:
-        regex: "^/documentation(/.*)"
-        replacement: "/nfx-documentation$1"
-
   routers:
     documentation-lan:
-      rule: 'HostRegexp(`^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$`) && (Path(`/documentation`) || PathPrefix(`/documentation/`))'
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/console/nfx-documentation`)'
       entryPoints: [websecure]
-      middlewares: [documentation-slash, documentation-rewrite]
       service: documentation-frontend
       tls: {}
-      priority: 30
+      priority: 25
     documentation-host:
-      rule: "Host(`identity.nebulaforgex.com`) && (Path(`/documentation`) || PathPrefix(`/documentation/`))"
+      rule: "Host(`identity.nebulaforgex.com`) && PathPrefix(`/console/nfx-documentation`)"
       entryPoints: [websecure]
-      middlewares: [documentation-slash, documentation-rewrite]
       service: documentation-frontend
       tls: {}
       priority: 200
@@ -34,4 +22,3 @@ http:
       loadBalancer:
         servers:
           - url: 'http://{{ env "NAS1_IP" }}:10120'
-
