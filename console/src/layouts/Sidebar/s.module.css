@@ -201,13 +201,13 @@
 }
 
 .menuArea :global(.ps-menu-button:hover) {
-  background-color: var(--gray-a3);
-  color: var(--gray-12);
+  background-color: var(--gray-a3) !important;
+  color: var(--gray-12) !important;
 }
 
 .menuArea :global(.ps-menu-button.ps-active:hover) {
-  background-color: var(--accent-a3);
-  color: var(--accent-11);
+  background-color: var(--accent-a3) !important;
+  color: var(--accent-11) !important;
 }
 
 .menuArea :global(.ps-menu-button:focus-visible) {

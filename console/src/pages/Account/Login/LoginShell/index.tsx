@@ -16,7 +16,13 @@ gsap.registerPlugin(useGSAP);
 const PEM_CHUNK =
   "MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAwTzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2VhcmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMTUwNjA0MTEwNDM4WhcNMzUwNjA0MTEwNDM4WjBPMQswCQYDVQQGEwJVUzEpMCcGA1UEChMgSW50ZXJuZXQgU2VjdXJpdHkgUmVzZWFyY2ggR3JvdXAxFTATBgNVBAMTDElTUkcgUm9vdCBYMTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAK3oJHP0FDfzm54rVygch77ct984kIxuPOZXoHj3dcKi";
 
-const PEM_FILL = Array.from({ length: 8 }, () => PEM_CHUNK).join("");
+function foldPem(value: string, width = 64) {
+  const lines: string[] = [];
+  for (let index = 0; index < value.length; index += width) lines.push(value.slice(index, index + width));
+  return lines.join("\n");
+}
+
+const PEM_FILL = foldPem(PEM_CHUNK.repeat(8));
 
 const FACSIMILE_ROWS = [
   ["facsimile.issuerLabel", "facsimile.issuer"],
@@ -117,7 +123,7 @@ export default function LoginShell({ children }: { children: ReactNode }) {
                           px="clamp(1.25rem, 2.4vw, 2.25rem)"
                         >
                           <Section className={styles.stretch} size="1" height="100%" py="clamp(1.25rem, 2.6vh, 2rem)" >
-                            <Grid className={styles.stretch} rows="auto auto minmax(0, 1fr) auto" height="100%" minHeight="0">
+                            <Flex direction="column" height="100%" minHeight="0" width="100%">
                               <Section size="1" pb="3" pt="0" className={styles.sheetTop}>
                                 <Flex align="baseline" justify="between" gap="4">
                                   <span className={styles.sheetKind}>{t("facsimile.kind")}</span>
@@ -129,14 +135,16 @@ export default function LoginShell({ children }: { children: ReactNode }) {
                               <Section size="1" py="4">
                                 <Grid columns="repeat(2, minmax(0, 1fr))" gapY="3" gapX="6">
                                   {FACSIMILE_ROWS.map(([labelKey, valueKey]) => (
-                                    <Grid key={labelKey} gap="2px" minWidth="0">
+                                    <Flex key={labelKey} direction="column" gap="1" minWidth="0">
                                       <span className={styles.pemKey}>{t(labelKey)}</span>
                                       <span className={styles.pemVal}>{t(valueKey)}</span>
-                                    </Grid>
+                                    </Flex>
                                   ))}
                                 </Grid>
                               </Section>
-                              <pre className={styles.pemBody}>{PEM_FILL}</pre>
+                              <Flex flexGrow="1" minHeight="0" width="100%" overflow="hidden">
+                                <pre className={styles.pemBody}>{PEM_FILL}</pre>
+                              </Flex>
                               <Section size="1" pt="3" pb="0" className={styles.sheetFoot}>
                                 <Flex align="center" justify="between" gap="4">
                                   <span className={styles.pemBegin}>{t("facsimile.algo")}</span>
@@ -145,7 +153,7 @@ export default function LoginShell({ children }: { children: ReactNode }) {
                                   </span>
                                 </Flex>
                               </Section>
-                            </Grid>
+                            </Flex>
                           </Section>
                         </Container>
                         <span className={styles.watermark}>{t("facsimile.watermark")}</span>
