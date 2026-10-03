@@ -624,7 +624,9 @@ function IdentitiesBody() {
                     <Box key={s.id} position="relative">
                       {active ? <motion.span layoutId="identities-active" className={styles.activePill} transition={{ type: "spring", stiffness: 520, damping: 42 }} /> : null}
                       <Button variant="ghost" color={active ? undefined : "gray"} highContrast={!active} className={styles.navItem} data-active={active ? "true" : undefined} onClick={() => setSection(s.id)}>
-                        {s.label}
+                        <Container size="1" px="3" width="100%" maxWidth="100%">
+                          {s.label}
+                        </Container>
                       </Button>
                     </Box>
                   );

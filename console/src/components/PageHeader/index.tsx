@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Badge, Box, Flex, Heading, Section, Text } from "@radix-ui/themes";
+import { Badge, Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { AnimatedIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 
 import styles from "./s.module.css";
@@ -23,15 +23,13 @@ export default function PageHeader({ icon, title, description, actions, index, d
           <Flex align="center" justify="center" flexShrink="0" className={compact ? styles.stamp : styles.stampLarge}>
             <AnimatedIcon icon={icon} size={compact ? 20 : 24} />
           </Flex>
-          <Flex direction="column" gap="1" minWidth="0">
+          <Flex direction="column" gap="2" minWidth="0">
             {index ? (
-              <Box>
-                <Badge variant="surface" radius="full" size="1">
-                  {index}
-                </Badge>
-              </Box>
+              <Badge variant="surface" radius="full" size="1">
+                {index}
+              </Badge>
             ) : null}
-            <Heading as="h1" size={compact ? "7" : "8"} weight="bold" trim="both" truncate>
+            <Heading as="h1" size={compact ? "7" : "8"} weight="bold">
               {title}
             </Heading>
             {description ? (

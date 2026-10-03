@@ -4,6 +4,11 @@
 
 http:
   middlewares:
+    storages-console-lan-to-port:
+      redirectRegex:
+        regex: "^https?://[^/]+/console/nfx-storages/?(.*)"
+        replacement: 'http://{{ env "NAS1_IP" }}:10101/console/nfx-storages/${1}'
+        permanent: false
     storages-strip:
       stripPrefix:
         prefixes:
@@ -91,6 +96,7 @@ http:
     storages-console-lan:
       rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/console/nfx-storages`)'
       entryPoints: [websecure]
+      middlewares: [storages-console-lan-to-port]
       service: storages-console
       tls: {}
       priority: 25

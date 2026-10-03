@@ -3,6 +3,11 @@
 
 http:
   middlewares:
+    news-console-lan-to-port:
+      redirectRegex:
+        regex: "^https?://[^/]+/console/nfx-news/?(.*)"
+        replacement: 'http://{{ env "NAS1_IP" }}:10075/console/nfx-news/${1}'
+        permanent: false
     news-strip:
       stripPrefix:
         prefixes:
@@ -105,6 +110,7 @@ http:
     news-console-lan:
       rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/console/nfx-news`)'
       entryPoints: [websecure]
+      middlewares: [news-console-lan-to-port]
       service: news-console
       tls: {}
       priority: 25

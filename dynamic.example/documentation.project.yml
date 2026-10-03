@@ -1,12 +1,21 @@
 # NFX-Documentation. Host port 10120.
 # Same path as the other consoles: /console/nfx-documentation.
 # nginx serves that path. No rewrite.
+# LAN (NAS1_IP) redirects to the host port so the docs keep their own browser origin.
 
 http:
+  middlewares:
+    documentation-lan-to-port:
+      redirectRegex:
+        regex: "^https?://[^/]+/console/nfx-documentation/?(.*)"
+        replacement: 'http://{{ env "NAS1_IP" }}:10120/console/nfx-documentation/${1}'
+        permanent: false
+
   routers:
     documentation-lan:
       rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/console/nfx-documentation`)'
       entryPoints: [websecure]
+      middlewares: [documentation-lan-to-port]
       service: documentation-frontend
       tls: {}
       priority: 25

@@ -5,6 +5,11 @@
 
 http:
   middlewares:
+    identity-console-lan-to-port:
+      redirectRegex:
+        regex: "^https?://[^/]+/console/nfx-identity/?(.*)"
+        replacement: 'http://{{ env "NAS1_IP" }}:10039/console/nfx-identity/${1}'
+        permanent: false
     identity-auth-strip:
       stripPrefix:
         prefixes:
@@ -59,6 +64,7 @@ http:
     identity-console-lan:
       rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/console/nfx-identity`)'
       entryPoints: [websecure]
+      middlewares: [identity-console-lan-to-port]
       service: identity-console
       tls: {}
       priority: 25

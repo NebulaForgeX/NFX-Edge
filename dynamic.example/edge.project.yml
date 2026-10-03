@@ -4,6 +4,11 @@
 
 http:
   middlewares:
+    edge-console-lan-to-port:
+      redirectRegex:
+        regex: "^https?://[^/]+/console/nfx-edge/?(.*)"
+        replacement: 'http://{{ env "NAS1_IP" }}:10115/console/nfx-edge/${1}'
+        permanent: false
     edge-strip:
       stripPrefix:
         prefixes:
@@ -41,6 +46,7 @@ http:
     edge-console-lan:
       rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/console/nfx-edge`)'
       entryPoints: [websecure]
+      middlewares: [edge-console-lan-to-port]
       service: edge-console
       tls: {}
       priority: 25
