@@ -105,5 +105,8 @@
       "uploading": "Uploading"
     }
   },
-  "index": "07 — Profile"
+  "index": "07 — Profile",
+  "toasts": {
+    "clearAvatarSuccess": "Avatar removed."
+  }
 }

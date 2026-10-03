@@ -1,6 +1,7 @@
 {
   "title": "Identités",
   "description": "Changez de profil, gérez les e-mails, téléphones et le mot de passe de ce compte.",
+  "profileSwitching": "Changement de profil…",
   "empty": {
     "emails": {
       "title": "Aucun e-mail",
@@ -85,5 +86,19 @@
       "description": "Créez un autre Profile. Les profils d'autorité sont accordés après examen."
     }
   },
-  "index": "07 — Identités"
+  "index": "07 — Identités",
+  "toasts": {
+    "createEmailSuccess": "E-mail ajouté.",
+    "verifyEmailSuccess": "E-mail vérifié.",
+    "updateEmailSuccess": "E-mail mis à jour.",
+    "setPrimaryEmailSuccess": "E-mail principal mis à jour.",
+    "deleteEmailSuccess": "E-mail supprimé.",
+    "sendVerificationCodeSuccess": "Si cette adresse peut recevoir des e-mails, un code de vérification a été envoyé.",
+    "changePasswordSuccess": "Mot de passe mis à jour.",
+    "createPhoneSuccess": "Téléphone ajouté.",
+    "verifyPhoneSuccess": "Téléphone vérifié.",
+    "updatePhoneSuccess": "Téléphone mis à jour.",
+    "setPrimaryPhoneSuccess": "Téléphone principal mis à jour.",
+    "deletePhoneSuccess": "Téléphone supprimé."
+  }
 }

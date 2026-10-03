@@ -62,6 +62,7 @@
     "createAccount": "Issue an account"
   },
   "selectProfile": {
+    "switching": "Switching profile…",
     "eyebrow": "Identity table",
     "title": "Which Profile continues?",
     "subtitle": "Your Account can hold more than one Profile.",

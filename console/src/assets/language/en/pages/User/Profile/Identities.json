@@ -1,6 +1,7 @@
 {
   "title": "Identities",
   "description": "Switch profiles, manage emails, phones, and password for this Account.",
+  "profileSwitching": "Switching profile…",
   "empty": {
     "emails": {
       "title": "No emails yet",
@@ -85,5 +86,19 @@
       "description": "Create another Profile. Authority profiles are granted by review."
     }
   },
-  "index": "07 — Identities"
+  "index": "07 — Identities",
+  "toasts": {
+    "createEmailSuccess": "Email added.",
+    "verifyEmailSuccess": "Email verified.",
+    "updateEmailSuccess": "Email updated.",
+    "setPrimaryEmailSuccess": "Primary email updated.",
+    "deleteEmailSuccess": "Email removed.",
+    "sendVerificationCodeSuccess": "If this address can receive email, a verification code has been sent.",
+    "changePasswordSuccess": "Password updated.",
+    "createPhoneSuccess": "Phone added.",
+    "verifyPhoneSuccess": "Phone verified.",
+    "updatePhoneSuccess": "Phone updated.",
+    "setPrimaryPhoneSuccess": "Primary phone updated.",
+    "deletePhoneSuccess": "Phone removed."
+  }
 }

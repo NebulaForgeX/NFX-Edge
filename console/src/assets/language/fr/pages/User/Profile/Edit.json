@@ -105,5 +105,8 @@
       "uploading": "Téléversement"
     }
   },
-  "index": "07 — Profil"
+  "index": "07 — Profil",
+  "toasts": {
+    "clearAvatarSuccess": "Avatar retiré."
+  }
 }

@@ -37,9 +37,9 @@ function LedgerField({ n, children }: { n: string; children: ReactNode }) {
 
 export default function SignupPage() {
   const { t } = useTranslation("pages.Account.Signup");
-  const form = useInitSignupForm();
+  const form = useInitSignupForm(t);
   const signup = useSignupWithEmail();
-  const sendCode = useSendVerificationCode();
+  const sendCode = useSendVerificationCode({ successMsg: t("toasts.sendVerificationCodeSuccess") });
   const language = usePreferenceStore((s) => s.language);
 
   const onSubmit: SubmitHandler<SignupFormData> = async (data) => {

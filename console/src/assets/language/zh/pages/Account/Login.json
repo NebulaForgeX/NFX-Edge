@@ -62,6 +62,7 @@
     "createAccount": "签发账号"
   },
   "selectProfile": {
+    "switching": "正在切换档案…",
     "eyebrow": "身份表",
     "title": "用哪个 Profile 继续？",
     "subtitle": "一个 Account 可以持有多个 Profile。",

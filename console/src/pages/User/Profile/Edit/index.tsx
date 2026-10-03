@@ -235,8 +235,8 @@ function BirthdayField({ value, onChange }: { value: string; onChange: (value: s
 
 function ProfileForm({ profile }: { profile: Profile.Response.ProfileBase }) {
   const { t } = useTranslation("pages.User.Profile.Edit");
-  const form = useInitUserProfileEditForm(profile);
-  const patch = usePatchProfile();
+  const form = useInitUserProfileEditForm(t, profile);
+  const patch = usePatchProfile({ successMsg: t("saveSuccess") });
   const genderValue = form.watch("gender");
   const timezoneValue = form.watch("timezone");
   const genderOptions = genderValue && !GENDERS.includes(genderValue as (typeof GENDERS)[number]) ? [genderValue, ...GENDERS] : [...GENDERS];

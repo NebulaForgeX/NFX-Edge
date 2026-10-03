@@ -62,6 +62,7 @@
     "createAccount": "Émettre un compte"
   },
   "selectProfile": {
+    "switching": "Changement de profil…",
     "eyebrow": "Table d'identités",
     "title": "Quel Profile continuer ?",
     "subtitle": "Votre Account peut porter plusieurs Profile.",

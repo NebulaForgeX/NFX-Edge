@@ -105,5 +105,8 @@
       "uploading": "上传中"
     }
   },
-  "index": "07 — 资料"
+  "index": "07 — 资料",
+  "toasts": {
+    "clearAvatarSuccess": "头像已移除。"
+  }
 }
