@@ -13,16 +13,10 @@ import styles from "./s.module.css";
 
 gsap.registerPlugin(useGSAP);
 
-const PEM_CHUNK =
-  "MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAwTzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2VhcmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMTUwNjA0MTEwNDM4WhcNMzUwNjA0MTEwNDM4WjBPMQswCQYDVQQGEwJVUzEpMCcGA1UEChMgSW50ZXJuZXQgU2VjdXJpdHkgUmVzZWFyY2ggR3JvdXAxFTATBgNVBAMTDElTUkcgUm9vdCBYMTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAK3oJHP0FDfzm54rVygch77ct984kIxuPOZXoHj3dcKi";
-
-function foldPem(value: string, width = 64) {
-  const lines: string[] = [];
-  for (let index = 0; index < value.length; index += width) lines.push(value.slice(index, index + width));
-  return lines.join("\n");
-}
-
-const PEM_FILL = foldPem(PEM_CHUNK.repeat(8));
+const PEM_FILL =
+  "MIIFazCCA1OgAwIBAgIRAIIQz7DSQONZRGPgu2OCiwAwDQYJKoZIhvcNAQELBQAwTzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2VhcmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMTUwNjA0MTEwNDM4WhcNMzUwNjA0MTEwNDM4WjBPMQswCQYDVQQGEwJVUzEpMCcGA1UEChMgSW50ZXJuZXQgU2VjdXJpdHkgUmVzZWFyY2ggR3JvdXAxFTATBgNVBAMTDElTUkcgUm9vdCBYMTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBAK3oJHP0FDfzm54rVygch77ct984kIxuPOZXoHj3dcKi".repeat(
+    6,
+  );
 
 const FACSIMILE_ROWS = [
   ["facsimile.issuerLabel", "facsimile.issuer"],
@@ -76,12 +70,11 @@ export default function LoginShell({ children }: { children: ReactNode }) {
           </Container>
         </Box>
 
-        <Flex direction="column" flexGrow="1" minHeight="0" minWidth="0" maxWidth="100%" width="100%" overflow="hidden">
-        <Grid className={styles.body} columns={narrow ? "1fr" : "minmax(18rem, 40%) minmax(0, 1fr)"} width="100%" height="100%">
-          <Box className={styles.protocol} data-narrow={narrow ? "true" : undefined} minWidth="0" minHeight="0" overflow="auto">
-            <Container size="4" width="100%" maxWidth="100%" px={{ initial: "6", lg: "9" }} >
-              <Section size="1" py={{ initial: "7", lg: "9" }}>
-                <Box width="100%" className="js-unlock-form">
+        <Flex flexGrow="1" minHeight="0" minWidth="0" width="100%" overflow="hidden">
+          <Flex direction="column" flexGrow="1" flexBasis="0" minWidth="0" className={styles.protocol} data-narrow={narrow ? "true" : undefined} overflow="auto">
+            <Container size="4" width="100%" maxWidth="100%" px="6">
+              <Section size="1" py="6">
+                <Box width="100%" minWidth="0" className="js-unlock-form">
                   {children}
                 </Box>
                 {narrow ? (
@@ -93,57 +86,40 @@ export default function LoginShell({ children }: { children: ReactNode }) {
                 ) : null}
               </Section>
             </Container>
-          </Box>
+          </Flex>
 
           {narrow ? null : (
-          <Box className={styles.stage}>
-            <Flex asChild className="js-pem" height="100%" minHeight="0" width="100%">
-              <aside aria-hidden>
-                <Container
-                  className={styles.stretch}
-                  size="4"
-                  width="100%"
-                  maxWidth="100%"
-                  height="100%"
-                  px={{ initial: "5", lg: "7" }}
-                >
-                  <Section className={styles.stretch} size="1" height="100%" py={{ initial: "5", lg: "7" }} >
-                    <Flex className={styles.stretch} height="100%" minHeight="0" width="100%">
-                      <Box className={styles.sheet} width="100%" height="100%" minHeight="0" position="relative" overflow="hidden" >
+            <Flex direction="column" flexGrow="1" flexBasis="0" minWidth="0" minHeight="0" className={styles.stage}>
+              <Flex asChild className="js-pem" flexGrow="1" minHeight="0" minWidth="0" width="100%">
+                <aside aria-hidden>
+                  <Container className={styles.stretch} size="4" width="100%" maxWidth="100%" height="100%" px="6">
+                    <Section className={styles.stretch} size="1" height="100%" py="6">
+                      <Flex direction="column" className={`${styles.stretch} ${styles.sheet}`} flexGrow="1" width="100%" minWidth="0" minHeight="0" position="relative" overflow="hidden">
                         <span className={styles.cornerTl} />
                         <span className={styles.cornerTr} />
                         <span className={styles.cornerBl} />
                         <span className={styles.cornerBr} />
-                        <Container
-                          className={styles.stretch}
-                          size="4"
-                          width="100%"
-                          maxWidth="100%"
-                          height="100%"
-                          px={{ initial: "5", lg: "6" }}
-                        >
-                          <Section className={styles.stretch} size="1" height="100%" py={{ initial: "5", lg: "6" }} >
-                            <Flex direction="column" height="100%" minHeight="0" width="100%">
+                        <Container className={styles.stretch} size="4" width="100%" maxWidth="100%" height="100%" px="5">
+                          <Section className={styles.stretch} size="1" height="100%" py="5">
+                            <Flex direction="column" height="100%" minHeight="0" minWidth="0" width="100%" gap="4">
                               <Section size="1" pb="3" pt="0" className={styles.sheetTop}>
-                                <Flex align="baseline" justify="between" gap="4">
+                                <Flex align="baseline" justify="between" gap="4" minWidth="0">
                                   <span className={styles.sheetKind}>{t("facsimile.kind")}</span>
-                                  <span className={styles.sheetTopMeta}>
-                                    {t("rail.tls")} · {t("rail.dns")} · {t("rail.file")}
-                                  </span>
+                                  <span className={styles.sheetTopMeta}>{t("rail.tls")} · {t("rail.dns")} · {t("rail.file")}</span>
                                 </Flex>
                               </Section>
-                              <Section size="1" py="4">
-                                <Grid columns="repeat(2, minmax(0, 1fr))" gapY="3" gapX="6">
-                                  {FACSIMILE_ROWS.map(([labelKey, valueKey]) => (
-                                    <Flex key={labelKey} direction="column" gap="1" minWidth="0">
-                                      <span className={styles.pemKey}>{t(labelKey)}</span>
-                                      <span className={styles.pemVal}>{t(valueKey)}</span>
-                                    </Flex>
-                                  ))}
-                                </Grid>
-                              </Section>
-                              <Flex flexGrow="1" minHeight="0" width="100%" overflow="hidden">
-                                <pre className={styles.pemBody}>{PEM_FILL}</pre>
+                              <Grid className={styles.meta} columns="2" gap="4" width="100%">
+                                {FACSIMILE_ROWS.map(([labelKey, valueKey]) => (
+                                  <Flex key={labelKey} direction="column" gap="1" minWidth="0">
+                                    <span className={styles.pemKey}>{t(labelKey)}</span>
+                                    <span className={styles.pemVal}>{t(valueKey)}</span>
+                                  </Flex>
+                                ))}
+                              </Grid>
+                              <Flex flexGrow="1" minHeight="0" minWidth="0" width="100%" overflow="hidden">
+                                <Text as="p" className={styles.pemBody}>
+                                  {PEM_FILL}
+                                </Text>
                               </Flex>
                               <Section size="1" pt="3" pb="0" className={styles.sheetFoot}>
                                 <Flex align="center" justify="between" gap="4" minWidth="0" width="100%">
@@ -157,15 +133,13 @@ export default function LoginShell({ children }: { children: ReactNode }) {
                           </Section>
                         </Container>
                         <span className={styles.watermark}>{t("facsimile.watermark")}</span>
-                      </Box>
-                    </Flex>
-                  </Section>
-                </Container>
-              </aside>
+                      </Flex>
+                    </Section>
+                  </Container>
+                </aside>
+              </Flex>
             </Flex>
-          </Box>
           )}
-        </Grid>
         </Flex>
       </main>
     </Flex>
