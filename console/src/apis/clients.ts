@@ -5,11 +5,11 @@ import axios, { AxiosError } from "axios";
 import applyCaseMiddleware from "axios-case-converter";
 
 import type { ApiErrorBody } from "nfx-ui/types";
-import { AuthStore, clearAuth } from "nfx-ui/stores";
 import { refreshAuthTokens } from "nfx-ui/apis";
+import { authEventEmitter, authEvents } from "nfx-ui/events";
+import { AuthStore, clearAuth, hasSelectedProfile } from "nfx-ui/stores";
+import { shouldForceLogoutAfterAuthRetry, shouldImmediateForceLogoutOnApiError } from "nfx-ui/utils";
 import { API_ENDPOINTS } from "@/apis/ip";
-import { routerEventEmitter } from "@/events/router";
-import { ROUTES } from "@/navigations";
 
 // 让 config._retry 有类型
 declare module "axios" {
@@ -122,17 +122,36 @@ protectedClient.interceptors.response.use(
     }
     logRexApiError(error);
 
+    const emitLogout = () => {
+      if (!AuthStore.getState().isAuthValid) return;
+      if (!hasSelectedProfile(AuthStore.getState().currentProfileId)) return;
+      const aID = AuthStore.getState().currentAccountId;
+      authEventEmitter.emit(authEvents.LOGOUT, aID ?? undefined);
+      clearAuth();
+    };
+
+    if (shouldImmediateForceLogoutOnApiError(error)) {
+      emitLogout();
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && error.config && !error.config._retry) {
       error.config._retry = true;
       try {
-        const ok = await refreshAuthTokens("401");
-        if (!ok) throw error;
+        const refreshed = await refreshAuthTokens("401");
+        if (!refreshed) {
+          emitLogout();
+          return Promise.reject(error);
+        }
         return protectedClient.request(error.config);
       } catch {
-        clearAuth();
-        routerEventEmitter.navigateReplace(ROUTES.LOGIN);
+        emitLogout();
         return Promise.reject(error);
       }
+    }
+
+    if (shouldForceLogoutAfterAuthRetry(error)) {
+      emitLogout();
     }
 
     return Promise.reject(error);
