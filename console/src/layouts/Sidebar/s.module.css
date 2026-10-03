@@ -196,15 +196,30 @@
 }
 
 .menuArea :global(.ps-menu-button:hover) {
-  background-color: var(--gray-a3);
-  color: var(--gray-12);
+  background-color: var(--gray-a3) !important;
+  color: var(--gray-12) !important;
+}
+
+.menuArea :global(.ps-menu-button:hover .ps-menu-icon),
+.menuArea :global(.ps-menu-button:hover .ps-menu-label),
+.menuArea :global(.ps-menu-button:hover .rt-Text) {
+  color: var(--gray-12) !important;
 }
 
 .menuArea :global(.ps-menu-button.ps-active),
 .menuArea :global(.ps-menu-button.ps-active:hover) {
-  background-color: transparent;
-  color: var(--accent-11);
+  background-color: transparent !important;
+  color: var(--accent-11) !important;
   font-weight: var(--font-weight-medium);
+}
+
+.menuArea :global(.ps-menu-button.ps-active .ps-menu-icon),
+.menuArea :global(.ps-menu-button.ps-active .ps-menu-label),
+.menuArea :global(.ps-menu-button.ps-active .rt-Text),
+.menuArea :global(.ps-menu-button.ps-active:hover .ps-menu-icon),
+.menuArea :global(.ps-menu-button.ps-active:hover .ps-menu-label),
+.menuArea :global(.ps-menu-button.ps-active:hover .rt-Text) {
+  color: var(--accent-11) !important;
 }
 
 .menuArea :global(.ps-menu-button:focus-visible) {

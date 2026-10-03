@@ -1,6 +1,7 @@
-.nav {
+.nav:global(.rt-Card) {
   position: sticky;
   top: var(--space-5);
+  --card-padding: 0;
 }
 
 .navItem:global(.rt-BaseButton) {

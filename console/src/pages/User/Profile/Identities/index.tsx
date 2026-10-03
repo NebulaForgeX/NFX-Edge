@@ -2,7 +2,7 @@ import { ArrowNarrowLeftIcon, UsersIcon } from "nfx-ui/icons";
 import type { Profile } from "nfx-ui/types";
 
 import { useState } from "react";
-import { Avatar, Badge, Box, Button, Card, Flex, Grid, Heading, Section, Select, Text, TextField } from "@radix-ui/themes";
+import { Avatar, Badge, Box, Button, Card, Container, Flex, Grid, Heading, Section, Select, Text, TextField } from "@radix-ui/themes";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { LanguageEnum, ProfileKindEnum } from "nfx-ui/enums";
 import {
@@ -614,21 +614,25 @@ function IdentitiesBody() {
   return (
     <Grid columns={{ initial: "1", md: "14rem minmax(0, 1fr)" }} gap="5" align="start">
       <Card size="2" variant="classic" className={styles.nav}>
-        <LayoutGroup id="identities-nav">
-          <Flex direction={{ initial: "row", md: "column" }} gap="1" wrap="wrap">
-            {sections.map((s) => {
-              const active = section === s.id;
-              return (
-                <Box key={s.id} position="relative">
-                  {active ? <motion.span layoutId="identities-active" className={styles.activePill} transition={{ type: "spring", stiffness: 520, damping: 42 }} /> : null}
-                  <Button variant="ghost" color={active ? undefined : "gray"} highContrast={!active} className={styles.navItem} data-active={active ? "true" : undefined} onClick={() => setSection(s.id)}>
-                    {s.label}
-                  </Button>
-                </Box>
-              );
-            })}
-          </Flex>
-        </LayoutGroup>
+        <Section size="1" py="3">
+          <Container size="1" px="3" width="100%" maxWidth="100%">
+            <LayoutGroup id="identities-nav">
+              <Flex direction={{ initial: "row", md: "column" }} gap="1" wrap="wrap">
+                {sections.map((s) => {
+                  const active = section === s.id;
+                  return (
+                    <Box key={s.id} position="relative">
+                      {active ? <motion.span layoutId="identities-active" className={styles.activePill} transition={{ type: "spring", stiffness: 520, damping: 42 }} /> : null}
+                      <Button variant="ghost" color={active ? undefined : "gray"} highContrast={!active} className={styles.navItem} data-active={active ? "true" : undefined} onClick={() => setSection(s.id)}>
+                        {s.label}
+                      </Button>
+                    </Box>
+                  );
+                })}
+              </Flex>
+            </LayoutGroup>
+          </Container>
+        </Section>
       </Card>
       <AnimatePresence mode="wait" initial={false}>
         <motion.div key={section} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}>
