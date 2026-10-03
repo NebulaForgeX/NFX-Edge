@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { Suspense as ReactSuspense } from "react";
-import { Container, Flex, Section, Spinner, Text } from "@radix-ui/themes";
+import { Flex, Skeleton, Spinner, Text } from "@radix-ui/themes";
 
 export type SuspenseProps = {
   children: ReactNode;
@@ -12,16 +12,17 @@ export default function Suspense({ children, loadingText = "Loading" }: Suspense
   return (
     <ReactSuspense
       fallback={
-        <Container size="1" px="6">
-          <Section size="1" py="6">
-            <Flex align="center" justify="center" gap="3" minHeight="200px">
-              <Spinner />
-              <Text size="2" color="gray">
-                {loadingText}
-              </Text>
-            </Flex>
-          </Section>
-        </Container>
+        <Flex direction="column" gap="3" width="100%" aria-busy="true">
+          <Flex align="center" gap="2">
+            <Spinner />
+            <Text size="2" color="gray">
+              {loadingText}
+            </Text>
+          </Flex>
+          <Skeleton width="100%" height="var(--space-8)" />
+          <Skeleton width="100%" height="var(--space-8)" />
+          <Skeleton width="70%" height="var(--space-8)" />
+        </Flex>
       }
     >
       {children}

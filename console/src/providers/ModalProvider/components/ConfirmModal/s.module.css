@@ -1,16 +1,17 @@
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+.stamp {
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: var(--radius-icon);
+  background: var(--amber-a3);
+  box-shadow: inset 0 0 0 1px var(--amber-a5);
+  color: var(--amber-11);
 }
 
 .message {
   white-space: pre-line;
-  text-align: left;
+  text-align: center;
+}
+
+.option {
+  width: 100%;
 }

@@ -76,11 +76,11 @@ export default function LoginShell({ children }: { children: ReactNode }) {
           </Container>
         </Box>
 
-        <Flex direction="column" flexGrow="1" minHeight="0" width="100%">
-        <Grid className={styles.body} columns={narrow ? "1fr" : "minmax(36rem, 44%) minmax(0, 1fr)"} width="100%" height="100%">
+        <Flex direction="column" flexGrow="1" minHeight="0" minWidth="0" maxWidth="100%" width="100%" overflow="hidden">
+        <Grid className={styles.body} columns={narrow ? "1fr" : "minmax(18rem, 40%) minmax(0, 1fr)"} width="100%" height="100%">
           <Box className={styles.protocol} data-narrow={narrow ? "true" : undefined} minWidth="0" minHeight="0" overflow="auto">
-            <Container size="4" width="100%" maxWidth="100%" px="clamp(2.25rem, 4.2vw, 4rem)" >
-              <Section size="1" py="clamp(2rem, 6vh, 4.5rem)">
+            <Container size="4" width="100%" maxWidth="100%" px={{ initial: "6", lg: "9" }} >
+              <Section size="1" py={{ initial: "7", lg: "9" }}>
                 <Box width="100%" className="js-unlock-form">
                   {children}
                 </Box>
@@ -105,9 +105,9 @@ export default function LoginShell({ children }: { children: ReactNode }) {
                   width="100%"
                   maxWidth="100%"
                   height="100%"
-                  px="clamp(1.5rem, 3vw, 2.75rem)"
+                  px={{ initial: "5", lg: "7" }}
                 >
-                  <Section className={styles.stretch} size="1" height="100%" py="clamp(1.5rem, 3.2vh, 2.5rem)" >
+                  <Section className={styles.stretch} size="1" height="100%" py={{ initial: "5", lg: "7" }} >
                     <Flex className={styles.stretch} height="100%" minHeight="0" width="100%">
                       <Box className={styles.sheet} width="100%" height="100%" minHeight="0" position="relative" overflow="hidden" >
                         <span className={styles.cornerTl} />
@@ -120,9 +120,9 @@ export default function LoginShell({ children }: { children: ReactNode }) {
                           width="100%"
                           maxWidth="100%"
                           height="100%"
-                          px="clamp(1.25rem, 2.4vw, 2.25rem)"
+                          px={{ initial: "5", lg: "6" }}
                         >
-                          <Section className={styles.stretch} size="1" height="100%" py="clamp(1.25rem, 2.6vh, 2rem)" >
+                          <Section className={styles.stretch} size="1" height="100%" py={{ initial: "5", lg: "6" }} >
                             <Flex direction="column" height="100%" minHeight="0" width="100%">
                               <Section size="1" pb="3" pt="0" className={styles.sheetTop}>
                                 <Flex align="baseline" justify="between" gap="4">
@@ -146,9 +146,9 @@ export default function LoginShell({ children }: { children: ReactNode }) {
                                 <pre className={styles.pemBody}>{PEM_FILL}</pre>
                               </Flex>
                               <Section size="1" pt="3" pb="0" className={styles.sheetFoot}>
-                                <Flex align="center" justify="between" gap="4">
+                                <Flex align="center" justify="between" gap="4" minWidth="0" width="100%">
                                   <span className={styles.pemBegin}>{t("facsimile.algo")}</span>
-                                  <span>
+                                  <span className={styles.pemVal}>
                                     {t("facsimile.fingerprintLabel")} {t("facsimile.fingerprint")}
                                   </span>
                                 </Flex>

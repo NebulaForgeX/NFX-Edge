@@ -1,9 +1,17 @@
 {
   "title": "创建新证书",
+  "subtitle": "通过 ACME 签发证书，或导入已有证书。",
   "loading": "加载中…",
+  "back": "返回",
   "mode": {
     "acme": "Let's Encrypt",
-    "pem": "导入 PEM"
+    "pem": "导入 PEM",
+    "acmeHint": "Edge 自动申请、验证并续期证书。",
+    "pemHint": "粘贴或拖入 PEM 格式的证书与私钥。"
+  },
+  "side": {
+    "title": "签发方式",
+    "active": "当前"
   },
   "index": "02 — 证书"
 }

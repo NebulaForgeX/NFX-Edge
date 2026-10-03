@@ -101,22 +101,22 @@ function Asider() {
             aria-label={t("header.openMenu")}
             aria-hidden={!isAsiderOpen}
           >
-            <Container size="4" width="100%" maxWidth="100%" height="100%" px="20px" className={styles.sidebarInset}>
-              <Section size="1" height="100%" py="20px">
+            <Container size="4" width="100%" maxWidth="100%" height="100%" px="5">
+              <Section size="1" height="100%" py="5">
                 <Flex direction="column" gap="6" height="100%">
-                  <Section size="1" pt="0" pb="22px" position="relative" minHeight="64px" className={styles.headerBand}>
+                  <Section size="1" pt="0" pb="5" position="relative" className={styles.headerBand}>
                     <Flex align="center" justify="between" gap="3">
                       {isAuthValid ? (
                         <Flex align="center" gap="3" width="100%">
-                          <Avatar size="3" radius="medium" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} aria-hidden />
-                          <Box className={styles.accountText}>
-                            <Text as="p" size="2" weight="bold">
+                          <Avatar size="3" radius="full" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} aria-hidden />
+                          <Flex direction="column" gap="1" minWidth="0">
+                            <Text as="p" size="2" weight="bold" truncate>
                               {displayName}
                             </Text>
-                            <Text as="p" size="1" color="gray" weight="medium">
+                            <Text as="p" size="1" color="gray" weight="medium" truncate>
                               {accountId ?? t("header.accountFallback")}
                             </Text>
-                          </Box>
+                          </Flex>
                         </Flex>
                       ) : (
                         <Logo title={APP_NAME} subtitle="Live local map" />
@@ -131,9 +131,9 @@ function Asider() {
                     <Box className={styles.navScroll}>
                       <Flex asChild direction="column" gap="3">
                         <nav>
-                          <Button type="button" variant="ghost" className={styles.navLink} onClick={() => navigateFromMenu(ROUTES.HOME)}>
+                          <Button type="button" variant="ghost" color="gray" size="3" className={styles.navLink} onClick={() => navigateFromMenu(ROUTES.HOME)}>
                             <AnimatedIcon icon={HomeIcon} size={18} aria-hidden="true" />
-                            <Text as="span" size="3">
+                            <Text as="span" size="2">
                               {t("header.home")}
                             </Text>
                           </Button>
@@ -160,7 +160,7 @@ function Asider() {
                           </Button>
                           <Button
                             className={styles.wideButton}
-                            data-tone="danger"
+                            color="red"
                             variant="outline"
                             size="2"
                             onClick={() => {

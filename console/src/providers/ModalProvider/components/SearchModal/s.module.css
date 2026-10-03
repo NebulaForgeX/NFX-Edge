@@ -1,68 +1,54 @@
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.hairline {
-  border-bottom: 1px solid var(--gray-6);
-}
-
-.searchField {
-  flex: 1;
-  min-width: 0;
-}
-
 .results {
-  max-height: 25rem;
-  overflow-y: auto;
+  max-height: min(50vh, 25rem);
 }
 
-.results::-webkit-scrollbar {
-  width: 0.5rem;
-}
-
-.results::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.results::-webkit-scrollbar-thumb {
-  background: var(--gray-6);
-  border-radius: 0.25rem;
+.activePill {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-3);
+  background: var(--accent-a3);
+  box-shadow: inset 0 0 0 1px var(--accent-a5);
 }
 
 .result {
-  border: 1px solid var(--gray-6);
-  background: var(--color-panel-solid);
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: start;
+  position: relative;
+  z-index: 1;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: var(--radius-3);
+  color: var(--gray-12);
+  cursor: pointer;
 }
 
-.result[data-selected="true"] {
-  border-color: var(--accent-9);
-  background: color-mix(in srgb, var(--accent-9) 12%, var(--color-panel-solid));
+.result:focus-visible {
+  outline: 2px solid var(--focus-8);
+  outline-offset: -2px;
 }
 
 .icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  background: color-mix(in srgb, var(--accent-9) 10%, var(--gray-3));
-  color: var(--accent-9);
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-icon);
+  background: var(--gray-a3);
+  color: var(--gray-11);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
 }
 
-.resultButton {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  color: inherit;
+.result[data-selected="true"] .icon {
+  background: var(--accent-a4);
+  color: var(--accent-11);
 }
 
-@media (max-width: 768px) {
-  .results {
-    max-height: 20rem;
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    transition: none;
   }
 }

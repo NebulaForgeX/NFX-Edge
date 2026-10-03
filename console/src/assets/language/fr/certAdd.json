@@ -1,9 +1,17 @@
 {
   "title": "Créer un nouveau certificat",
+  "subtitle": "Émettez un certificat via ACME ou importez un certificat existant.",
   "loading": "Chargement…",
+  "back": "Retour",
   "mode": {
     "acme": "Let's Encrypt",
-    "pem": "Importer PEM"
+    "pem": "Importer PEM",
+    "acmeHint": "Edge demande, valide et renouvelle le certificat automatiquement.",
+    "pemHint": "Collez ou déposez un certificat et sa clé privée au format PEM."
+  },
+  "side": {
+    "title": "Méthode d'émission",
+    "active": "Sélectionné"
   },
   "index": "02 — Certificats"
 }

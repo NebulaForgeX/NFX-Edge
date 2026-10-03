@@ -1,0 +1,35 @@
+.nav {
+  position: sticky;
+  top: var(--space-5);
+}
+
+.navItem:global(.rt-BaseButton) {
+  position: relative;
+  z-index: 1;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.navItem:global(.rt-BaseButton)[data-active="true"] {
+  font-weight: var(--font-weight-medium);
+}
+
+.activePill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: var(--radius-chip);
+  background: var(--accent-a3);
+  box-shadow: inset 0 0 0 1px var(--accent-a5);
+}
+
+.current {
+  box-shadow:
+    inset 0 0 0 1px var(--accent-a6),
+    var(--shadow-2);
+}
+
+.mono {
+  font-family: var(--code-font-family);
+  overflow-wrap: anywhere;
+}

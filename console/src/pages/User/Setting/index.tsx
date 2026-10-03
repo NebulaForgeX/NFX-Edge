@@ -36,7 +36,7 @@ export default function SettingsPage() {
     <PageFrame>
       <PageHeader icon={GearIcon} index={t("index")} title={t("title")} description={t("description")} />
       <ActionBar>
-        <Button size="2" variant="outline" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
+        <Button size="2" variant="outline" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
           {t("actions.openProfile")}
         </Button>
       </ActionBar>

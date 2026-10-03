@@ -23,5 +23,6 @@
     "manual_add": "Ajout manuel"
   },
   "loading": "Chargement du certificat...",
-  "index": "02 — Certificats"
+  "index": "02 — Certificats",
+  "back": "Retour"
 }

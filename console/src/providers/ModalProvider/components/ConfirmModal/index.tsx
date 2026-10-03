@@ -1,6 +1,6 @@
 import { TriangleAlertIcon } from "nfx-ui/icons";
 import { memo, useEffect, useState } from "react";
-import { Button, Checkbox, Dialog, Flex, Text } from "@radix-ui/themes";
+import { Button, Card, Dialog, Flex, Grid, Switch, Text, VisuallyHidden } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
 import ModalStore, { useModalStore } from "@/stores/modal";
@@ -49,31 +49,41 @@ const ConfirmModal = memo(() => {
         if (!open) handleCancel();
       }}
     >
-      <Dialog.Content maxWidth="28rem">
+      <Dialog.Content size="3" maxWidth="28rem">
         <Flex direction="column" align="center" gap="4">
-          <Text color="amber">
-            <TriangleAlertIcon size={32} />
-          </Text>
-          {title ? <Dialog.Title align="center">{title}</Dialog.Title> : <Dialog.Title className={styles.srOnly}>{t("confirm")}</Dialog.Title>}
+          <Flex align="center" justify="center" className={styles.stamp}>
+            <TriangleAlertIcon size={24} />
+          </Flex>
+          {title ? (
+            <Dialog.Title align="center" mb="0">
+              {title}
+            </Dialog.Title>
+          ) : (
+            <VisuallyHidden>
+              <Dialog.Title>{t("confirm")}</Dialog.Title>
+            </VisuallyHidden>
+          )}
           <Dialog.Description size="2" color="gray" className={styles.message}>
             {message || t("noMessage")}
           </Dialog.Description>
           {forceRenewalOption ? (
-            <Text as="label" size="2" color="gray">
-              <Flex align="start" gap="2">
-                <Checkbox checked={forceRenewalChecked} onCheckedChange={(checked) => setForceRenewalChecked(checked === true)} />
-                <Text size="2">{forceRenewalOption.label}</Text>
-              </Flex>
-            </Text>
+            <Card size="1" variant="surface" className={styles.option}>
+              <Text as="label" size="2">
+                <Flex align="center" justify="between" gap="3">
+                  <Text size="2">{forceRenewalOption.label}</Text>
+                  <Switch checked={forceRenewalChecked} onCheckedChange={setForceRenewalChecked} />
+                </Flex>
+              </Text>
+            </Card>
           ) : null}
-          <Flex gap="3" justify="center" width="100%">
-            <Button type="button" variant="outline" color="gray" onClick={handleCancel}>
+          <Grid columns="2" gap="3" width="100%">
+            <Button type="button" size="3" variant="outline" color="gray" onClick={handleCancel}>
               {cancelText || t("cancel")}
             </Button>
-            <Button type="button" color="red" onClick={handleConfirm}>
+            <Button type="button" size="3" color="red" onClick={handleConfirm}>
               {confirmText || t("confirm")}
             </Button>
-          </Flex>
+          </Grid>
         </Flex>
       </Dialog.Content>
     </Dialog.Root>

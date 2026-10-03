@@ -1,8 +1,8 @@
 import type { AccentColorEnum, GrayColorEnum } from "nfx-ui/enums";
 
 import { CheckIcon, GearIcon } from "@radix-ui/react-icons";
-import { Button, Flex, IconButton, Popover, RadioCards, SegmentedControl, Separator, Text } from "@radix-ui/themes";
-import { AccentColor, Appearance, GrayColor, Language, LANGUAGE_VALUES, PanelBackground, Radius, RadiusEnum, Scaling } from "nfx-ui/enums";
+import { Box, Button, Flex, IconButton, Popover, RadioCards, SegmentedControl, Separator, Text, Theme } from "@radix-ui/themes";
+import { AccentColor, Appearance, GrayColor, Language, LANGUAGE_VALUES, PanelBackground, Radius, Scaling } from "nfx-ui/enums";
 import { useBaseLabel, useLanguageLabel, useSyncPreference } from "nfx-ui/hooks";
 import { usePreferenceStore } from "nfx-ui/stores";
 import {
@@ -25,14 +25,6 @@ export type PreferencesPopoverProps = {
 function swatchVar(color: AccentColorEnum | GrayColorEnum): string {
   return color === "auto" ? "var(--gray-9)" : `var(--${color}-9)`;
 }
-
-const RADIUS_CORNER: Record<RadiusEnum, string> = {
-  [RadiusEnum.NONE]: styles.radiusNone,
-  [RadiusEnum.SMALL]: styles.radiusSmall,
-  [RadiusEnum.MEDIUM]: styles.radiusMedium,
-  [RadiusEnum.LARGE]: styles.radiusLarge,
-  [RadiusEnum.FULL]: styles.radiusFull,
-};
 
 function PreferencesPopover({ triggerVariant = "outline" }: PreferencesPopoverProps) {
   const { t } = useTranslation("language");
@@ -140,7 +132,9 @@ function PreferencesPopover({ triggerVariant = "outline" }: PreferencesPopoverPr
                 return (
                   <RadioCards.Item key={v} value={v} aria-label={platform}>
                     <Flex direction="column" align="center" gap="1" width="100%">
-                      <Flex flexGrow="0" flexShrink="0" className={`${styles.radiusCorner} ${RADIUS_CORNER[v]}`} />
+                      <Theme asChild radius={v}>
+                        <Box className={styles.radiusCorner} />
+                      </Theme>
                       <Text as="span" size="1" weight="bold" align="center">
                         {platform}
                       </Text>

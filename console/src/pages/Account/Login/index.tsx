@@ -23,7 +23,7 @@ import styles from "./s.module.css";
 function ProtocolStep({ n, children }: { n: string; children: ReactNode }) {
   return (
     <Flex align="start" gap="4" width="100%">
-      <Section size="1" pt="1.45rem" pb="0">
+      <Section size="1" pt="5" pb="0">
         <Flex className={styles.stepNum} align="center" justify="center" flexShrink="0" width="2rem" height="2rem">
           {n}
         </Flex>
@@ -92,10 +92,10 @@ export default function LoginPage() {
             <Text as="span" size="1" weight="bold" className={styles.index}>
               {t("selectProfile.eyebrow")}
             </Text>
-            <Heading as="h1" size="8" m="0" className={styles.title}>
+            <Heading as="h1" size={{ initial: "8", lg: "9" }} weight="bold" m="0">
               {t("selectProfile.title")}
             </Heading>
-            <Text as="p" m="0" className={styles.lede}>
+            <Text as="p" size="2" color="gray" m="0" className={styles.lede}>
               {t("selectProfile.subtitle")}
             </Text>
           </Flex>
@@ -142,10 +142,10 @@ export default function LoginPage() {
             <Text as="span" size="1" weight="bold" className={styles.index}>
               {t("protocol.kicker")}
             </Text>
-            <Heading as="h1" size="8" m="0" className={styles.title}>
+            <Heading as="h1" size={{ initial: "8", lg: "9" }} weight="bold" m="0">
               {t("protocol.title")}
             </Heading>
-            <Text as="p" m="0" className={styles.lede}>
+            <Text as="p" size="2" color="gray" m="0" className={styles.lede}>
               {t("protocol.subtitle")}
             </Text>
           </Flex>

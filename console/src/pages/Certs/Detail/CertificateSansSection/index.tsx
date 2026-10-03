@@ -1,5 +1,5 @@
-import { Container, Flex, Grid, Section } from "@radix-ui/themes";
-import { LayersIcon } from "nfx-ui/icons";
+import { Badge, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { AnimatedIcon, LayersIcon } from "nfx-ui/icons";
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import { safeArray } from "nfx-ui/utils";
@@ -19,55 +19,44 @@ const CertificateSansSection = memo(({ sans }: CertificateSansSectionProps) => {
   if (list.length === 0) return null;
 
   return (
-    <Section className={styles.root} aria-labelledby="cert-sans-heading">
-      <Section className={styles.header}>
-        <Container width="100%" maxWidth="none" className={styles.headerInset} >
-          <Flex align="start" justify="between" className={styles.headerRow}>
-            <Flex align="start" className={styles.headerMain}>
-              <Flex align="center" justify="center" className={styles.iconWrap} aria-hidden>
-                <LayersIcon size={20} strokeWidth={2} />
-              </Flex>
-              <div className={styles.headerText}>
-                <h2 id="cert-sans-heading" className={styles.title}>
-                  {t("certificate.sans") || "Subject Alternative Names (SANs)"}
-                </h2>
-                <Section className={styles.subtitle}>
-                  <p className={styles.subtitleText}>{t("certificate.sansSectionSubtitle")}</p>
-                </Section>
-              </div>
+    <Card size="3" variant="surface" aria-labelledby="cert-sans-heading">
+      <Flex direction="column" gap="4">
+        <Flex align="start" justify="between" gap="4">
+          <Flex align="start" gap="3" minWidth="0">
+            <Flex align="center" justify="center" flexShrink="0" className={styles.stamp} aria-hidden>
+              <AnimatedIcon icon={LayersIcon} size={14} />
             </Flex>
-            <Flex flexShrink="0" className={styles.countItem}>
-            <Container width="auto" maxWidth="none" className={styles.count} >
-              <Flex align="center" justify="center" width="100%" height="100%">
-                <span className={styles.countText} title={t("certificate.sansCountTitle", { count: list.length })}>
-                  {list.length}
-                </span>
-              </Flex>
-            </Container>
+            <Flex direction="column" gap="1" minWidth="0">
+              <Heading as="h2" id="cert-sans-heading" size="3" weight="bold">
+                {t("certificate.sans")}
+              </Heading>
+              <Text as="p" size="2" color="gray" className={styles.subtitle}>
+                {t("certificate.sansSectionSubtitle")}
+              </Text>
             </Flex>
           </Flex>
-        </Container>
-      </Section>
-
-      <Section asChild className={styles.list}>
-        <ul>
-          {list.map((name, i) => (
-            <Section asChild key={`${name}:${i}`} className={styles.item}>
-              <li>
-                <Container width="100%" maxWidth="none" className={styles.itemInset} >
-                  <Grid className={styles.itemGrid}>
-                    <span className={styles.itemIndex} aria-hidden>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <code className={styles.itemName}>{name}</code>
-                  </Grid>
-                </Container>
-              </li>
-            </Section>
-          ))}
-        </ul>
-      </Section>
-    </Section>
+          <Badge size="2" variant="surface" radius="full" title={t("certificate.sansCountTitle", { count: list.length })}>
+            {list.length}
+          </Badge>
+        </Flex>
+        <Flex asChild direction="column" className={styles.list}>
+          <ul>
+            {list.map((name, i) => (
+              <Flex asChild key={`${name}:${i}`} align="baseline" gap="3" className={styles.item}>
+                <li>
+                  <Text size="1" color="gray" className={styles.index} aria-hidden>
+                    {String(i + 1).padStart(2, "0")}
+                  </Text>
+                  <Text size="2" className={styles.name}>
+                    {name}
+                  </Text>
+                </li>
+              </Flex>
+            ))}
+          </ul>
+        </Flex>
+      </Flex>
+    </Card>
   );
 });
 

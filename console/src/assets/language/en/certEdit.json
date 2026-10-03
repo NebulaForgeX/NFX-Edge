@@ -23,5 +23,6 @@
     "manual_add": "Manual Add"
   },
   "loading": "Loading certificate...",
-  "index": "02 — Certificates"
+  "index": "02 — Certificates",
+  "back": "Back"
 }

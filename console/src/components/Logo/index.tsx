@@ -20,49 +20,35 @@ export interface LogoProps {
   onClick?: () => void;
 }
 
+const VARIANT_CLASS: Record<NonNullable<LogoProps["variant"]>, string> = {
+  plain: styles.plain,
+  glassSquare: styles.glassSquare,
+  glassCircle: styles.glassCircle,
+};
+
+const SIZE_CLASS: Record<NonNullable<LogoProps["size"]>, string> = {
+  small: styles.small,
+  medium: styles.medium,
+  large: styles.large,
+};
+
 function Logo({ to = ROUTES.HOME, alt = `${APP_NAME} logo`, title, subtitle, variant = "plain", size = "medium", className = "", onClick }: LogoProps) {
   const appearance = useResolvedAppearance();
-  const sizeClass =
-    size === "small"
-      ? styles.sizeSmall
-      : size === "large" && variant === "plain"
-        ? styles.sizeLargePlain
-        : size === "large" && variant === "glassSquare"
-          ? styles.sizeLargeGlassSquare
-          : size === "large" && variant === "glassCircle"
-            ? styles.sizeLargeGlassCircle
-            : variant === "glassSquare"
-              ? styles.sizeGlassSquare
-              : variant === "glassCircle"
-                ? styles.sizeGlassCircle
-                : styles.sizePlain;
-  const logoClasses = [styles.logo, className].filter(Boolean).join(" ");
 
   return (
     <Flex asChild align="center" gap="3" width="fit-content">
       <Button
         type="button"
         variant="ghost"
-        className={logoClasses}
+        className={[styles.logo, className].filter(Boolean).join(" ")}
         aria-label={typeof title === "string" ? title : APP_NAME}
         onClick={() => {
           routerEventEmitter.navigate({ to });
           onClick?.();
         }}
       >
-        <Box
-          className={[
-            styles.mark,
-            sizeClass,
-            variant === "glassCircle" ? styles.radiusFull : variant === "glassSquare" ? styles.radiusIcon : styles.radiusChip,
-            variant === "glassCircle" ? styles.edgeCircle : variant === "glassSquare" ? styles.edgeSquare : "",
-            variant === "glassCircle" ? styles.fillCircle : variant === "glassSquare" ? styles.fillSquare : "",
-            variant === "plain" ? styles.shadowPlain : variant === "glassSquare" ? styles.shadowSquare : styles.shadowCircle,
-          ]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          <img src={getLogoSrc(appearance)} alt={alt} />
+        <Box className={[styles.mark, VARIANT_CLASS[variant], SIZE_CLASS[size]].join(" ")}>
+          <img src={getLogoSrc(appearance)} alt={alt} className={styles.image} />
         </Box>
 
         {(title || subtitle) && (

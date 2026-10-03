@@ -1,6 +1,7 @@
-import { DownloadIcon, XIcon } from "nfx-ui/icons";
+import { DownloadIcon, FileDescriptionIcon, XIcon } from "nfx-ui/icons";
 import { memo, useEffect, useState } from "react";
-import { Box, Button, Container, Dialog, Flex, IconButton, Section, Text } from "@radix-ui/themes";
+import { Button, Callout, Container, Dialog, Flex, IconButton, Inset, ScrollArea, Section, Separator, Skeleton, Text } from "@radix-ui/themes";
+import { useTranslation } from "react-i18next";
 import { getApiErrorMessage } from "nfx-ui/utils";
 
 import { useDownloadFile, useFetchFileContent } from "@/hooks/file";
@@ -9,6 +10,7 @@ import ModalStore, { useModalStore } from "@/stores/modal";
 import styles from "./s.module.css";
 
 const FileModal = memo(() => {
+  const { t } = useTranslation("modal");
   const isOpen = useModalStore((state) => state.fileModal.isOpen);
   const filePath = useModalStore((state) => state.fileModal.filePath);
   const fileName = useModalStore((state) => state.fileModal.fileName);
@@ -36,12 +38,12 @@ const FileModal = memo(() => {
         if (result.success && result.content) {
           setFileContent(result.content);
         } else {
-          setError(result.message || "Failed to load file content");
+          setError(result.message || t("file.loadFailed"));
         }
       })
       .catch((err: unknown) => {
         if (cancelled) return;
-        setError(getApiErrorMessage(err as never, "Failed to load file content"));
+        setError(getApiErrorMessage(err as never, t("file.loadFailed")));
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -49,7 +51,7 @@ const FileModal = memo(() => {
     return () => {
       cancelled = true;
     };
-  }, [isOpen, filePath, mutateContent]);
+  }, [isOpen, filePath, mutateContent, t]);
 
   const handleClose = () => {
     ModalStore.getState().hideModal("file");
@@ -69,44 +71,60 @@ const FileModal = memo(() => {
         if (!open) handleClose();
       }}
     >
-      <Dialog.Content maxWidth="50rem" style={{ padding: 0 }}>
-        <Box className={styles.hairline}>
-          <Section py="4">
-            <Container width="100%" maxWidth="none" px="5" >
-              <Flex align="center" justify="between" gap="3">
-                <Dialog.Title mb="0">{fileName || "File"}</Dialog.Title>
-                <IconButton type="button" variant="ghost" aria-label="Close" onClick={handleClose}>
+      <Dialog.Content size="3" maxWidth="50rem">
+        <Flex direction="column" gap="4">
+          <Flex align="center" justify="between" gap="3">
+            <Flex align="center" gap="3" minWidth="0">
+              <Flex align="center" justify="center" flexShrink="0" className={styles.stamp}>
+                <FileDescriptionIcon size={20} />
+              </Flex>
+              <Flex direction="column" gap="1" minWidth="0">
+                <Dialog.Title mb="0" size="4" truncate>
+                  {fileName || t("file.title")}
+                </Dialog.Title>
+                <Dialog.Description size="1" color="gray" truncate className={styles.path}>
+                  {filePath}
+                </Dialog.Description>
+              </Flex>
+            </Flex>
+            <Flex align="center" gap="2" flexShrink="0">
+              <Button type="button" variant="outline" color="gray" disabled={loading || Boolean(error)} loading={downloadMutation.isPending} onClick={() => void handleDownload()}>
+                <DownloadIcon size={16} />
+                {t("file.download")}
+              </Button>
+              <Dialog.Close>
+                <IconButton type="button" variant="ghost" color="gray" aria-label={t("file.close")}>
                   <XIcon size={18} />
                 </IconButton>
-              </Flex>
-            </Container>
-          </Section>
-        </Box>
-        <Section py="4">
-          <Container width="100%" maxWidth="none" px="4">
-            {loading ? (
-              <Text color="gray">Loading...</Text>
-            ) : error ? (
-              <Text color="red">{error}</Text>
-            ) : (
-              <Flex direction="column" gap="3">
-                <Flex justify="end">
-                  <Button type="button" variant="outline" onClick={() => void handleDownload()}>
-                    <DownloadIcon size={16} />
-                    Download
-                  </Button>
-                </Flex>
-                <Box className={styles.sheet}>
-                  <Section py="4">
-                    <Container width="100%" maxWidth="none" px="4" >
-                      <pre className={styles.pem}>{fileContent}</pre>
-                    </Container>
-                  </Section>
-                </Box>
-              </Flex>
-            )}
-          </Container>
-        </Section>
+              </Dialog.Close>
+            </Flex>
+          </Flex>
+          <Inset side="x" clip="padding-box">
+            <Separator size="4" />
+          </Inset>
+          {loading ? (
+            <Flex direction="column" gap="2">
+              <Skeleton height="1rem" width="70%" />
+              <Skeleton height="1rem" width="90%" />
+              <Skeleton height="1rem" width="55%" />
+              <Skeleton height="1rem" width="80%" />
+            </Flex>
+          ) : error ? (
+            <Callout.Root color="red" variant="surface">
+              <Callout.Text>{error}</Callout.Text>
+            </Callout.Root>
+          ) : (
+            <ScrollArea type="auto" className={styles.sheet}>
+              <Section size="1" py="4">
+                <Container size="4" px="4">
+                  <Text as="div" size="1" className={styles.pem}>
+                    {fileContent}
+                  </Text>
+                </Container>
+              </Section>
+            </ScrollArea>
+          )}
+        </Flex>
       </Dialog.Content>
     </Dialog.Root>
   );

@@ -10,10 +10,9 @@
   "ttl": "TTL",
   "ttlAutomatic": "Automatique",
   "mxPref": "Préf. MX",
-  "emailType": "Type d'e-mail : {{type}}",
-  "ourDns": "DNS Namecheap : {{value}}",
-  "expires": "Expiration {{at}}",
-  "locked": "Verrouillé {{value}}",
+  "ourDns": "DNS Namecheap",
+  "expires": "Expiration",
+  "locked": "Verrouillé",
   "applyCert": "Demander un certificat",
   "applyHost": "Demander {{host}}",
   "applyClickHint": "Cliquez une ligne : le bouton de gauche demande cet hôte. En multi-sélection, le dernier clic est le CN, les autres des SAN. Le bouton de droite demande toujours le domaine racine. Vous pouvez aussi modifier adresse / TTL / MX ensemble.",
@@ -33,5 +32,10 @@
   "confirmDeleteMessage": "Supprimer {{type}} {{host}} ? Namecheap setHosts remplace toute la liste.",
   "notOurDns": "Ce domaine n'utilise pas le DNS Namecheap",
   "notOurDnsHint": "Les hôtes ne peuvent être modifiés que si le domaine utilise les serveurs de noms Namecheap.",
-  "index": "05 — Namecheap"
+  "index": "05 — Namecheap",
+  "records": "Enregistrements",
+  "profile": "Profil du domaine",
+  "patchTitle": "Modifier la sélection",
+  "yes": "Oui",
+  "no": "Non"
 }

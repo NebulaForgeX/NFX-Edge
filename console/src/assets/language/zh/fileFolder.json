@@ -23,5 +23,8 @@
   "subtitle": "磁盘上已导出的证书文件",
   "path": "路径",
   "root": "websites",
-  "loading": "正在读取目录…"
+  "loading": "正在读取目录…",
+  "folders": "文件夹",
+  "files": "文件",
+  "download": "下载"
 }

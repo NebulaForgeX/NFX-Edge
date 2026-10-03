@@ -1,80 +1,63 @@
 .sheet {
   position: relative;
-  border: 1px solid var(--gray-6);
-  background: var(--color-panel-solid);
+  overflow: hidden;
+}
+
+.sheet[data-valid="true"] {
+  box-shadow:
+    inset 0 0 0 1px var(--green-a6),
+    var(--shadow-3);
+}
+
+.sheet[data-valid="false"] {
+  box-shadow:
+    inset 0 0 0 1px var(--red-a6),
+    var(--shadow-3);
+}
+
+.corners {
+  position: absolute;
+  inset: var(--space-2);
+  pointer-events: none;
+  --corner: var(--space-4);
+  --corner-line: var(--accent-9);
+  background:
+    linear-gradient(var(--corner-line), var(--corner-line)) top left / var(--corner) 1px no-repeat,
+    linear-gradient(var(--corner-line), var(--corner-line)) top left / 1px var(--corner) no-repeat,
+    linear-gradient(var(--corner-line), var(--corner-line)) top right / var(--corner) 1px no-repeat,
+    linear-gradient(var(--corner-line), var(--corner-line)) top right / 1px var(--corner) no-repeat,
+    linear-gradient(var(--corner-line), var(--corner-line)) bottom left / var(--corner) 1px no-repeat,
+    linear-gradient(var(--corner-line), var(--corner-line)) bottom left / 1px var(--corner) no-repeat,
+    linear-gradient(var(--corner-line), var(--corner-line)) bottom right / var(--corner) 1px no-repeat,
+    linear-gradient(var(--corner-line), var(--corner-line)) bottom right / 1px var(--corner) no-repeat;
 }
 
 .hairline {
-  border-bottom: 1px solid var(--gray-6);
+  border-bottom: 1px solid var(--gray-a5);
 }
 
 .kicker {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
   text-transform: uppercase;
-  color: var(--gray-11);
-}
-
-.corner {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-color: var(--accent-9);
-  border-style: solid;
-  pointer-events: none;
-}
-
-.cornerTl {
-  top: 8px;
-  left: 8px;
-  border-width: 1px 0 0 1px;
-}
-
-.cornerTr {
-  top: 8px;
-  right: 8px;
-  border-width: 1px 1px 0 0;
-}
-
-.cornerBl {
-  bottom: 8px;
-  left: 8px;
-  border-width: 0 0 1px 1px;
-}
-
-.cornerBr {
-  bottom: 8px;
-  right: 8px;
-  border-width: 0 1px 1px 0;
+  letter-spacing: var(--letter-spacing-2);
 }
 
 .subject {
-  margin: 0;
-  overflow-wrap: anywhere;
-  font-family: var(--heading-font-family), sans-serif;
-}
-
-.metaItem {
-  gap: 0.2rem;
-}
-
-.metaItem dt {
-  margin: 0;
-  font-size: 10px;
-  text-transform: uppercase;
-  color: var(--gray-10);
-}
-
-.metaItem dd {
-  margin: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 13px;
-  color: var(--gray-12);
   overflow-wrap: anywhere;
 }
 
-.sansHairline {
-  border-top: 1px dashed var(--gray-6);
+.days {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--letter-spacing-8);
+  line-height: var(--line-height-8);
+}
+
+.mono {
+  font-family: var(--code-font-family);
+  overflow-wrap: anywhere;
+}
+
+.sans {
+  border-top: 1px dashed var(--gray-a6);
 }
 
 .vacant {
@@ -84,14 +67,13 @@
 
 .watermark {
   position: absolute;
-  top: 1.5rem;
+  top: 0;
   right: 0;
   pointer-events: none;
   user-select: none;
-  font-family: var(--heading-font-family), sans-serif;
-  font-size: clamp(3.5rem, 8vw, 7rem);
-  font-weight: 700;
-  line-height: 0.78;
-  color: color-mix(in oklab, var(--accent-9) 16%, transparent);
+  font-family: var(--heading-font-family);
+  font-size: calc(var(--font-size-9) * 1.6);
+  font-weight: var(--font-weight-bold);
+  line-height: 0.8;
+  color: var(--accent-a4);
 }
-

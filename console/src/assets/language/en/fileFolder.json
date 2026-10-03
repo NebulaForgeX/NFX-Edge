@@ -23,5 +23,8 @@
   "subtitle": "Exported certificate files on disk",
   "path": "Path",
   "root": "websites",
-  "loading": "Reading directory…"
+  "loading": "Reading directory…",
+  "folders": "Folders",
+  "files": "Files",
+  "download": "Download"
 }

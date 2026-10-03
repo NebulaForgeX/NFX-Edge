@@ -1,8 +1,10 @@
-import { ArrowNarrowLeftIcon, RouterIcon } from "nfx-ui/icons";
+import { PlusIcon } from "@radix-ui/react-icons";
+import { ArrowNarrowLeftIcon, PenIcon, ShieldCheck, TrashIcon, TriangleAlertIcon, WorldIcon } from "nfx-ui/icons";
 import { memo, useMemo, useState } from "react";
-import { Button, Container, Flex, Grid, Section, Text, TextArea } from "@radix-ui/themes";
+import { Badge, Button, Card, Code, DataList, Flex, Grid, Heading, IconButton, Text, TextArea, Tooltip } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
-import { ActionBar, DataTable, Dropdown, EmptyState, Input, PageHeader } from "@/components";
+import { ActionBar, DataTable, Dropdown, EmptyState, Input, PageHeader, SideCard } from "@/components";
+import FlagBadge from "@/features/dns/FlagBadge";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { getApiError } from "nfx-ui/utils";
@@ -153,12 +155,12 @@ const NamecheapDomainDetailPage = memo(() => {
   };
 
   const hostBody = (() => {
-    if (detailQuery.isLoading) return <EmptyState icon={RouterIcon} title={t("loading")} />;
+    if (detailQuery.isLoading) return <EmptyState icon={WorldIcon} title={t("loading")} />;
     if (detailQuery.isError) {
-      return <EmptyState icon={RouterIcon} title={t("loadError")} description={getApiError(detailQuery.error)?.message} />;
+      return <EmptyState icon={TriangleAlertIcon} title={t("loadError")} description={getApiError(detailQuery.error)?.message} />;
     }
     if (!isOurDns) {
-      return <EmptyState icon={RouterIcon} title={t("notOurDns")} description={t("notOurDnsHint")} />;
+      return <EmptyState icon={TriangleAlertIcon} title={t("notOurDns")} description={t("notOurDnsHint")} />;
     }
     const canAdd = Boolean(draft.name.trim() && draft.address.trim()) && !addHost.isPending;
     const onAddKeyDown = (event: { key: string; preventDefault: () => void }) => {
@@ -168,9 +170,9 @@ const NamecheapDomainDetailPage = memo(() => {
       }
     };
     return (
-      <Flex direction="column" gap="3" width="100%">
+      <Flex direction="column" gap="4" width="100%">
       <DataTable
-        emptyIcon={RouterIcon}
+        emptyIcon={WorldIcon}
         empty={t("empty")}
         rows={hosts}
         rowKey={hostKey}
@@ -185,15 +187,24 @@ const NamecheapDomainDetailPage = memo(() => {
           <Input key="address" size="1" value={draft.address} placeholder={t("address")} onChange={(e) => setDraft((p) => ({ ...p, address: e.target.value }))} onKeyDown={onAddKeyDown} />,
           <TtlDropdown key="ttl" size="1" value={draft.ttl} automaticLabel={t("ttlAutomatic")} onChange={(value) => setDraft((p) => ({ ...p, ttl: value }))} />,
           <Input key="mxPref" size="1" value={draft.mxPref} placeholder={t("mxPref")} onChange={(e) => setDraft((p) => ({ ...p, mxPref: e.target.value }))} onKeyDown={onAddKeyDown} />,
-          <Button key="add" size="1" onClick={saveAdd} disabled={!canAdd} aria-label={t("add")}>
-            +
-          </Button>,
+          <Tooltip key="add" content={t("add")}>
+            <IconButton size="1" onClick={saveAdd} disabled={!canAdd} loading={addHost.isPending} aria-label={t("add")}>
+              <PlusIcon />
+            </IconButton>
+          </Tooltip>,
         ]}
         columns={[
           {
             key: "name",
             header: t("host"),
-            render: (host) => (editing === hostKey(host) ? <Input size="1" value={editDraft.name} onChange={(e) => setEditDraft((p) => ({ ...p, name: e.target.value }))} /> : host.name),
+            render: (host) =>
+              editing === hostKey(host) ? (
+                <Input size="1" value={editDraft.name} onChange={(e) => setEditDraft((p) => ({ ...p, name: e.target.value }))} />
+              ) : (
+                <Text size="2" weight="medium">
+                  {host.name}
+                </Text>
+              ),
           },
           {
             key: "type",
@@ -202,7 +213,9 @@ const NamecheapDomainDetailPage = memo(() => {
               editing === hostKey(host) ? (
                 <Dropdown size="1" options={typeOptions} value={editDraft.type} onChange={(value) => setEditDraft((p) => ({ ...p, type: value }))} />
               ) : (
-                host.type
+                <Badge variant="surface" radius="full" color="gray">
+                  {host.type}
+                </Badge>
               ),
           },
           {
@@ -219,7 +232,9 @@ const NamecheapDomainDetailPage = memo(() => {
                   onChange={(event) => setEditDraft((p) => ({ ...p, address: event.target.value }))}
                 />
               ) : (
-                host.address
+                <Code variant="ghost" size="2" className={styles.address}>
+                  {host.address}
+                </Code>
               ),
           },
           {
@@ -248,77 +263,98 @@ const NamecheapDomainDetailPage = memo(() => {
             render: (host) =>
               editing === hostKey(host) ? (
                 <Flex gap="2" onClick={(event) => event.stopPropagation()}>
-                  <Button size="1" onClick={() => saveEdit(host)} disabled={updateHost.isPending}>
+                  <Button size="1" onClick={() => saveEdit(host)} loading={updateHost.isPending}>
                     {t("save")}
                   </Button>
-                  <Button size="1" variant="outline" onClick={() => {
-                    setEditing(null);
-                    setEditMinHeight(0);
-                  }}>
+                  <Button
+                    size="1"
+                    variant="outline"
+                    color="gray"
+                    onClick={() => {
+                      setEditing(null);
+                      setEditMinHeight(0);
+                    }}
+                  >
                     {t("cancel")}
                   </Button>
                 </Flex>
               ) : (
-                <Flex gap="2" onClick={(event) => event.stopPropagation()}>
-                  <Button
-                    size="1"
-                    variant="outline"
-                    onClick={(event) => {
-                      const cell = event.currentTarget.closest("tr")?.querySelectorAll("td")[2];
-                      setEditMinHeight(cell ? Math.ceil(cell.getBoundingClientRect().height) : 0);
-                      setEditing(hostKey(host));
-                      setEditDraft({
-                        name: host.name,
-                        type: host.type,
-                        address: host.address,
-                        ttl: namecheapTtlSelectValue(host.ttl),
-                        mxPref: host.mxPref ?? "10",
-                      });
-                    }}
-                  >
-                    {t("edit")}
-                  </Button>
-                  <Button
-                    size="1"
-                    color="red"
-                    variant="outline"
-                    onClick={() =>
-                      showConfirm({
-                        title: t("confirmDeleteTitle"),
-                        message: t("confirmDeleteMessage", { host: host.name, type: host.type }),
-                        confirmText: t("remove"),
-                        cancelText: t("cancel"),
-                        onConfirm: () => {
-                          void deleteHost.mutateAsync({
-                            id: credentialId,
-                            request: { domain, hostId: host.hostId, name: host.name, type: host.type },
-                          });
-                        },
-                      })
-                    }
-                  >
-                    {t("remove")}
-                  </Button>
+                <Flex gap="1" justify="end" onClick={(event) => event.stopPropagation()}>
+                  <Tooltip content={t("edit")}>
+                    <IconButton
+                      size="1"
+                      variant="ghost"
+                      color="gray"
+                      aria-label={t("edit")}
+                      onClick={(event) => {
+                        const cell = event.currentTarget.closest("tr")?.querySelectorAll("td")[2];
+                        setEditMinHeight(cell ? Math.ceil(cell.getBoundingClientRect().height) : 0);
+                        setEditing(hostKey(host));
+                        setEditDraft({
+                          name: host.name,
+                          type: host.type,
+                          address: host.address,
+                          ttl: namecheapTtlSelectValue(host.ttl),
+                          mxPref: host.mxPref ?? "10",
+                        });
+                      }}
+                    >
+                      <PenIcon size={14} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip content={t("remove")}>
+                    <IconButton
+                      size="1"
+                      variant="ghost"
+                      color="red"
+                      aria-label={t("remove")}
+                      onClick={() =>
+                        showConfirm({
+                          title: t("confirmDeleteTitle"),
+                          message: t("confirmDeleteMessage", { host: host.name, type: host.type }),
+                          confirmText: t("remove"),
+                          cancelText: t("cancel"),
+                          onConfirm: () => {
+                            void deleteHost.mutateAsync({
+                              id: credentialId,
+                              request: { domain, hostId: host.hostId, name: host.name, type: host.type },
+                            });
+                          },
+                        })
+                      }
+                    >
+                      <TrashIcon size={14} />
+                    </IconButton>
+                  </Tooltip>
                 </Flex>
               ),
           },
         ]}
       />
-      <Flex direction="column" gap="3" width="100%">
-        <Text className={styles.hint}>
-          {selectedHosts.length ? t("patchHint", { count: selectedHosts.length }) : t("applyClickHint")}
-        </Text>
-        {selectedHosts.length ? (
-          <Flex gap="3" wrap="wrap" width="100%" align="end">
-            <Flex direction="column" className={styles.field}>
-              <Flex direction="column" gap="1">
-                <Text size="1">{t("address")}</Text>
-                <Input size="2" value={patchAddress} placeholder={t("keep")} onChange={(event) => setPatchAddress(event.target.value)} />
-              </Flex>
+      <Card size="3" variant="surface">
+        <Flex direction="column" gap="4">
+          <Flex align="center" justify="between" gap="3" wrap="wrap">
+            <Flex direction="column" gap="1" minWidth="0">
+              <Heading as="h3" size="3" weight="bold">
+                {t("patchTitle")}
+              </Heading>
+              <Text size="2" color="gray">
+                {selectedHosts.length ? t("patchHint", { count: selectedHosts.length }) : t("applyClickHint")}
+              </Text>
             </Flex>
-            <Flex direction="column" className={styles.field}>
+            {selectedHosts.length ? (
+              <Badge size="2" variant="surface" radius="full">
+                {selectedHosts.length}
+              </Badge>
+            ) : null}
+          </Flex>
+          {selectedHosts.length ? (
+            <Grid columns={{ initial: "1", sm: "3", md: "minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) auto" }} gap="3" align="end">
+              <Input label={t("address")} size="2" value={patchAddress} placeholder={t("keep")} onChange={(event) => setPatchAddress(event.target.value)} />
               <Flex direction="column" gap="1">
-                <Text size="1">{t("ttl")}</Text>
+                <Text size="1" weight="medium" color="gray">
+                  {t("ttl")}
+                </Text>
                 <TtlDropdown
                   size="2"
                   value={patchTtl}
@@ -328,25 +364,20 @@ const NamecheapDomainDetailPage = memo(() => {
                   onChange={setPatchTtl}
                 />
               </Flex>
-            </Flex>
-            <Flex direction="column" className={styles.field}>
-              <Flex direction="column" gap="1">
-                <Text size="1">{t("mxPref")}</Text>
-                <Input size="2" value={patchMx} placeholder={t("keep")} onChange={(event) => setPatchMx(event.target.value)} />
-              </Flex>
-            </Flex>
-            <Button type="button" onClick={applySelectedPatch} disabled={!canPatch}>
-              {patchHosts.isPending ? t("loading") : t("patchSelected")}
+              <Input label={t("mxPref")} size="2" value={patchMx} placeholder={t("keep")} onChange={(event) => setPatchMx(event.target.value)} />
+              <Button type="button" onClick={applySelectedPatch} disabled={!canPatch} loading={patchHosts.isPending}>
+                {t("patchSelected")}
+              </Button>
+            </Grid>
+          ) : null}
+          <Flex justify="end" gap="2" wrap="wrap">
+            <Button variant="outline" color="gray" disabled={!applyCn} onClick={goApply}>
+              <ShieldCheck size={16} />
+              {applyCn ? t("applyHost", { host: applyCn }) : t("applyHost", { host: t("host") })}
             </Button>
           </Flex>
-        ) : null}
-        <Flex justify="end" gap="2" wrap="wrap">
-          <Button disabled={!applyCn} onClick={goApply}>
-            {applyCn ? t("applyHost", { host: applyCn }) : t("applyHost", { host: t("host") })}
-          </Button>
-          <Button onClick={goApplyApex}>{t("applyCert")}</Button>
         </Flex>
-      </Flex>
+      </Card>
       </Flex>
     );
   })();
@@ -354,40 +385,63 @@ const NamecheapDomainDetailPage = memo(() => {
   return (
     <PageFrame>
       <PageHeader
-        icon={RouterIcon}
+        icon={WorldIcon}
         index={t("index")}
         title={domain}
         description={t("subtitle")}
+        actions={
+          <Button onClick={goApplyApex}>
+            <ShieldCheck size={16} />
+            {t("applyCert")}
+          </Button>
+        }
       />
-      <ActionBar>
-        <Button variant="outline" onClick={() => routerEventEmitter.navigate({ to: backPath })}>
+      <ActionBar
+        status={
+          <Badge size="2" variant="surface" radius="full">
+            {t("records")} · {hosts.length}
+          </Badge>
+        }
+      >
+        <Button variant="outline" color="gray" onClick={() => routerEventEmitter.navigate({ to: backPath })}>
           <ArrowNarrowLeftIcon size={16} />
           {t("back")}
         </Button>
       </ActionBar>
-      <Grid columns={{ initial: "1", lg: "minmax(0, 1fr) 16rem" }} gap="6" align="start">
+      <Grid columns={{ initial: "1", xl: "minmax(0, 1fr) 18rem" }} gap="5" align="start">
         <Flex direction="column" gap="4" width="100%" minWidth="0">
           {hostBody}
         </Flex>
-        <Section size="1" py="4" className={styles.side}>
-          <Container size="2" px="4" width="100%">
-            <Flex direction="column" gap="3">
-              <Flex direction="column" gap="1">
-                <Text size="1" color="gray">{t("host")}</Text>
-                <Text size="7" className={styles.count}>{hosts.length}</Text>
-              </Flex>
-              {info ? (
-                <Text size="2" color="gray">
-                  {t("expires", { at: info.expires || "—" })}
-                  {" · "}
-                  {t("locked", { value: info.isLocked || info.status || "—" })}
-                  {" · "}
-                  {t("ourDns", { value: String(info.isOurDns) })}
+        <SideCard icon={WorldIcon} title={t("profile")} caption={domain}>
+          <DataList.Root orientation="vertical" size="2">
+            <DataList.Item>
+              <DataList.Label>{t("records")}</DataList.Label>
+              <DataList.Value>
+                <Text size="5" weight="bold" className={styles.count}>
+                  {hosts.length}
                 </Text>
-              ) : null}
-            </Flex>
-          </Container>
-        </Section>
+              </DataList.Value>
+            </DataList.Item>
+            <DataList.Item>
+              <DataList.Label>{t("expires")}</DataList.Label>
+              <DataList.Value>
+                <Code variant="ghost">{info?.expires || "—"}</Code>
+              </DataList.Value>
+            </DataList.Item>
+            <DataList.Item>
+              <DataList.Label>{t("locked")}</DataList.Label>
+              <DataList.Value>
+                <FlagBadge value={info?.isLocked} yes={t("yes")} no={t("no")} onColor="amber" />
+              </DataList.Value>
+            </DataList.Item>
+            <DataList.Item>
+              <DataList.Label>{t("ourDns")}</DataList.Label>
+              <DataList.Value>
+                <FlagBadge value={info ? String(info.isOurDns) : undefined} yes={t("yes")} no={t("no")} />
+              </DataList.Value>
+            </DataList.Item>
+          </DataList.Root>
+        </SideCard>
       </Grid>
     </PageFrame>
   );

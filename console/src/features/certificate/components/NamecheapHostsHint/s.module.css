@@ -1,24 +1,15 @@
-.titleHairline {
-  border-bottom: 1px solid var(--gray-6);
+.title {
+  border-bottom: 1px solid var(--gray-a5);
 }
 
-.hint {
-  font-size: 0.8rem;
-  color: var(--gray-11);
-}
-
-.panel {
-  height: 100%;
-  min-height: 0;
-}
-
-.body {
-  flex: 1 1 auto;
-  min-height: 0;
+.stamp {
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-icon);
+  background: var(--accent-a3);
+  color: var(--accent-11);
 }
 
 .scroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: auto;
+  max-height: calc(var(--space-9) * 6);
 }

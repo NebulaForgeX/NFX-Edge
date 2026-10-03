@@ -4,7 +4,7 @@ import { memo, useEffect, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Flex, Text } from "@radix-ui/themes";
+import { Code, Flex, Text } from "@radix-ui/themes";
 
 import { Dropdown } from "@/components";
 import { CERTIFICATE_ISSUER_VALUES, DEFAULT_CERTIFICATE_ISSUER } from "@/enums";
@@ -33,11 +33,13 @@ const IssuerController = memo(({ record = false }: IssuerControllerProps) => {
 
   return (
     <Flex direction="column" gap="1">
-      <Text size="1" color="gray">
+      <Text size="1" weight="medium" color="gray">
         {t("form.issuer")}
       </Text>
       {record ? (
-        <Text size="2">{current || "—"}</Text>
+        <Code size="2" variant="ghost">
+          {current || "—"}
+        </Code>
       ) : (
         <Dropdown
           options={options}

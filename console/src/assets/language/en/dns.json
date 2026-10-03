@@ -16,7 +16,9 @@
     "emptyHint": "Add the Namecheap.com login, API key, and whitelist IP.",
     "missing": "That API account was not found.",
     "detailHint": "Verify the key, check balance, then open Domain List or SSL.",
-    "back": "Back to account"
+    "back": "Back to account",
+    "production": "Production",
+    "sandbox": "Sandbox"
   },
   "credential": {
     "title": "API account",
@@ -40,7 +42,12 @@
     "verifiedAt": "Last verified: {{at}}",
     "verifiedAtShort": "Last verified",
     "confirmDeleteTitle": "Delete Namecheap account",
-    "confirmDeleteMessage": "Remove this API key from the Edge account?"
+    "confirmDeleteMessage": "Remove this API key from the Edge account?",
+    "connection": "Connection",
+    "manage": "Manage",
+    "shortcuts": "Open",
+    "lastError": "Last error",
+    "outbound": "Edge outbound IPv4"
   },
   "balances": {
     "title": "Balance",

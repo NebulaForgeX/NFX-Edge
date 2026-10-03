@@ -1,8 +1,8 @@
 import { ArrowNarrowLeftIcon, PenIcon } from "nfx-ui/icons";
 import { memo } from "react";
-import { Button, Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
+import { Badge, Button, Grid, Text } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
-import { ActionBar, PageHeader, Suspense } from "@/components";
+import { ActionBar, PageHeader, SideCard, Suspense } from "@/components";
 import { FormProvider } from "react-hook-form";
 import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,6 @@ import { routerEventEmitter } from "@/events/router";
 import { CertificateEditForm, useInitCertificateForm, useEditCertificate } from "@/features/certificate";
 import { useCertificateDetailById } from "@/hooks";
 
-import styles from "./s.module.css";
 
 const CertEditPageContent = memo(({ certificateId }: { certificateId: string }) => {
   const { t } = useTranslation("certEdit");
@@ -28,23 +27,25 @@ const CertEditPageContent = memo(({ certificateId }: { certificateId: string }) 
           title={`${t("title")} — ${certificate.domain}`}
           description={t("subtitle")}
         />
-        <ActionBar>
-          <Button variant="ghost" onClick={() => routerEventEmitter.navigateBack()}>
+        <ActionBar
+          status={
+            <Badge size="2" variant="surface" radius="full">
+              {certificate.domain}
+            </Badge>
+          }
+        >
+          <Button variant="outline" color="gray" onClick={() => routerEventEmitter.navigateBack()}>
             <ArrowNarrowLeftIcon size={16} />
+            {t("back")}
           </Button>
         </ActionBar>
-        <Grid columns={{ initial: "1", lg: "minmax(0, 1fr) 18rem" }} gap="6" align="start">
+        <Grid columns={{ initial: "1", lg: "minmax(0, 1fr) 18rem" }} gap="5" align="start">
           <CertificateEditForm onSubmit={onSubmit} onSubmitError={onSubmitError} isPending={isPending} />
-          <Section size="1" py="4" className={styles.side}>
-            <Container size="2" px="4" width="100%">
-              <Flex direction="column" gap="2">
-                <Text size="1" color="gray">
-                  {certificate.domain}
-                </Text>
-                <Text size="2">{t("subtitle")}</Text>
-              </Flex>
-            </Container>
-          </Section>
+          <SideCard icon={PenIcon} title={certificate.domain}>
+            <Text size="2" color="gray">
+              {t("subtitle")}
+            </Text>
+          </SideCard>
         </Grid>
       </PageFrame>
     </FormProvider>

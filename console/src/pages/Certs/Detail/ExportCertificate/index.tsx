@@ -1,6 +1,6 @@
 import { DownloadIcon, StackIcon } from "nfx-ui/icons";
 import { memo } from "react";
-import { Container, Flex, Section, Text } from "@radix-ui/themes";
+import { Flex, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
 import { IconButton } from "@/components";
@@ -15,12 +15,7 @@ interface ExportCertificateProps {
   certificateId?: string;
 }
 
-const ExportCertificate = memo(({
-  certificate,
-  privateKey,
-  domain,
-  certificateId,
-}: ExportCertificateProps) => {
+const ExportCertificate = memo(({ certificate, privateKey, domain, certificateId }: ExportCertificateProps) => {
   const { t } = useTranslation("certDetail");
   const { downloadCertificate, downloadPrivateKey, downloadBoth } = useDownloadCertificate({
     certificate,
@@ -32,29 +27,25 @@ const ExportCertificate = memo(({
   });
 
   return (
-    <Container width="100%" maxWidth="100%" px="4">
-      <Section py="4">
-        <Flex direction="column" gap="3">
-          <Text as="p" size="1" weight="medium" className={styles.title}>
-            {t("export.title") || "Export Certificate"}
-          </Text>
-          <Flex direction="column" gap="2">
-            <IconButton onClick={downloadCertificate} variant="primary" icon={<DownloadIcon size={16} />}>
-              {t("download.certificate") || "Download Certificate"}
-            </IconButton>
-            <IconButton onClick={downloadPrivateKey} variant="primary" icon={<DownloadIcon size={16} />}>
-              {t("download.privateKey") || "Download Private Key"}
-            </IconButton>
-            <IconButton onClick={downloadBoth} variant="secondary" icon={<DownloadIcon size={16} />}>
-              {t("download.both") || "Download Both"}
-            </IconButton>
-            <IconButton onClick={exportToWebsitesFolder} variant="secondary" icon={<StackIcon size={16} />}>
-              {t("export.toWebsitesFolder") || "Export to Websites Folder"}
-            </IconButton>
-          </Flex>
-        </Flex>
-      </Section>
-    </Container>
+    <Flex direction="column" gap="3">
+      <Text as="p" size="1" weight="medium" color="gray" className={styles.title}>
+        {t("export.title")}
+      </Text>
+      <Flex direction="column" gap="2">
+        <IconButton onClick={downloadBoth} variant="primary" fullWidth icon={<DownloadIcon size={16} />}>
+          {t("download.both")}
+        </IconButton>
+        <IconButton onClick={downloadCertificate} variant="outline" color="gray" fullWidth icon={<DownloadIcon size={16} />}>
+          {t("download.certificate")}
+        </IconButton>
+        <IconButton onClick={downloadPrivateKey} variant="outline" color="gray" fullWidth icon={<DownloadIcon size={16} />}>
+          {t("download.privateKey")}
+        </IconButton>
+        <IconButton onClick={exportToWebsitesFolder} variant="outline" color="gray" fullWidth icon={<StackIcon size={16} />}>
+          {t("export.toWebsitesFolder")}
+        </IconButton>
+      </Flex>
+    </Flex>
   );
 });
 

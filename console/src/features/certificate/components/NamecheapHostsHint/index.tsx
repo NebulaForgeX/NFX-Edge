@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from "react";
-import { Box, Button, Flex, Section, Text } from "@radix-ui/themes";
+import { Button, Flex, ScrollArea, Section, Text } from "@radix-ui/themes";
+import { RouterIcon } from "nfx-ui/icons";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
@@ -45,35 +46,35 @@ function NamecheapHostsHint() {
 
   let body;
   if (!apex.includes(".")) {
-    body = <Text className={styles.hint}>{t("hostsHint.emptyDomain")}</Text>;
+    body = <Text size="1" color="gray">{t("hostsHint.emptyDomain")}</Text>;
   } else if (!creds.isSuccess) {
-    body = <Text className={styles.hint}>{creds.isError ? t("hostsHint.needAccount") : t("hostsHint.looking")}</Text>;
+    body = <Text size="1" color="gray">{creds.isError ? t("hostsHint.needAccount") : t("hostsHint.looking")}</Text>;
   } else if (!hasCredentials) {
     body = (
       <Flex direction="column" gap="3">
-        <Text className={styles.hint}>{t("hostsHint.needAccount")}</Text>
-        <Button type="button" variant="outline" onClick={() => routerEventEmitter.navigate({ to: ROUTES.NAMECHEAP_NEW })}>
+        <Text size="1" color="gray">{t("hostsHint.needAccount")}</Text>
+        <Button type="button" variant="outline" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.NAMECHEAP_NEW })}>
           {t("hostsHint.connect")}
         </Button>
       </Flex>
     );
   } else if (!lookup.data && (lookup.isLoading || lookup.isFetching)) {
-    body = <Text className={styles.hint}>{t("hostsHint.looking")}</Text>;
+    body = <Text size="1" color="gray">{t("hostsHint.looking")}</Text>;
   } else if (lookup.isError || !lookup.data?.detail) {
-    body = <Text className={styles.hint}>{t("hostsHint.notFound")}</Text>;
+    body = <Text size="1" color="gray">{t("hostsHint.notFound")}</Text>;
   } else {
     body = (
-      <Flex direction="column" gap="3" width="100%" className={styles.body}>
+      <Flex direction="column" gap="3" width="100%" flexGrow="1" minHeight="0">
         {info ? (
-          <Text className={styles.hint}>
+          <Text size="1" color="gray">
             {t("hostsHint.expires", { at: info.expires || "—" })} · {t("hostsHint.locked", { value: info.isLocked || info.status || "—" })} ·{" "}
             {t("hostsHint.ourDns", { value: String(info.isOurDns) })}
           </Text>
         ) : null}
         {hosts.length === 0 ? (
-          <Text className={styles.hint}>{t("hostsHint.noHosts")}</Text>
+          <Text size="1" color="gray">{t("hostsHint.noHosts")}</Text>
         ) : (
-          <Flex direction="column" className={styles.scroll}>
+          <ScrollArea type="auto" scrollbars="vertical" className={styles.scroll}>
             <DataTable
               empty={t("hostsHint.noHosts")}
               rows={hosts}
@@ -86,22 +87,25 @@ function NamecheapHostsHint() {
                 { key: "ttl", header: t("hostsHint.colTtl"), render: (host) => formatNamecheapTtl(host.ttl, t("hostsHint.ttlAutomatic")) },
               ]}
             />
-          </Flex>
+          </ScrollArea>
         )}
       </Flex>
     );
   }
 
   return (
-    <Flex direction="column" gap="3" width="100%" height="100%" className={styles.panel}>
-      <Box className={styles.titleHairline}>
-        <Section pt="0" pb="3">
+    <Flex direction="column" gap="3" width="100%" height="100%" minHeight="0">
+      <Section size="1" pt="0" pb="3" className={styles.title}>
+        <Flex align="center" gap="2">
+          <Flex align="center" justify="center" flexShrink="0" className={styles.stamp}>
+            <RouterIcon size={14} />
+          </Flex>
           <Text size="2" weight="bold">
             {t("hostsHint.title")}
           </Text>
-        </Section>
-      </Box>
-      <Text className={styles.hint}>{t("hostsHint.clickToAdd")}</Text>
+        </Flex>
+      </Section>
+      <Text size="1" color="gray">{t("hostsHint.clickToAdd")}</Text>
       {body}
     </Flex>
   );

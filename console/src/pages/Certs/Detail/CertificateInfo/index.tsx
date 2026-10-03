@@ -1,20 +1,26 @@
-import { Box, Container, Flex, Grid, Section } from "@radix-ui/themes";
-import { TriangleAlertIcon } from "nfx-ui/icons";
+import { Callout, Card, Code, DataList, Flex, Heading, Text } from "@radix-ui/themes";
+import { AnimatedIcon, InfoCircleIcon, TriangleAlertIcon } from "nfx-ui/icons";
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
+
 import type { CertificateDetailResponse } from "@/types";
+
 import styles from "./s.module.css";
 
 interface CertificateInfoProps {
   certDetail: CertificateDetailResponse;
 }
 
-function InfoItem({ label, value }: { label: string; value: string }) {
+function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <Flex direction="column" className={styles.infoItem}>
-      <label>{label}</label>
-      <span>{value}</span>
-    </Flex>
+    <DataList.Item>
+      <DataList.Label minWidth="9rem">{label}</DataList.Label>
+      <DataList.Value>
+        <Text size="2" className={styles.value}>
+          {value}
+        </Text>
+      </DataList.Value>
+    </DataList.Item>
   );
 }
 
@@ -22,45 +28,55 @@ const CertificateInfo = memo(({ certDetail }: CertificateInfoProps) => {
   const { t } = useTranslation("certDetail");
 
   return (
-    <Box className={styles.section}>
-      <Container width="100%" maxWidth="none" className={styles.sectionInset} >
-        <Section className={styles.sectionPad}>
-          <Section className={styles.title}>
-            <h2 className={styles.titleText}>{t("certificate.info") || "Certificate Information"}</h2>
-          </Section>
-          <Grid columns="repeat(auto-fit, minmax(12rem, 1fr))" gap="4">
-            <InfoItem label={t("certificate.email") || "Contact email"} value={certDetail.email?.trim() ? certDetail.email : "—"} />
-            {certDetail.folderName ? <InfoItem label={t("certificate.folderName") || "Folder Name"} value={certDetail.folderName} /> : null}
-            {certDetail.status ? <InfoItem label={t("certificate.status") || "Status"} value={certDetail.status} /> : null}
-            <InfoItem label={t("certificate.issuer") || "Issuer"} value={certDetail.issuer || t("certificate.unknown") || "Unknown"} />
-            {certDetail.notBefore ? <InfoItem label={t("certificate.validFrom") || "Valid From"} value={new Date(certDetail.notBefore).toLocaleString()} /> : null}
-            {certDetail.notAfter ? <InfoItem label={t("certificate.expiryDate") || "Expiry Date"} value={new Date(certDetail.notAfter).toLocaleString()} /> : null}
-          </Grid>
-          {certDetail.lastErrorMessage ? (
-              <Section mt="2" className={styles.error}>
-                <Container width="100%" maxWidth="none" className={styles.errorInset} >
-                  <Section className={styles.errorPad}>
-                    <Section className={styles.errorHeader}>
-                      <Flex align="center" className={styles.errorHeaderRow}>
-                        <TriangleAlertIcon size={18} className={styles.errorIcon} />
-                        <label>{t("certificate.lastError") || "Last Error"}</label>
-                      </Flex>
-                    </Section>
-                    <p className={styles.errorMessage}>{certDetail.lastErrorMessage}</p>
-                    {certDetail.lastErrorTime ? (
-                      <Section mt="2" pt="0" pb="0">
-                        <p className={styles.errorTimeText}>
-                          {t("certificate.errorTime") || "Error Time"}: {new Date(certDetail.lastErrorTime).toLocaleString()}
-                        </p>
-                      </Section>
-                    ) : null}
-                  </Section>
-                </Container>
-              </Section>
-            ) : null}
-        </Section>
-      </Container>
-    </Box>
+    <Card size="3" variant="surface">
+      <Flex direction="column" gap="4">
+        <Flex align="center" gap="2">
+          <Flex align="center" justify="center" className={styles.stamp}>
+            <AnimatedIcon icon={InfoCircleIcon} size={14} />
+          </Flex>
+          <Heading as="h2" size="3" weight="bold">
+            {t("certificate.info")}
+          </Heading>
+        </Flex>
+        <DataList.Root orientation={{ initial: "vertical", sm: "horizontal" }} size="2">
+          <InfoRow label={t("certificate.email")} value={certDetail.email?.trim() ? certDetail.email : "—"} />
+          {certDetail.folderName ? <InfoRow label={t("certificate.folderName")} value={certDetail.folderName} /> : null}
+          {certDetail.status ? (
+            <DataList.Item>
+              <DataList.Label minWidth="9rem">{t("certificate.status")}</DataList.Label>
+              <DataList.Value>
+                <Code size="2" variant="ghost">
+                  {certDetail.status}
+                </Code>
+              </DataList.Value>
+            </DataList.Item>
+          ) : null}
+          <InfoRow label={t("certificate.issuer")} value={certDetail.issuer || t("certificate.unknown")} />
+          {certDetail.notBefore ? <InfoRow label={t("certificate.validFrom")} value={new Date(certDetail.notBefore).toLocaleString()} /> : null}
+          {certDetail.notAfter ? <InfoRow label={t("certificate.expiryDate")} value={new Date(certDetail.notAfter).toLocaleString()} /> : null}
+        </DataList.Root>
+        {certDetail.lastErrorMessage ? (
+          <Callout.Root color="red" variant="surface" role="alert">
+            <Callout.Icon>
+              <TriangleAlertIcon size={16} />
+            </Callout.Icon>
+            <Flex direction="column" gap="1">
+              <Text size="2" weight="bold">
+                {t("certificate.lastError")}
+              </Text>
+              <Callout.Text size="2" className={styles.mono}>
+                {certDetail.lastErrorMessage}
+              </Callout.Text>
+              {certDetail.lastErrorTime ? (
+                <Text size="1" color="gray" className={styles.mono}>
+                  {t("certificate.errorTime")}: {new Date(certDetail.lastErrorTime).toLocaleString()}
+                </Text>
+              ) : null}
+            </Flex>
+          </Callout.Root>
+        ) : null}
+      </Flex>
+    </Card>
   );
 });
 

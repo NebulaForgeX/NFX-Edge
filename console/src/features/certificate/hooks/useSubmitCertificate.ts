@@ -19,34 +19,37 @@ export const useSubmitCertificate = () => {
   const { mutateAsync, isPending } = useApplyCertificate();
 
   const apply = useCallback(
-    async (payload: ApplyCertificateRequest) => {
-      try {
-        const result = await mutateAsync(payload);
-        if (result.success) {
-          showSuccess(getCommandMessage(result.message, t("messages.certificateApplySuccess")));
-          routerEventEmitter.navigate({ to: ROUTES.CERTS_OVERVIEW });
-          return;
+    async (initial: ApplyCertificateRequest) => {
+      const run = async (payload: ApplyCertificateRequest): Promise<void> => {
+        try {
+          const result = await mutateAsync(payload);
+          if (result.success) {
+            showSuccess(getCommandMessage(result.message, t("messages.certificateApplySuccess")));
+            routerEventEmitter.navigate({ to: ROUTES.CERTS_OVERVIEW });
+            return;
+          }
+          if (result.message === ALREADY_EXISTS && !payload.forceRenewal) {
+            showConfirm({
+              title: te("overwrite.title"),
+              message: te("overwrite.message", { domain: payload.domain }),
+              confirmText: te("overwrite.confirm"),
+              cancelText: te("overwrite.cancel"),
+              onConfirm: () => {
+                void run({ ...payload, forceRenewal: true });
+              },
+            });
+            return;
+          }
+          let msg = getCommandMessage(result.message, t("messages.certificateApplyFailed"));
+          if (result.rateLimit && result.retryAfter) {
+            msg = `${msg} (retry after ${result.retryAfter})`;
+          }
+          showError(msg);
+        } catch {
+          // useApplyCertificate onError already surfaces Axios / API errors
         }
-        if (result.message === ALREADY_EXISTS && !payload.forceRenewal) {
-          showConfirm({
-            title: te("overwrite.title"),
-            message: te("overwrite.message", { domain: payload.domain }),
-            confirmText: te("overwrite.confirm"),
-            cancelText: te("overwrite.cancel"),
-            onConfirm: () => {
-              void apply({ ...payload, forceRenewal: true });
-            },
-          });
-          return;
-        }
-        let msg = getCommandMessage(result.message, t("messages.certificateApplyFailed"));
-        if (result.rateLimit && result.retryAfter) {
-          msg = `${msg} (retry after ${result.retryAfter})`;
-        }
-        showError(msg);
-      } catch {
-        // useApplyCertificate onError already surfaces Axios / API errors
-      }
+      };
+      await run(initial);
     },
     [mutateAsync, t, te],
   );

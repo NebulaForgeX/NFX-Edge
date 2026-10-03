@@ -1,14 +1,7 @@
-.wrap {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  border: 1px solid var(--gray-a5);
-  background: var(--color-background);
-}
-
 .ledger {
   width: 100%;
   max-width: 100%;
+  box-shadow: var(--shadow-2);
 }
 
 .ledger :global(table) {
@@ -16,79 +9,38 @@
   table-layout: fixed;
 }
 
-.ledger :global(.rt-TableCell),
-.ledger :global(.rt-TableColumnHeaderCell) {
-  min-width: 0;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-.ledger :global(.rt-TableRow) {
-  box-shadow: inset 0 -1px var(--gray-a4);
-}
-
-.ledger :global(.rt-TableBody .rt-TableRow:last-child) {
-  box-shadow: none;
-}
-
 .head {
-  background: var(--color-panel-solid);
-}
-
-.head span {
-  font-size: 10px !important;
-  font-weight: 650 !important;
   text-transform: uppercase;
-  color: var(--gray-10) !important;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  background: var(--gray-a2);
 }
 
-.cellMin {
+.cell {
   min-width: 0;
-}
-
-.cellType {
-  vertical-align: middle;
-  white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
-  color: var(--gray-12);
 }
 
-.cellMin :global(.rt-TextFieldRoot),
-.cellMin :global(.rt-TextAreaRoot) {
+.cell :global(.rt-TextFieldRoot),
+.cell :global(.rt-TextAreaRoot) {
   width: 100%;
   max-width: 100%;
 }
 
 .mono {
-  vertical-align: middle;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 12px;
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  color: var(--gray-12);
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-1);
 }
 
 .clickable {
   cursor: pointer;
+  transition: background-color 160ms ease;
 }
 
-.clickable:hover,
-.clickable[data-picked="true"]:hover,
-.clickable[data-picked="true"] {
-  background: color-mix(in oklab, var(--accent-9) 6%, transparent);
+.clickable:hover {
+  background: var(--accent-a2);
 }
 
-.clickable[data-picked="true"],
-.clickable[data-picked="true"]:hover {
-  background: color-mix(in oklab, var(--accent-9) 10%, transparent);
-}
-
-.picked {
-  background: color-mix(in oklab, var(--accent-9) 10%, transparent);
+.ledger :global(.rt-TableRow)[data-picked="true"],
+.ledger :global(.rt-TableRow)[data-picked="true"]:hover {
+  background: var(--accent-a3);
 }

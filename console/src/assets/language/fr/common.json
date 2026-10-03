@@ -26,7 +26,8 @@
   },
   "search": {
     "placeholder": "Rechercher des fonctions, des pages...",
-    "noResults": "Aucun résultat trouvé pour \"{{query}}\""
+    "noResults": "Aucun résultat trouvé pour \"{{query}}\"",
+    "clear": "Effacer la recherche"
   },
   "footer": {
     "copyright": "NFX-Edge. Tous droits réservés.",

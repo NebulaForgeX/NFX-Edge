@@ -1,8 +1,9 @@
-import { RouterIcon } from "nfx-ui/icons";
+import { PlusIcon } from "@radix-ui/react-icons";
+import { ArrowNarrowLeftIcon, CheckedIcon, MagnifierIcon, StackIcon, TriangleAlertIcon, WorldIcon, XIcon } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 import { memo, useMemo, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import { Box, Button, Checkbox, Container, Flex, Section, Tabs, Text } from "@radix-ui/themes";
+import { Badge, Box, Button, Card, Checkbox, Code, Container, Flex, Grid, IconButton, ScrollArea, Section, Tabs, Text, Tooltip } from "@radix-ui/themes";
 import gsap from "gsap";
 import { PageFrame } from "@/layouts";
 import { ActionBar, Dropdown, EmptyState, Input, PageHeader } from "@/components";
@@ -25,11 +26,11 @@ gsap.registerPlugin(useGSAP);
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <Flex direction="column" className={styles.field}>
-      <Flex direction="column" gap="1">
-        <Text size="1">{label}</Text>
-        {children}
-      </Flex>
+    <Flex direction="column" gap="1" minWidth="0">
+      <Text size="1" weight="medium" color="gray">
+        {label}
+      </Text>
+      {children}
     </Flex>
   );
 }
@@ -50,7 +51,7 @@ function AddressInput({
   const { t } = useTranslation("dns");
   return (
     <Flex gap="2" align="center" width="100%">
-      <Flex direction="column" className={styles.grow} minWidth="0" >
+      <Flex direction="column" flexGrow="1" minWidth="0">
         <Input
           size="2"
           value={self ? "" : value}
@@ -59,8 +60,12 @@ function AddressInput({
           onChange={(event) => onValue(event.target.value)}
         />
       </Flex>
-      <Checkbox checked={self} onCheckedChange={(value) => onSelf(value === true)} />
-      <Text size="1">{t("bulk.addressSelfShort")}</Text>
+      <Text as="label" size="1" color="gray" wrap="nowrap">
+        <Flex gap="1" align="center">
+          <Checkbox size="1" checked={self} onCheckedChange={(value) => onSelf(value === true)} />
+          {t("bulk.addressSelfShort")}
+        </Flex>
+      </Text>
     </Flex>
   );
 }
@@ -93,10 +98,10 @@ function FilterFields({
   const { t } = useTranslation("dns");
   return (
     <Flex direction="column" gap="3">
-      <Text size="2" weight="bold">
+      <Text size="1" weight="bold" className={styles.kicker}>
         {t("bulk.filter")}
       </Text>
-      <Flex gap="3" wrap="wrap" width="100%">
+      <Grid columns={{ initial: "1", sm: "2", lg: "5" }} gap="3" width="100%">
         <Field label={t("bulk.host")}>
           <Input size="2" value={host} placeholder={t("bulk.any")} onChange={(event) => onHost(event.target.value)} />
         </Field>
@@ -112,19 +117,25 @@ function FilterFields({
         <Field label={t("bulk.mxPref")}>
           <Input size="2" value={mx} placeholder={t("bulk.any")} onChange={(event) => onMx(event.target.value)} />
         </Field>
-      </Flex>
+      </Grid>
     </Flex>
   );
 }
 
 function HostSnapLine({ snap, empty, ttlAutomatic, mark }: { snap?: NamecheapBulkHostSnap | null; empty: string; ttlAutomatic: string; mark?: boolean }) {
-  if (!snap) return <Text className={styles.hint}>{empty}</Text>;
+  if (!snap) {
+    return (
+      <Text size="1" color="gray">
+        {empty}
+      </Text>
+    );
+  }
   return (
     <Flex direction="column" gap="1" width="100%">
-      <Text className={styles.hostLine}>
+      <Code size="1" variant="ghost">
         {snap.name} · {snap.type}
-      </Text>
-      <Text size="1" color="gray" className={mark ? styles.changed : undefined}>
+      </Code>
+      <Text size="1" color={mark ? undefined : "gray"} className={mark ? styles.changed : styles.mono}>
         {snap.address} · TTL {formatNamecheapTtl(snap.ttl, ttlAutomatic)} · MX {snap.mxPref || "—"}
       </Text>
     </Flex>
@@ -173,44 +184,56 @@ function AffectedPane({
 }) {
   const blocks = items.filter((item) => (item.changes?.length ?? 0) > 0 || item.status === "failed");
   return (
-    <Flex direction="column" className={styles.pane}>
-      <Flex direction="column" gap="3">
-        <Text size="2" weight="bold">
-          {title}
+    <Flex direction="column" gap="3" minWidth="0">
+      <Text size="1" weight="bold" className={styles.kicker}>
+        {title}
+      </Text>
+      {blocks.length === 0 ? (
+        <Text size="2" color="gray">
+          {empty}
         </Text>
-        {blocks.length === 0 ? (
-          <Text className={styles.hint}>{empty}</Text>
-        ) : (
-          <div className={styles.listFrame}>
-            <Box className={styles.listScroll}>
-              {blocks.map((item) => (
-                <Box key={item.domain} className={styles.item}>
-                  <Section py="3">
-                    <Container width="100%" maxWidth="none" px="3" >
-                      <Flex direction="column" gap="3">
-                        <Text size="2" weight="bold">
-                          {item.domain}
-                        </Text>
-                        {(item.changes ?? []).map((change, index) => (
-                          <HostSnapLine
-                            key={`${item.domain}-${index}`}
-                            snap={side === "before" ? change.before : change.after}
-                            empty={missing}
-                            ttlAutomatic={ttlAutomatic}
-                            mark={side === "after" && changeMarked(change)}
-                          />
-                        ))}
-                        {item.status === "failed" ? <Text className={styles.hint}>{item.message}</Text> : null}
-                      </Flex>
-                    </Container>
-                  </Section>
-                </Box>
-              ))}
+      ) : (
+        <ListFrame>
+          {blocks.map((item) => (
+            <Box key={item.domain} className={styles.item}>
+              <Section size="1" py="3">
+                <Container size="4" px="3">
+                  <Flex direction="column" gap="3">
+                    <Text size="2" weight="bold">
+                      {item.domain}
+                    </Text>
+                    {(item.changes ?? []).map((change, index) => (
+                      <HostSnapLine
+                        key={`${item.domain}-${index}`}
+                        snap={side === "before" ? change.before : change.after}
+                        empty={missing}
+                        ttlAutomatic={ttlAutomatic}
+                        mark={side === "after" && changeMarked(change)}
+                      />
+                    ))}
+                    {item.status === "failed" ? (
+                      <Text size="1" color="red">
+                        {item.message}
+                      </Text>
+                    ) : null}
+                  </Flex>
+                </Container>
+              </Section>
             </Box>
-          </div>
-        )}
-      </Flex>
+          ))}
+        </ListFrame>
+      )}
     </Flex>
+  );
+}
+
+function ListFrame({ children }: { children: ReactNode }) {
+  return (
+    <Box className={styles.listFrame}>
+      <ScrollArea type="auto" scrollbars="vertical" className={styles.listScroll}>
+        {children}
+      </ScrollArea>
+    </Box>
   );
 }
 
@@ -388,88 +411,95 @@ const NamecheapDomainsBulkPage = memo(() => {
   };
 
   const lists = (() => {
-    if (domainsQuery.isLoading) return <EmptyState icon={RouterIcon} title={t("loading")} />;
+    if (domainsQuery.isLoading) return <EmptyState icon={WorldIcon} title={t("loading")} />;
     if (domainsQuery.isError) {
-      return <EmptyState icon={RouterIcon} title={t("domains.loadError")} description={getApiError(domainsQuery.error)?.message} />;
+      return <EmptyState icon={TriangleAlertIcon} title={t("domains.loadError")} description={getApiError(domainsQuery.error)?.message} />;
     }
     return (
-      <Flex gap="4" width="100%" align="start">
-        <Flex direction="column" className={styles.pane}>
-          <Flex direction="column" gap="3">
-            <Text size="2" weight="bold">
-              {t("bulk.available")}
+      <Grid columns={{ initial: "1", md: "2" }} gap="4" width="100%" align="start">
+        <Flex direction="column" gap="3" minWidth="0">
+          <Text size="1" weight="bold" className={styles.kicker}>
+            {t("bulk.available")}
+          </Text>
+          <Input size="2" value={query} placeholder={t("bulk.search")} onChange={(event) => setQuery(event.target.value)} />
+          {available.length === 0 ? (
+            <Text size="2" color="gray">
+              {t("bulk.noneAvailable")}
             </Text>
-            <Input size="2" value={query} placeholder={t("bulk.search")} onChange={(event) => setQuery(event.target.value)} />
-            {available.length === 0 ? (
-              <Text className={styles.hint}>{t("bulk.noneAvailable")}</Text>
-            ) : (
-              <div className={styles.listFrame}>
-                <Box className={styles.listScroll}>
-                  {available.map((row) => (
-                    <Box key={row.name} className={styles.item}>
-                      <button type="button" className={styles.pick} onClick={() => addDomain(row.name)}>
-                        <Section py="3">
-                          <Container width="100%" maxWidth="none" px="3" >
-                            <Text>{row.name}</Text>
-                          </Container>
-                        </Section>
-                      </button>
-                    </Box>
-                  ))}
+          ) : (
+            <ListFrame>
+              {available.map((row) => (
+                <Box key={row.name} className={styles.item}>
+                  <button type="button" className={styles.pick} onClick={() => addDomain(row.name)}>
+                    <Section size="1" py="2">
+                      <Container size="4" px="3">
+                        <Flex align="center" justify="between" gap="3">
+                          <Text size="2">{row.name}</Text>
+                          <PlusIcon className={styles.pickIcon} />
+                        </Flex>
+                      </Container>
+                    </Section>
+                  </button>
                 </Box>
-              </div>
-            )}
-          </Flex>
+              ))}
+            </ListFrame>
+          )}
         </Flex>
-        <Flex direction="column" className={styles.pane}>
-          <Flex direction="column" gap="3">
-            <Text size="2" weight="bold">
+        <Flex direction="column" gap="3" minWidth="0">
+          <Flex align="center" justify="between" gap="2">
+            <Text size="1" weight="bold" className={styles.kicker}>
               {t("bulk.selected", { count: selected.length })}
             </Text>
-            {selected.length === 0 ? (
-              <Text className={styles.hint}>{t("bulk.noneSelected")}</Text>
-            ) : (
-              <div className={styles.listFrame}>
-                <Box className={styles.listScroll}>
-                  {selected.map((name) => (
-                    <Box key={name} className={styles.item}>
-                      <Section py="3">
-                        <Container width="100%" maxWidth="none" px="3" >
-                          <Flex align="center" justify="between" gap="3" width="100%">
-                            <Text>{name}</Text>
-                            <Button type="button" size="1" variant="ghost" color="red" onClick={() => removeDomain(name)}>
-                              {t("bulk.remove")}
-                            </Button>
-                          </Flex>
-                        </Container>
-                      </Section>
-                    </Box>
-                  ))}
-                </Box>
-              </div>
-            )}
           </Flex>
+          {selected.length === 0 ? (
+            <EmptyState icon={StackIcon} title={t("bulk.noneSelected")} />
+          ) : (
+            <ListFrame>
+              {selected.map((name) => (
+                <Box key={name} className={styles.item}>
+                  <Section size="1" py="2">
+                    <Container size="4" px="3">
+                      <Flex align="center" justify="between" gap="3" width="100%">
+                        <Flex align="center" gap="2" minWidth="0">
+                          <CheckedIcon size={14} className={styles.check} />
+                          <Text size="2" weight="medium" truncate>
+                            {name}
+                          </Text>
+                        </Flex>
+                        <Tooltip content={t("bulk.remove")}>
+                          <IconButton type="button" size="1" variant="ghost" color="red" aria-label={t("bulk.remove")} onClick={() => removeDomain(name)}>
+                            <XIcon size={12} />
+                          </IconButton>
+                        </Tooltip>
+                      </Flex>
+                    </Container>
+                  </Section>
+                </Box>
+              ))}
+            </ListFrame>
+          )}
         </Flex>
-      </Flex>
+      </Grid>
     );
   })();
 
   return (
     <PageFrame>
       <PageHeader
-        icon={RouterIcon}
+        icon={StackIcon}
         index={t("index")}
         title={t("bulk.title")}
         description={credentialQuery.data ? `${credentialQuery.data.apiUser} · ${t("bulk.subtitle")}` : t("bulk.subtitle")}
       />
       <ActionBar
         status={
-          <Text size="2" color="gray">
-            {credentialQuery.data?.apiUser || t("bulk.title")}
-          </Text>
+          <Badge size="2" variant="surface" radius="full">
+            {t("bulk.selected", { count: selected.length })}
+          </Badge>
         }
       >
-        <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_DOMAINS.replace(":credentialId", credentialId))}>
+        <Button variant="outline" color="gray" onClick={() => navigate(ROUTES.NAMECHEAP_DOMAINS.replace(":credentialId", credentialId))}>
+          <ArrowNarrowLeftIcon size={16} />
           {t("bulk.back")}
         </Button>
       </ActionBar>
@@ -478,7 +508,7 @@ const NamecheapDomainsBulkPage = memo(() => {
           <Flex ref={trackRef} className={styles.track}>
             <Flex direction="column" className={styles.board}>{lists}</Flex>
             <Flex direction="column" className={styles.board}>
-              <Flex gap="4" width="100%" align="start">
+              <Grid columns={{ initial: "1", md: "2" }} gap="4" width="100%" align="start">
                 <AffectedPane
                   items={review}
                   side="before"
@@ -495,13 +525,12 @@ const NamecheapDomainsBulkPage = memo(() => {
                   missing={t("bulk.removed")}
                   ttlAutomatic={t("bulk.ttlAutomatic")}
                 />
-              </Flex>
+              </Grid>
             </Flex>
           </Flex>
         </Box>
-        <Box className={styles.actionRule}>
-          <Section pt="4" pb="0">
-            <Flex direction="column" gap="3">
+        <Card size="3" variant="classic">
+            <Flex direction="column" gap="4">
               {stage === 1 ? (
                 <Tabs.Root value={action} onValueChange={(value) => setAction(value as NamecheapBulkHostActionEnum)}>
                   <Tabs.List>
@@ -509,10 +538,12 @@ const NamecheapDomainsBulkPage = memo(() => {
                     <Tabs.Trigger value={NamecheapBulkHostActionEnum.ADD}>{t("bulk.actionAdd")}</Tabs.Trigger>
                     <Tabs.Trigger value={NamecheapBulkHostActionEnum.DELETE}>{t("bulk.actionDelete")}</Tabs.Trigger>
                   </Tabs.List>
-                  <Section pt="3" pb="0">
+                  <Section size="1" pt="4" pb="0">
                     <Tabs.Content value={NamecheapBulkHostActionEnum.UPDATE}>
                       <Flex direction="column" gap="3">
-                        <Text className={styles.hint}>{t("bulk.updateHint")}</Text>
+                        <Text size="2" color="gray">
+                          {t("bulk.updateHint")}
+                        </Text>
                         <FilterFields
                           host={filterHost}
                           type={filterType}
@@ -526,10 +557,10 @@ const NamecheapDomainsBulkPage = memo(() => {
                           onTtl={setFilterTtl}
                           onMx={setFilterMx}
                         />
-                        <Text size="2" weight="bold">
+                        <Text size="1" weight="bold" className={styles.kicker}>
                           {t("bulk.patch")}
                         </Text>
-                        <Flex gap="3" wrap="wrap" width="100%">
+                        <Grid columns={{ initial: "1", sm: "2", lg: "minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr)" }} gap="3" width="100%">
                           <Field label={t("bulk.address")}>
                             <AddressInput
                               value={patchAddress}
@@ -552,14 +583,22 @@ const NamecheapDomainsBulkPage = memo(() => {
                           <Field label={t("bulk.mxPref")}>
                             <Input size="2" value={patchMx} placeholder={t("bulk.keep")} onChange={(event) => setPatchMx(event.target.value)} />
                           </Field>
-                        </Flex>
+                        </Grid>
                       </Flex>
                     </Tabs.Content>
                     <Tabs.Content value={NamecheapBulkHostActionEnum.ADD}>
                       <Flex direction="column" gap="3">
-                        <Text className={styles.hint}>{t("bulk.addHint")}</Text>
+                        <Text size="2" color="gray">
+                          {t("bulk.addHint")}
+                        </Text>
                         {adds.map((row, index) => (
-                          <Flex key={`add-${index}`} gap="3" wrap="wrap" width="100%" align="end">
+                          <Grid
+                            key={`add-${index}`}
+                            columns={{ initial: "1", sm: "2", lg: "minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) auto" }}
+                            gap="3"
+                            width="100%"
+                            align="end"
+                          >
                             <Field label={t("bulk.host")}>
                               <Input size="2" value={row.name} placeholder="@" onChange={(event) => patchAdd(index, { name: event.target.value })} />
                             </Field>
@@ -581,53 +620,65 @@ const NamecheapDomainsBulkPage = memo(() => {
                             <Field label={t("bulk.mxPref")}>
                               <Input size="2" value={row.mxPref} onChange={(event) => patchAdd(index, { mxPref: event.target.value })} />
                             </Field>
-                            <Button type="button" size="2" variant="outline" color="red" disabled={adds.length === 1} onClick={() => removeAdd(index)}>
-                              {t("bulk.remove")}
-                            </Button>
-                          </Flex>
+                            <Tooltip content={t("bulk.remove")}>
+                              <IconButton type="button" size="2" variant="ghost" color="red" aria-label={t("bulk.remove")} disabled={adds.length === 1} onClick={() => removeAdd(index)}>
+                                <XIcon size={14} />
+                              </IconButton>
+                            </Tooltip>
+                          </Grid>
                         ))}
-                        <Button type="button" size="1" variant="outline" onClick={appendAdd}>
-                          {t("bulk.addRow")}
-                        </Button>
+                        <Flex>
+                          <Button type="button" size="1" variant="outline" color="gray" onClick={appendAdd}>
+                            <PlusIcon />
+                            {t("bulk.addRow")}
+                          </Button>
+                        </Flex>
                       </Flex>
                     </Tabs.Content>
                     <Tabs.Content value={NamecheapBulkHostActionEnum.DELETE}>
                       <Flex direction="column" gap="3">
-                        <Text className={styles.hint}>{t("bulk.deleteHint")}</Text>
-                        <Flex gap="3" wrap="wrap" width="100%">
+                        <Text size="2" color="gray">
+                          {t("bulk.deleteHint")}
+                        </Text>
+                        <Grid columns={{ initial: "1", sm: "2" }} gap="3" width="100%">
                           <Field label={t("bulk.host")}>
                             <Input size="2" value={filterHost} placeholder={t("bulk.any")} onChange={(event) => setFilterHost(event.target.value)} />
                           </Field>
                           <Field label={t("bulk.type")}>
                             <Dropdown size="2" options={typeFilterOptions} value={filterType} onChange={setFilterType} />
                           </Field>
-                        </Flex>
+                        </Grid>
                       </Flex>
                     </Tabs.Content>
                   </Section>
                 </Tabs.Root>
               ) : (
-                <Text className={styles.hint}>{t("bulk.reviewHint", { count: affectedCount })}</Text>
+                <Text size="2" color="gray">
+                  {t("bulk.reviewHint", { count: affectedCount })}
+                </Text>
               )}
-              <Flex justify="end" gap="2">
-                {stage === 2 ? (
-                  <Button variant="outline" onClick={goBack} disabled={bulk.isPending}>
-                    {t("bulk.cancel")}
-                  </Button>
-                ) : null}
-                {stage === 1 ? (
-                  <Button onClick={goReview} disabled={!canPreview}>
-                    {preview.isPending ? t("loading") : t("bulk.confirm")}
-                  </Button>
-                ) : (
-                  <Button onClick={submit} disabled={!canSubmit}>
-                    {bulk.isPending ? t("loading") : t("bulk.submit")}
-                  </Button>
-                )}
-              </Flex>
+              <Section size="1" pt="4" pb="0" className={styles.footer}>
+                <Flex justify="end" gap="2">
+                  {stage === 2 ? (
+                    <Button variant="outline" color="gray" onClick={goBack} disabled={bulk.isPending}>
+                      {t("bulk.cancel")}
+                    </Button>
+                  ) : null}
+                  {stage === 1 ? (
+                    <Button onClick={goReview} disabled={!canPreview} loading={preview.isPending}>
+                      <MagnifierIcon size={16} />
+                      {t("bulk.confirm")}
+                    </Button>
+                  ) : (
+                    <Button onClick={submit} disabled={!canSubmit} loading={bulk.isPending}>
+                      <CheckedIcon size={16} />
+                      {t("bulk.submit")}
+                    </Button>
+                  )}
+                </Flex>
+              </Section>
             </Flex>
-          </Section>
-        </Box>
+        </Card>
       </Flex>
     </PageFrame>
   );

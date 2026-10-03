@@ -41,7 +41,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <Flex direction="column" gap="1" width={fullWidth ? "100%" : undefined} className={className}>
         {label ? (
-          <Text as="label" htmlFor={id} className={styles.label}>
+          <Text as="label" htmlFor={id} size="1" weight="medium" color="gray">
             {label}
           </Text>
         ) : null}
@@ -65,9 +65,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {leftIcon ? <TextField.Slot>{leftIcon}</TextField.Slot> : null}
         </TextField.Root>
         {error ? (
-          <Text className={styles.error}>{error}</Text>
+          <Text size="1" color="red">
+            {error}
+          </Text>
         ) : helperText ? (
-          <Text className={styles.helper}>{helperText}</Text>
+          <Text size="1" color="gray">
+            {helperText}
+          </Text>
         ) : null}
       </Flex>
     );

@@ -1,8 +1,9 @@
-import { UsersIcon } from "nfx-ui/icons";
+import { ArrowNarrowLeftIcon, UsersIcon } from "nfx-ui/icons";
 import type { Profile } from "nfx-ui/types";
 
 import { useState } from "react";
-import { Avatar, Badge, Box, Button, Container, Flex, Grid, Section, Select, Text, TextField } from "@radix-ui/themes";
+import { Avatar, Badge, Box, Button, Card, Flex, Grid, Heading, Section, Select, Text, TextField } from "@radix-ui/themes";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { LanguageEnum, ProfileKindEnum } from "nfx-ui/enums";
 import {
   useChangePassword,
@@ -30,11 +31,14 @@ import { useAuthStore, usePreferenceStore } from "nfx-ui/stores";
 import { isVerificationCodeComplete, normalizeVerificationCode } from "nfx-ui/utils";
 import { useTranslation } from "react-i18next";
 
-import { ActionBar, PageHeader, Suspense } from "@/components";
+import { ActionBar, EmptyState, PageHeader, Suspense } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
 import { ROUTES } from "@/navigations";
+import { showConfirm } from "@/stores/modal";
 import { buildAvatarImageSrc, safeArray, safeStringable } from "@/utils";
+
+import styles from "./s.module.css";
 
 type SectionId = "emails" | "phones" | "password" | "profiles";
 
@@ -63,20 +67,16 @@ function toAuthorityRow(item: Profile.Response.AuthorityProfileItem): IdentityRo
   };
 }
 
-function EmptyBlock({ title, description }: { title: string; description: string }) {
+function SectionHead({ title, description }: { title: string; description: string }) {
   return (
-    <Container size="4" width="100%" px="4">
-      <Section size="1" py="6">
-        <Flex direction="column" align="center" justify="center" gap="1">
-          <Text size="2" weight="medium">
-            {title}
-          </Text>
-          <Text size="1" color="gray" align="center">
-            {description}
-          </Text>
-        </Flex>
-      </Section>
-    </Container>
+    <Flex direction="column" gap="1">
+      <Heading as="h3" size="4" weight="bold">
+        {title}
+      </Heading>
+      <Text as="p" size="2" color="gray">
+        {description}
+      </Text>
+    </Flex>
   );
 }
 
@@ -100,35 +100,35 @@ function EmailRow({
   const [nextEmail, setNextEmail] = useState(item.email);
   const [editing, setEditing] = useState(false);
   const verified = Boolean(item.verifiedAt);
-  const hint = [item.isPrimary ? t("labels.primary") : null, verified ? t("labels.verified") : t("labels.unverified")].filter(Boolean).join(" · ");
 
   return (
     <Flex direction="column" gap="3">
       <Flex direction="column" gap="3">
-        <Box>
-          <Text size="2" weight="bold">
+        <Flex align="center" gap="2" wrap="wrap" minWidth="0">
+          <Text size="2" weight="bold" className={styles.mono}>
             {item.email}
           </Text>
-          {hint ? (
-            <Section mt="1" pt="0" pb="0">
-              <Text size="1" color="gray">
-                {hint}
-              </Text>
-            </Section>
+          {item.isPrimary ? (
+            <Badge variant="surface" radius="full">
+              {t("labels.primary")}
+            </Badge>
           ) : null}
-        </Box>
+          <Badge variant="surface" radius="full" color={verified ? "green" : "amber"}>
+            {verified ? t("labels.verified") : t("labels.unverified")}
+          </Badge>
+        </Flex>
         <Flex gap="2" wrap="wrap" align="center">
             {!verified ? (
-              <Button size="1" variant="outline" loading={sendCode.isPending} onClick={() => sendCode.mutate({ emailId: item.id })}>
+              <Button size="1" variant="outline" color="gray" loading={sendCode.isPending} onClick={() => sendCode.mutate({ emailId: item.id })}>
                 {t("actions.sendCode")}
               </Button>
             ) : null}
             {!item.isPrimary ? (
-              <Button size="1" variant="outline" onClick={() => setPrimary.mutate(item.id)}>
+              <Button size="1" variant="outline" color="gray" onClick={() => setPrimary.mutate(item.id)}>
                 {t("actions.setPrimary")}
               </Button>
             ) : null}
-            <Button size="1" variant="outline" onClick={() => setEditing((v) => !v)}>
+            <Button size="1" variant="outline" color="gray" onClick={() => setEditing((v) => !v)}>
               {editing ? t("actions.cancelEdit") : t("actions.editEmail")}
             </Button>
             <Button size="1" variant="outline" color="red" onClick={() => deleteEmail.mutate(item.id)}>
@@ -191,17 +191,8 @@ function EmailsSection() {
     <Flex direction="column" gap="3">
       <Flex direction="column" gap="3">
         <Flex direction="column" gap="3">
-          <Box>
-            <Text size="2" weight="bold">
-              {t("sections.emails.title")}
-            </Text>
-            <Section mt="1" pt="0" pb="0">
-              <Text size="1" color="gray">
-                {t("sections.emails.description")}
-              </Text>
-            </Section>
-          </Box>
-          {emailItems.length ? null : <EmptyBlock title={t("empty.emails.title")} description={t("empty.emails.description")} />}
+          <SectionHead title={t("sections.emails.title")} description={t("sections.emails.description")} />
+          {emailItems.length ? null : <EmptyState icon={UsersIcon} title={t("empty.emails.title")} description={t("empty.emails.description")} />}
           <Flex direction="column" gap="2">
             <Text size="1" weight="medium" color="gray">
               {t("labels.emailPlaceholder")}
@@ -218,7 +209,9 @@ function EmailsSection() {
         </Flex>
       </Flex>
       {emailItems.map((item) => (
-        <EmailRow key={item.id} item={item} />
+        <Card key={item.id} size="2" variant="surface">
+          <EmailRow item={item} />
+        </Card>
       ))}
     </Flex>
   );
@@ -244,34 +237,34 @@ function PhoneRow({
   const [nextPhone, setNextPhone] = useState(item.phone);
   const [editing, setEditing] = useState(false);
   const verified = Boolean(item.verifiedAt);
-  const hint = [item.isPrimary ? t("labels.primary") : null, verified ? t("labels.verified") : t("labels.unverified")].filter(Boolean).join(" · ");
 
   return (
     <Flex direction="column" gap="3">
-      <Box>
-        <Text size="2" weight="bold">
+      <Flex align="center" gap="2" wrap="wrap" minWidth="0">
+        <Text size="2" weight="bold" className={styles.mono}>
           {item.phone}
         </Text>
-        {hint ? (
-          <Section mt="1" pt="0" pb="0">
-            <Text size="1" color="gray">
-              {hint}
-            </Text>
-          </Section>
+        {item.isPrimary ? (
+          <Badge variant="surface" radius="full">
+            {t("labels.primary")}
+          </Badge>
         ) : null}
-      </Box>
+        <Badge variant="surface" radius="full" color={verified ? "green" : "amber"}>
+          {verified ? t("labels.verified") : t("labels.unverified")}
+        </Badge>
+      </Flex>
       <Flex gap="2" wrap="wrap" align="center">
         {!verified ? (
-          <Button size="1" variant="outline" loading={sendCode.isPending} onClick={() => sendCode.mutate(item.id)}>
+          <Button size="1" variant="outline" color="gray" loading={sendCode.isPending} onClick={() => sendCode.mutate(item.id)}>
             {t("actions.sendCode")}
           </Button>
         ) : null}
         {!item.isPrimary ? (
-          <Button size="1" variant="outline" onClick={() => setPrimary.mutate(item.id)}>
+          <Button size="1" variant="outline" color="gray" onClick={() => setPrimary.mutate(item.id)}>
             {t("actions.setPrimary")}
           </Button>
         ) : null}
-        <Button size="1" variant="outline" onClick={() => setEditing((v) => !v)}>
+        <Button size="1" variant="outline" color="gray" onClick={() => setEditing((v) => !v)}>
           {editing ? t("actions.cancelEdit") : t("actions.editPhone")}
         </Button>
         <Button size="1" variant="outline" color="red" onClick={() => deletePhone.mutate(item.id)}>
@@ -336,17 +329,8 @@ function PhonesSection() {
 
   return (
     <Flex direction="column" gap="3">
-      <Box>
-        <Text size="2" weight="bold">
-          {t("sections.phones.title")}
-        </Text>
-        <Section mt="1" pt="0" pb="0">
-          <Text size="1" color="gray">
-            {t("sections.phones.description")}
-          </Text>
-        </Section>
-      </Box>
-      {items.length ? null : <EmptyBlock title={t("empty.phones.title")} description={t("empty.phones.description")} />}
+      <SectionHead title={t("sections.phones.title")} description={t("sections.phones.description")} />
+      {items.length ? null : <EmptyState icon={UsersIcon} title={t("empty.phones.title")} description={t("empty.phones.description")} />}
       <Flex direction="column" gap="2">
         <Text size="1" color="gray">
           {t("labels.phonePlaceholder")}
@@ -361,7 +345,9 @@ function PhonesSection() {
         </Flex>
       </Flex>
       {items.map((item) => (
-        <PhoneRow key={item.id} item={item} />
+        <Card key={item.id} size="2" variant="surface">
+          <PhoneRow item={item} />
+        </Card>
       ))}
     </Flex>
   );
@@ -384,16 +370,7 @@ function PasswordSection() {
   return (
     <Flex direction="column" gap="3">
       <Flex direction="column" gap="3">
-        <Box>
-          <Text size="2" weight="bold">
-            {t("sections.password.title")}
-          </Text>
-          <Section mt="1" pt="0" pb="0">
-            <Text size="1" color="gray">
-              {t("sections.password.description")}
-            </Text>
-          </Section>
-        </Box>
+        <SectionHead title={t("sections.password.title")} description={t("sections.password.description")} />
         <Flex direction="column" gap="2">
           <Text size="1" weight="medium" color="gray">
             {t("labels.currentPassword")}
@@ -434,7 +411,7 @@ function PasswordSection() {
             <Button
               type="button"
               size="2"
-              variant="outline"
+              variant="outline" color="gray"
               loading={sendCode.isPending}
               disabled={busy || !primaryEmail}
               onClick={() =>
@@ -505,24 +482,20 @@ function ProfilesSection() {
   };
 
   const handleDelete = (profileId: string, kind: ProfileKindEnum, name: string) => {
-    if (!window.confirm(t("labels.deleteConfirmBody", { name }))) return;
-    deleteProfile.mutate({ profileId, kind });
+    showConfirm({
+      title: t("actions.deleteProfile"),
+      message: t("labels.deleteConfirmBody", { name }),
+      confirmText: t("actions.deleteProfile"),
+      cancelText: t("actions.cancelEdit"),
+      onConfirm: () => deleteProfile.mutate({ profileId, kind }),
+    });
   };
 
   return (
     <Flex direction="column" gap="3">
       <Flex direction="column" gap="3">
         <Flex direction="column" gap="3">
-          <Box>
-            <Text size="2" weight="bold">
-              {t("sections.profiles.title")}
-            </Text>
-            <Section mt="1" pt="0" pb="0">
-              <Text size="1" color="gray">
-                {t("sections.profiles.description")}
-              </Text>
-            </Section>
-          </Box>
+          <SectionHead title={t("sections.profiles.title")} description={t("sections.profiles.description")} />
           {rows.length ? (
             rows.map((row) => {
               const isCommunity = row.kind === ProfileKindEnum.COMMUNITY;
@@ -533,19 +506,19 @@ function ProfilesSection() {
               const initials = name.slice(0, 2).toUpperCase();
 
               return (
-                <Section size="1" py="2" key={`${row.kind}-${row.profileId}`}>
-                <Flex align="center" justify="between" gap="3">
+                <Card size="2" variant="surface" key={`${row.kind}-${row.profileId}`} className={isCurrent ? styles.current : undefined}>
+                <Flex align="center" justify="between" gap="3" wrap="wrap">
                   <Flex align="center" gap="3" minWidth="0" flexGrow="1">
-                    <Avatar size="2" src={row.avatarImageId ? buildAvatarImageSrc(row.avatarImageId) : undefined} fallback={initials} />
+                    <Avatar size="3" radius="full" src={row.avatarImageId ? buildAvatarImageSrc(row.avatarImageId) : undefined} fallback={initials} />
                     <Flex direction="column" gap="1" minWidth="0">
                       <Text size="2" weight="medium">
                         {name}
                       </Text>
                       <Flex gap="2" align="center" wrap="wrap">
-                        <Badge color={isCommunity ? "blue" : "amber"} variant="outline">
+                        <Badge color={isCommunity ? "blue" : "amber"} variant="surface" radius="full">
                           {isCommunity ? t("labels.scopeCommunity") : t("labels.scopeAuthority")}
                         </Badge>
-                        <Text size="1" color="gray">
+                        <Text size="1" color="gray" className={styles.mono}>
                           {row.profileId}
                         </Text>
                       </Flex>
@@ -553,11 +526,11 @@ function ProfilesSection() {
                   </Flex>
                   <Flex gap="2" wrap="wrap" align="center">
                     {isCurrent ? (
-                      <Badge color="green" variant="outline">
+                      <Badge color="green" variant="surface" radius="full">
                         {t("labels.current")}
                       </Badge>
                     ) : (
-                      <Button size="1" variant="outline" disabled={busy} loading={isSwitching} onClick={() => void handleSwitch(row.profileId, row.kind)}>
+                      <Button size="1" variant="outline" color="gray" disabled={busy} loading={isSwitching} onClick={() => void handleSwitch(row.profileId, row.kind)}>
                         {t("actions.switch")}
                       </Button>
                     )}
@@ -575,27 +548,18 @@ function ProfilesSection() {
                     ) : null}
                   </Flex>
                 </Flex>
-                </Section>
+                </Card>
               );
             })
           ) : (
-            <EmptyBlock title={t("empty.profiles.title")} description={t("empty.profiles.description")} />
+            <EmptyState icon={UsersIcon} title={t("empty.profiles.title")} description={t("empty.profiles.description")} />
           )}
         </Flex>
       </Flex>
 
       <Flex direction="column" gap="3">
         <Flex direction="column" gap="3">
-          <Box>
-            <Text size="2" weight="bold">
-              {t("labels.newCommunityProfile")}
-            </Text>
-            <Section mt="1" pt="0" pb="0">
-              <Text size="1" color="gray">
-                {t("sections.forgerProfiles.description")}
-              </Text>
-            </Section>
-          </Box>
+          <SectionHead title={t("labels.newCommunityProfile")} description={t("sections.forgerProfiles.description")} />
           <Flex direction="column" gap="2">
             <Text size="1" weight="medium" color="gray">
               {t("labels.displayName")}
@@ -643,23 +607,34 @@ function IdentitiesBody() {
   ];
 
   return (
-    <Grid columns={{ initial: "1", md: "12rem 1fr" }} gap="5" align="start">
-      <Flex direction={{ initial: "row", md: "column" }} gap="1" wrap="wrap">
-        {sections.map((s) => {
-          const active = section === s.id;
-          return (
-            <Button key={s.id} variant={active ? "solid" : "outline"} color={active ? undefined : "gray"} onClick={() => setSection(s.id)}>
-              {s.label}
-            </Button>
-          );
-        })}
-      </Flex>
-      <Flex direction="column" gap="3" minWidth="0">
-        {section === "profiles" ? <ProfilesSection /> : null}
-        {section === "emails" ? <EmailsSection /> : null}
-        {section === "phones" ? <PhonesSection /> : null}
-        {section === "password" ? <PasswordSection /> : null}
-      </Flex>
+    <Grid columns={{ initial: "1", md: "14rem minmax(0, 1fr)" }} gap="5" align="start">
+      <Card size="2" variant="classic" className={styles.nav}>
+        <LayoutGroup id="identities-nav">
+          <Flex direction={{ initial: "row", md: "column" }} gap="1" wrap="wrap">
+            {sections.map((s) => {
+              const active = section === s.id;
+              return (
+                <Box key={s.id} position="relative">
+                  {active ? <motion.span layoutId="identities-active" className={styles.activePill} transition={{ type: "spring", stiffness: 520, damping: 42 }} /> : null}
+                  <Button variant="ghost" color={active ? undefined : "gray"} highContrast={!active} className={styles.navItem} data-active={active ? "true" : undefined} onClick={() => setSection(s.id)}>
+                    {s.label}
+                  </Button>
+                </Box>
+              );
+            })}
+          </Flex>
+        </LayoutGroup>
+      </Card>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div key={section} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}>
+          <Card size="3" variant="surface">
+            {section === "profiles" ? <ProfilesSection /> : null}
+            {section === "emails" ? <EmailsSection /> : null}
+            {section === "phones" ? <PhonesSection /> : null}
+            {section === "password" ? <PasswordSection /> : null}
+          </Card>
+        </motion.div>
+      </AnimatePresence>
     </Grid>
   );
 }
@@ -670,7 +645,8 @@ export default function ProfileIdentitiesPage() {
     <PageFrame>
       <PageHeader icon={UsersIcon} index={t("index")} title={t("title")} description={t("description")} />
       <ActionBar>
-        <Button size="2" variant="outline" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
+        <Button size="2" variant="outline" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
+          <ArrowNarrowLeftIcon size={16} />
           {t("actions.openProfile")}
         </Button>
       </ActionBar>

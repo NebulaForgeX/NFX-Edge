@@ -26,7 +26,8 @@
   },
   "search": {
     "placeholder": "Search functions, pages...",
-    "noResults": "No results found for \"{{query}}\""
+    "noResults": "No results found for \"{{query}}\"",
+    "clear": "Clear search"
   },
   "footer": {
     "copyright": "NFX-Edge. All rights reserved.",

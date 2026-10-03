@@ -10,10 +10,9 @@
   "ttl": "TTL",
   "ttlAutomatic": "自动",
   "mxPref": "MX 优先级",
-  "emailType": "邮箱类型：{{type}}",
-  "ourDns": "Namecheap DNS：{{value}}",
-  "expires": "到期 {{at}}",
-  "locked": "锁定 {{value}}",
+  "ourDns": "Namecheap DNS",
+  "expires": "到期",
+  "locked": "锁定",
   "applyCert": "申请证书",
   "applyHost": "申请 {{host}}",
   "applyClickHint": "点选一行，左边按钮会申请该 host。多选时最后点的是 CN，其余作为 SAN。右边始终申请主域名。也可一起改地址 / TTL / MX。",
@@ -33,5 +32,10 @@
   "confirmDeleteMessage": "删除 {{type}} {{host}}？Namecheap setHosts 会整表替换。",
   "notOurDns": "该域名未使用 Namecheap DNS",
   "notOurDnsHint": "只有使用 Namecheap 名称服务器时才能编辑 host 记录。",
-  "index": "05 — Namecheap"
+  "index": "05 — Namecheap",
+  "records": "主机记录",
+  "profile": "域名信息",
+  "patchTitle": "修改所选",
+  "yes": "是",
+  "no": "否"
 }

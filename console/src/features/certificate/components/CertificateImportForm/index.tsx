@@ -2,9 +2,10 @@ import type { FieldErrors } from "react-hook-form";
 import type { CertificateFormValues } from "../../schemas/certificateSchema";
 
 import { memo, useCallback } from "react";
-import { Box, Button, Flex, Grid, Section, Text } from "@radix-ui/themes";
+import { Button, Flex, Grid } from "@radix-ui/themes";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { SparklesIcon } from "nfx-ui/icons";
 import { safeArray, safeStringable } from "nfx-ui/utils";
 
 import { useParseCertificatePreview } from "@/hooks";
@@ -20,8 +21,7 @@ import {
   PrivateKeyController,
   SANsController,
 } from "../../controllers";
-
-import styles from "./s.module.css";
+import { FormSection } from "@/components";
 
 export interface CertificateImportFormProps {
   onSubmit: (data: CertificateFormValues) => Promise<void>;
@@ -60,44 +60,50 @@ const CertificateImportForm = memo(({ onSubmit, onSubmitError, isPending }: Cert
   );
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <Box className={styles.hairline}>
-        <Section size="1" py="5">
-          <Flex direction="column" gap="4">
-            <Text className={styles.kicker}>{t("form.sectionPem")}</Text>
-            <Text as="p" size="2" className={styles.lede}>
-              {t("form.sectionPemHint")}
-            </Text>
+    <Flex asChild direction="column" gap="4">
+      <form onSubmit={(e) => e.preventDefault()}>
+        <FormSection
+          step={1}
+          title={t("form.sectionPem")}
+          hint={t("form.sectionPemHint")}
+          footer={
+            <Button
+              type="button"
+              variant="outline"
+              color="gray"
+              loading={parsing}
+              disabled={!methods.watch("certificate")?.trim()}
+              onClick={() => void handleParsed(methods.getValues("certificate"))}
+            >
+              <SparklesIcon size={14} />
+              {t("upload.parseFill")}
+            </Button>
+          }
+        >
+          <Grid columns={{ initial: "1", md: "2" }} gap="4">
             <CertificateController />
             <PrivateKeyController />
-            <Flex>
-              <Button type="button" variant="outline" disabled={parsing || !methods.watch("certificate")?.trim()} onClick={() => void handleParsed(methods.getValues("certificate"))}>
-                {parsing ? t("upload.parsing") : t("upload.parseFill")}
-              </Button>
-            </Flex>
-          </Flex>
-        </Section>
-      </Box>
-      <Box className={styles.hairline}>
-        <Section size="1" py="5">
-          <Flex direction="column" gap="4">
-            <Text className={styles.kicker}>{t("form.basicInfo")}</Text>
-            <Grid columns={{ initial: "1", sm: "2" }} gap="4">
-              <DomainController />
-              <FolderNameController />
-              <EmailControllerForAdd />
-              <IssuerController record />
-            </Grid>
-            <SANsController />
-            <Flex justify="end">
-              <Button type="button" size="2" disabled={isPending} loading={isPending} onClick={methods.handleSubmit(onSubmit, onSubmitError)}>
-                {isPending ? t("form.creating") : t("form.create")}
-              </Button>
-            </Flex>
-          </Flex>
-        </Section>
-      </Box>
-    </form>
+          </Grid>
+        </FormSection>
+        <FormSection
+          step={2}
+          title={t("form.basicInfo")}
+          footer={
+            <Button type="button" size="2" disabled={isPending} loading={isPending} onClick={methods.handleSubmit(onSubmit, onSubmitError)}>
+              {isPending ? t("form.creating") : t("form.create")}
+            </Button>
+          }
+        >
+          <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+            <DomainController />
+            <FolderNameController />
+            <EmailControllerForAdd />
+            <IssuerController record />
+          </Grid>
+          <SANsController />
+        </FormSection>
+      </form>
+    </Flex>
   );
 });
 

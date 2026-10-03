@@ -10,6 +10,11 @@
   },
   "search": {
     "noResults": "未找到 \"{{query}}\" 的结果"
+  },
+  "file": {
+    "title": "文件",
+    "download": "下载",
+    "close": "关闭",
+    "loadFailed": "文件内容加载失败"
   }
 }
-

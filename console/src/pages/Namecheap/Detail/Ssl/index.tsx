@@ -1,16 +1,16 @@
-import { RouterIcon } from "nfx-ui/icons";
+import { ArrowNarrowLeftIcon, ShieldCheck, TriangleAlertIcon } from "nfx-ui/icons";
 import { memo } from "react";
-import { Button, Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
-import { PageFrame } from "@/layouts";
-import { ActionBar, DataTable, EmptyState, PageHeader } from "@/components";
+import { Badge, Button, Grid, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 import { getApiError } from "nfx-ui/utils";
 
+import { ActionBar, DataTable, EmptyState, PageHeader, StatCard } from "@/components";
+import FlagBadge from "@/features/dns/FlagBadge";
+import { isNamecheapFlag } from "@/features/dns/flag";
 import { useNamecheapSsl } from "@/hooks/dns";
+import { PageFrame } from "@/layouts";
 import { ROUTES } from "@/navigations";
-
-import styles from "./s.module.css";
 
 const NamecheapSslPage = memo(() => {
   const { t } = useTranslation("dns");
@@ -18,19 +18,17 @@ const NamecheapSslPage = memo(() => {
   const navigate = useNavigate();
   const sslQuery = useNamecheapSsl(credentialId);
   const rows = sslQuery.data?.items ?? [];
-  const expired = rows.filter((row) => {
-    const next = (row.isExpired ?? "").toLowerCase();
-    return next === "true" || next === "yes";
-  }).length;
+  const expired = rows.filter((row) => isNamecheapFlag(row.isExpired)).length;
+  const backButton = (
+    <Button variant="outline" color="gray" onClick={() => navigate(ROUTES.NAMECHEAP_DETAIL.replace(":credentialId", credentialId))}>
+      <ArrowNarrowLeftIcon size={16} />
+      {t("accounts.back")}
+    </Button>
+  );
 
   return (
     <PageFrame>
-      <PageHeader
-        icon={RouterIcon}
-        index={t("index")}
-        title={t("ssl.title")}
-        description={t("ssl.subtitle")}
-      />
+      <PageHeader icon={ShieldCheck} index={t("index")} title={t("ssl.title")} description={t("ssl.subtitle")} />
       <ActionBar
         status={
           <Text size="2" color="gray">
@@ -38,60 +36,51 @@ const NamecheapSslPage = memo(() => {
           </Text>
         }
       >
-        <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_DETAIL.replace(":credentialId", credentialId))}>
-          {t("accounts.back")}
-        </Button>
+        {backButton}
       </ActionBar>
-      <Grid columns={{ initial: "1", lg: "minmax(0, 1fr) 14rem" }} gap="6" align="start">
-      {sslQuery.isLoading ? (
-        <EmptyState icon={RouterIcon} title={t("loading")} />
-      ) : sslQuery.isError ? (
-        <EmptyState
-          icon={RouterIcon}
-          title={t("ssl.loadError")}
-          description={getApiError(sslQuery.error)?.message}
-          action={
-            <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_DETAIL.replace(":credentialId", credentialId))}>
-              {t("accounts.back")}
-            </Button>
-          }
-        />
+      <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+        <StatCard icon={ShieldCheck} label={t("ssl.title")} value={rows.length} tone="accent" />
+        <StatCard icon={TriangleAlertIcon} label={t("ssl.expired")} value={expired} tone="red" />
+      </Grid>
+      {sslQuery.isError ? (
+        <EmptyState icon={TriangleAlertIcon} title={t("ssl.loadError")} description={getApiError(sslQuery.error)?.message} action={backButton} />
       ) : (
         <DataTable
-          emptyIcon={RouterIcon}
+          emptyIcon={ShieldCheck}
           empty={t("ssl.empty")}
-          emptyAction={
-            <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_DETAIL.replace(":credentialId", credentialId))}>
-              {t("accounts.back")}
-            </Button>
-          }
+          emptyAction={backButton}
+          loading={sslQuery.isLoading}
           rows={rows}
           rowKey={(row) => row.certificateId || `${row.hostName}-${row.expireDate}`}
           columns={[
-            { key: "hostName", header: t("ssl.host") },
+            {
+              key: "hostName",
+              header: t("ssl.host"),
+              render: (row) => (
+                <Text size="2" weight="medium">
+                  {row.hostName || "—"}
+                </Text>
+              ),
+            },
             { key: "sslType", header: t("ssl.type") },
-            { key: "status", header: t("ssl.status") },
-            { key: "purchaseDate", header: t("ssl.purchased") },
-            { key: "expireDate", header: t("ssl.expires") },
-            { key: "isExpired", header: t("ssl.expired") },
+            {
+              key: "status",
+              header: t("ssl.status"),
+              render: (row) =>
+                row.status ? (
+                  <Badge variant="surface" radius="full" color="gray">
+                    {row.status}
+                  </Badge>
+                ) : (
+                  "—"
+                ),
+            },
+            { key: "purchaseDate", header: t("ssl.purchased"), mono: true },
+            { key: "expireDate", header: t("ssl.expires"), mono: true },
+            { key: "isExpired", header: t("ssl.expired"), render: (row) => <FlagBadge value={row.isExpired} yes={t("yes")} no={t("no")} onColor="red" /> },
           ]}
         />
       )}
-      <Section size="1" py="4" className={styles.side}>
-        <Container size="2" px="4" width="100%">
-          <Flex direction="column" gap="4">
-            <Flex direction="column" gap="1">
-              <Text size="1" color="gray">{t("ssl.title")}</Text>
-              <Text size="7" className={styles.count}>{rows.length}</Text>
-            </Flex>
-            <Flex direction="column" gap="1">
-              <Text size="1" color="gray">{t("ssl.expired")}</Text>
-              <Text size="4" className={styles.count}>{expired}</Text>
-            </Flex>
-          </Flex>
-        </Container>
-      </Section>
-      </Grid>
     </PageFrame>
   );
 });

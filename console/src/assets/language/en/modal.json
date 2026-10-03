@@ -10,6 +10,11 @@
   },
   "search": {
     "noResults": "No results found for \"{{query}}\""
+  },
+  "file": {
+    "title": "File",
+    "download": "Download",
+    "close": "Close",
+    "loadFailed": "Failed to load file content"
   }
 }
-

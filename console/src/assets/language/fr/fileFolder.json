@@ -23,5 +23,8 @@
   "subtitle": "Fichiers de certificats exportés",
   "path": "Chemin",
   "root": "websites",
-  "loading": "Lecture du répertoire…"
+  "loading": "Lecture du répertoire…",
+  "folders": "Dossiers",
+  "files": "Fichiers",
+  "download": "Télécharger"
 }

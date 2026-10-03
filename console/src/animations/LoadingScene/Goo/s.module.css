@@ -39,7 +39,7 @@
   content: "";
   width: calc(16 * var(--goo-unit));
   height: calc(12 * var(--goo-unit));
-  background: color-mix(in oklab, var(--cyan-9) 70%, var(--accent-9));
+  background: var(--accent-10);
   position: absolute;
   border-radius: 50%;
   left: calc(-4 * var(--goo-unit));

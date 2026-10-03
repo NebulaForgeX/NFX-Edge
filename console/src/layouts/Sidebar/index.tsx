@@ -5,6 +5,7 @@ import { Avatar, Box, Button, Container, Flex, IconButton, Section, Text } from 
 import { AnimatedIcon, type AnimatedIconComponent, ArrowNarrowLeftIcon, ArrowNarrowUpIcon, DownChevron, FileDescriptionIcon, GearIcon, LayersIcon, LayoutDashboardIcon, LogoutIcon, MagnifierIcon, PassportIcon, PenIcon, RightChevron, RouterIcon, ShieldCheck, StackIcon, UnorderedListIcon, UserIcon } from "nfx-ui/icons";
 import { ProfileKindEnum } from "nfx-ui/enums";
 import { useCurrentProfile } from "nfx-ui/hooks";
+import { LayoutGroup, MotionConfig } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { Menu, Sidebar as ProSidebar } from "react-pro-sidebar";
 import { Link, Outlet, useLocation } from "react-router";
@@ -32,12 +33,14 @@ function SectionTitle({ label, icon, collapsed }: { label: string; icon: Animate
     return <Section size="1" mt="3" pt="3" pb="0" className={styles.sectionRule} />;
   }
   return (
-    <Section size="1" mt="4" pt="5" pb="0" className={styles.sectionRule}>
+    <Section size="1" mt="4" pt="4" pb="2" className={styles.sectionRule}>
       <Flex align="center" justify="between" gap="2">
-        <Text as="span" size="2" weight="bold" className={styles.sectionLabel}>
+        <Text as="span" size="1" weight="medium" color="gray" className={styles.sectionLabel}>
           {label}
         </Text>
-        <AnimatedIcon icon={icon} size={16} className={styles.sectionTitleIcon} />
+        <Box className={styles.sectionIcon}>
+          <AnimatedIcon icon={icon} size={14} />
+        </Box>
       </Flex>
     </Section>
   );
@@ -268,6 +271,7 @@ function Sidebar() {
   };
 
   return (
+    <MotionConfig reducedMotion="user">
     <Flex className={styles.shell} minHeight="100dvh" width="100%">
       <SidebarMenuState collapsed={collapsed}>
         <Box className={styles.proSidebar}>
@@ -284,25 +288,29 @@ function Sidebar() {
             collapsedWidth={SIDEBAR_COLLAPSED_WIDTH}
           >
             <Flex direction="column" className={styles.sidebar} height="100%" minHeight="0">
-              <Box >
-                <Container size="4" width="100%" maxWidth="100%" px="5" >
+              <Box>
+                <Container size="4" width="100%" maxWidth="100%" px="4">
                   <Box position="relative">
-                    <Section size="1" pt="21px" pb="22px" className={styles.headerRule}>
+                    <Section size="1" py="5" className={styles.headerRule}>
                       <Button type="button" variant="ghost" className={styles.accountCard} aria-label={displayName}>
                         <Flex align="center" width="100%" gap="3">
-                          <Box >
-                            <Avatar
-                              size="3"
-                              src={avatarImageId ? buildImageUrl(avatarImageId) : undefined}
-                              fallback={<UserIcon size={20} />}
-                              alt=""
-                              aria-hidden="true"
-                            />
-                          </Box>
+                          <Avatar
+                            size="3"
+                            radius="full"
+                            src={avatarImageId ? buildImageUrl(avatarImageId) : undefined}
+                            fallback={<UserIcon size={20} />}
+                            alt=""
+                            aria-hidden="true"
+                            className={styles.avatar}
+                          />
                           {!collapsed && (
                             <Flex direction="column" flexGrow="1" minWidth="0" gap="1">
-                              <span className={styles.accountRole}>{t(kind === ProfileKindEnum.AUTHORITY ? "sidebar.profileAuthority" : "sidebar.profileCommunity")}</span>
-                              <span className={styles.accountName}>{displayName}</span>
+                              <Text as="span" size="1" weight="medium" color="gray" truncate className={styles.accountRole}>
+                                {t(kind === ProfileKindEnum.AUTHORITY ? "sidebar.profileAuthority" : "sidebar.profileCommunity")}
+                              </Text>
+                              <Text as="span" size="3" weight="bold" truncate className={styles.accountName}>
+                                {displayName}
+                              </Text>
                             </Flex>
                           )}
                         </Flex>
@@ -322,18 +330,20 @@ function Sidebar() {
                 </Container>
               </Box>
 
-              <Box minHeight="0" className={styles.menuArea} data-collapsed={collapsed ? "true" : "false"} >
+              <Box minHeight="0" flexGrow="1" className={styles.menuArea} data-collapsed={collapsed ? "true" : "false"}>
                 <Section size="1" py="2">
-                  <Container size="4" width="100%" maxWidth="100%" px="5" >
-                    <OverviewSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
-                    <MainMenuSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
-                    <SettingsSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
+                  <Container size="4" width="100%" maxWidth="100%" px="4">
+                    <LayoutGroup id="sidebar">
+                      <OverviewSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
+                      <MainMenuSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
+                      <SettingsSection collapsed={collapsed} broken={broken} onMobileClose={closeMobile} />
+                    </LayoutGroup>
                   </Container>
                 </Section>
               </Box>
 
-              <Section size="1" pt="3" pb="5" className={styles.footer} data-collapsed={collapsed ? "true" : "false"} >
-                <Container size="4" width="100%" maxWidth="100%" px="5" >
+              <Section size="1" pt="3" pb="5" className={styles.footer} data-collapsed={collapsed ? "true" : "false"}>
+                <Container size="4" width="100%" maxWidth="100%" px="4">
                   <Button
                     variant="ghost"
                     className={styles.logout}
@@ -356,15 +366,17 @@ function Sidebar() {
 
       <Flex className={styles.content} direction="column" flexGrow="1" minWidth="0" minHeight="0" height="100%" position="relative" inert={broken && toggled ? true : undefined}>
         {broken ? (
-          <IconButton variant="surface" color="gray" size="3" className={styles.mobileToggle} onClick={() => setToggled(true)} aria-label={t("sidebar.openMenu")}>
+          <IconButton variant="surface" color="gray" size="3" m="3" className={styles.mobileToggle} onClick={() => setToggled(true)} aria-label={t("sidebar.openMenu")}>
             <AnimatedIcon icon={UnorderedListIcon} size={18} />
           </IconButton>
         ) : null}
-        <Box minWidth="0" minHeight="0" position="relative" width="100%" height="100%" >
+        <Box className={styles.ambient} aria-hidden />
+        <Box minWidth="0" minHeight="0" position="relative" width="100%" height="100%">
           <Outlet />
         </Box>
       </Flex>
     </Flex>
+    </MotionConfig>
   );
 }
 

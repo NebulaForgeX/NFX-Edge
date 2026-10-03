@@ -17,6 +17,8 @@
     "add": "Add Certificate",
     "apply": "Apply Certificate",
     "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
     "search": "Search",
     "searchPlaceholder": "Search domain or folder",
     "loadingMore": "Load more"

@@ -17,14 +17,18 @@ function IssueStep({ n, label, hint }: { n: string; label: string; hint: string 
   return (
     <Flex asChild flexGrow="1" className={`${styles.stepItem} js-issue-step`}>
       <li>
-        <Flex gap="3" className={styles.step}>
-          <Flex className={styles.stepNum} align="center" justify="center" flexShrink="0" width="2.3rem" height="2.3rem">
+        <Flex direction={{ initial: "column", sm: "row" }} align={{ initial: "center", sm: "start" }} gap={{ initial: "2", sm: "3" }}>
+          <Flex className={styles.stepNum} align="center" justify="center" flexShrink="0" width="var(--space-7)" height="var(--space-7)">
             {n}
           </Flex>
-          <Section size="1" pt="4px" pb="0" className={styles.stepCopy}>
-            <Flex direction="column" gap="2px">
-              <span className={styles.stepLabel}>{label}</span>
-              <span className={styles.stepHint}>{hint}</span>
+          <Section size="1" pt={{ initial: "0", sm: "1" }} pb="0">
+            <Flex direction="column" gap="1" align={{ initial: "center", sm: "start" }}>
+              <Text size="2" weight="bold">
+                {label}
+              </Text>
+              <Text size="1" color="gray">
+                {hint}
+              </Text>
             </Flex>
           </Section>
         </Flex>
@@ -69,12 +73,12 @@ export default function SignupShell({ children }: { children: ReactNode }) {
           </header>
         </Box>
 
-        <Section size="1" pt="7" pb="8" className={styles.body}>
+        <Section size="1" pt={{ initial: "4", sm: "7" }} pb="8">
           <Container size="4" width="100%" maxWidth="100%" px="5" >
-            <Grid className={styles.bodyGrid} columns="11rem minmax(0, 32rem)" justify="center" gap="6" width="100%">
-              <Section size="1" pt="8" pb="0" position="relative" className={styles.stepRail}>
-                <Box className={styles.stepLine} />
-                <Flex asChild direction="column" gap="6" className={styles.steps}>
+            <Grid columns={{ initial: "1fr", sm: "11rem minmax(0, 32rem)" }} justify="center" gap="6" width="100%">
+              <Section size="1" pt={{ initial: "0", sm: "8" }} pb="0" position="relative">
+                <Box display={{ initial: "none", sm: "block" }} className={styles.stepLine} />
+                <Flex asChild direction={{ initial: "row", sm: "column" }} justify={{ initial: "between", sm: "start" }} gap={{ initial: "3", sm: "6" }} className={styles.steps}>
                   <ol aria-label={t("steps.aria")}>
                     <IssueStep n={t("steps.verifyNum")} label={t("steps.verify")} hint={t("steps.verifyHint")} />
                     <IssueStep n={t("steps.passphraseNum")} label={t("steps.passphrase")} hint={t("steps.passphraseHint")} />

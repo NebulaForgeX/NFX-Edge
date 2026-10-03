@@ -17,6 +17,8 @@
     "add": "Ajouter un certificat",
     "apply": "Demander un certificat",
     "view": "Voir",
+    "edit": "Modifier",
+    "delete": "Supprimer",
     "search": "Rechercher",
     "searchPlaceholder": "Rechercher un domaine ou un dossier",
     "loadingMore": "Charger plus"

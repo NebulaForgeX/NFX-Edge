@@ -2,24 +2,19 @@ import type { FieldErrors } from "react-hook-form";
 import type { CertificateFormValues } from "../../schemas/certificateSchema";
 
 import { memo, useCallback, useRef } from "react";
-import { Box, Button, Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
+import { Button, Card, Flex, Grid } from "@radix-ui/themes";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
+import { RocketIcon, UploadIcon } from "nfx-ui/icons";
 import { safeArray, safeStringable } from "nfx-ui/utils";
 
 import { useParseCertificatePreview } from "@/hooks";
 import { showError, showSuccess } from "@/stores/modal";
 import { getCommandMessage } from "@/utils";
 
-import {
-  DomainController,
-  EmailControllerForAdd,
-  FolderNameController,
-  ForceRenewalController,
-  IssuerController,
-  SANsController,
-} from "../../controllers";
+import { DomainController, EmailControllerForAdd, FolderNameController, ForceRenewalController, IssuerController, SANsController } from "../../controllers";
+import { FormSection } from "@/components";
 import NamecheapHostsHint from "../NamecheapHostsHint";
 
 import styles from "./s.module.css";
@@ -67,60 +62,52 @@ const CertificateApplyForm = memo(({ onSubmit, onSubmitError, isPending }: Certi
   );
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <Box className={styles.hairline}>
-        <Section size="1" py="5">
-          <Flex direction="column" gap="4">
-            <Text className={styles.kicker}>{t("form.sectionImport")}</Text>
-            <Text as="p" size="2" className={styles.lede}>
-              {t("form.sectionImportHint")}
-            </Text>
-            <input ref={certFileRef} type="file" accept=".pem,.crt,.cer,.txt" className={styles.hiddenFile} onChange={handleCertFile} />
-            <Flex>
-              <Button type="button" variant="outline" disabled={parsing} onClick={() => certFileRef.current?.click()}>
-                {parsing ? t("upload.parsing") : t("upload.certPemParseOnly")}
+    <Flex asChild direction="column" gap="4">
+      <form onSubmit={(e) => e.preventDefault()}>
+        <FormSection
+          step={1}
+          title={t("form.sectionImport")}
+          hint={t("form.sectionImportHint")}
+          footer={
+            <>
+              <input ref={certFileRef} type="file" accept=".pem,.crt,.cer,.txt" className={styles.hiddenFile} onChange={handleCertFile} />
+              <Button type="button" variant="outline" color="gray" loading={parsing} onClick={() => certFileRef.current?.click()}>
+                <UploadIcon size={14} />
+                {t("upload.certPemParseOnly")}
               </Button>
+            </>
+          }
+        />
+        <FormSection step={2} title={t("form.basicInfo")}>
+          <Grid columns={{ initial: "1", xl: "minmax(0, 3fr) minmax(0, 2fr)" }} gap="5">
+            <Flex direction="column" gap="4" minWidth="0">
+              <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+                <DomainController />
+                <FolderNameController />
+                <EmailControllerForAdd requireEmail />
+                <IssuerController />
+              </Grid>
+              <SANsController />
             </Flex>
-          </Flex>
-        </Section>
-      </Box>
-      <Box className={styles.hairline}>
-        <Section size="1" py="5">
-          <Flex direction="column" gap="4">
-            <Text className={styles.kicker}>{t("form.basicInfo")}</Text>
-            <Grid columns={{ initial: "1", lg: "2fr 1fr" }} gap="5">
-              <Flex direction="column" gap="4">
-                <Grid columns={{ initial: "1", sm: "2" }} gap="4">
-                  <DomainController />
-                  <FolderNameController />
-                  <EmailControllerForAdd requireEmail />
-                  <IssuerController />
-                </Grid>
-                <SANsController />
-              </Flex>
-              <Box className={styles.sideRule}>
-                <Container width="100%" maxWidth="none" px="4" >
-                  <NamecheapHostsHint />
-                </Container>
-              </Box>
-            </Grid>
-          </Flex>
-        </Section>
-      </Box>
-      <Box className={styles.hairline}>
-        <Section size="1" py="5">
-          <Flex direction="column" gap="4">
-            <Text className={styles.kicker}>{t("form.verification")}</Text>
-            <ForceRenewalController />
-            <Flex justify="end">
-              <Button type="button" size="2" disabled={isPending} loading={isPending} onClick={methods.handleSubmit(onSubmit, onSubmitError)}>
-                {isPending ? t("form.applySubmitting") : t("form.applySubmit")}
-              </Button>
-            </Flex>
-          </Flex>
-        </Section>
-      </Box>
-    </form>
+            <Card size="2" variant="surface">
+              <NamecheapHostsHint />
+            </Card>
+          </Grid>
+        </FormSection>
+        <FormSection
+          step={3}
+          title={t("form.verification")}
+          footer={
+            <Button type="button" size="2" disabled={isPending} loading={isPending} onClick={methods.handleSubmit(onSubmit, onSubmitError)}>
+              <RocketIcon size={14} />
+              {isPending ? t("form.applySubmitting") : t("form.applySubmit")}
+            </Button>
+          }
+        >
+          <ForceRenewalController />
+        </FormSection>
+      </form>
+    </Flex>
   );
 });
 

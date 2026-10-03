@@ -1,9 +1,17 @@
 {
   "title": "Create New Certificate",
+  "subtitle": "Issue a certificate through ACME or import one you already have.",
   "loading": "Loading…",
+  "back": "Back",
   "mode": {
     "acme": "Let's Encrypt",
-    "pem": "Import PEM"
+    "pem": "Import PEM",
+    "acmeHint": "Edge requests, validates and renews the certificate automatically.",
+    "pemHint": "Paste or drop an existing certificate and private key in PEM format."
+  },
+  "side": {
+    "title": "Issuing method",
+    "active": "Selected"
   },
   "index": "02 — Certificates"
 }

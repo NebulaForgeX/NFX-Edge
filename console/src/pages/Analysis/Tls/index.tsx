@@ -1,14 +1,15 @@
-import { MagnifierIcon, ShieldCheck } from "nfx-ui/icons";
-import { memo, useMemo, useState } from "react";
-import { Badge, Box, Button, Container, Flex, Grid, Heading, Section, Text } from "@radix-ui/themes";
-import { PageFrame } from "@/layouts";
-import { ActionBar, PageHeader, PemSheet } from "@/components";
+import { CheckedIcon, MagnifierIcon, ShieldCheck, TriangleAlertIcon } from "nfx-ui/icons";
+import { memo, useMemo, useRef, useState } from "react";
+import { Badge, Box, Button, Callout, Card, DataList, Flex, Grid, Heading, Section, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
-
 import { getApiErrorMessage } from "nfx-ui/utils";
-import { getCommandMessage } from "@/utils";
-import type { AnalyzeTLSResponse } from "@/types";
+
+import { useReveal } from "@/animations";
+import { ActionBar, PageHeader, PemSheet } from "@/components";
 import { useAnalyzeTls } from "@/hooks/analysis";
+import { PageFrame } from "@/layouts";
+import type { AnalyzeTLSResponse } from "@/types";
+import { getCommandMessage } from "@/utils";
 
 import styles from "./s.module.css";
 
@@ -17,9 +18,10 @@ const TLSAnalysisPage = memo(() => {
   const analyzeMutation = useAnalyzeTls();
   const [certificate, setCertificate] = useState("");
   const [privateKey, setPrivateKey] = useState("");
-  const [result, setResult] = useState<AnalyzeTLSResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<Nullable<AnalyzeTLSResponse>>(null);
+  const [error, setError] = useState<Nullable<string>>(null);
   const pending = analyzeMutation.isPending;
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const handleAnalyze = async () => {
     if (pending) return;
@@ -54,26 +56,26 @@ const TLSAnalysisPage = memo(() => {
     if (!specimen) return [];
     const cert = specimen.certificate;
     return [
-      { key: "domain", label: t("result.domain"), value: cert.commonName || t("na") },
       { key: "issuer", label: t("result.issuer"), value: cert.issuer || t("na") },
       { key: "notBefore", label: t("result.notBefore"), value: cert.notBefore || t("na") },
       { key: "notAfter", label: t("result.notAfter"), value: cert.notAfter || t("na") },
-      { key: "days", label: t("result.daysRemaining"), value: String(specimen.summary.daysRemaining ?? t("na")) },
       { key: "hasKey", label: t("result.hasPrivateKey"), value: specimen.summary.hasPrivateKey ? t("yes") : t("no") },
       { key: "keyValid", label: t("result.keyValid"), value: specimen.summary.keyValid === null ? t("na") : specimen.summary.keyValid ? t("yes") : t("no") },
     ];
   }, [specimen, t]);
 
+  useReveal(resultRef, { selector: "[data-reveal]", dependencies: [specimen], distance: 10, stagger: 0.05 });
+
   return (
     <PageFrame>
       <PageHeader icon={ShieldCheck} index={t("index")} title={t("title")} description={t("subtitle")} />
       <ActionBar>
+        <Button size="2" variant="outline" color="gray" onClick={handleClear} disabled={pending}>
+          {t("clear")}
+        </Button>
         <Button size="2" onClick={() => void handleAnalyze()} disabled={!certificate.trim() || pending} loading={pending}>
           <MagnifierIcon size={16} />
           {pending ? t("analyzing") : t("analyze")}
-        </Button>
-        <Button size="2" variant="outline" onClick={handleClear} disabled={pending}>
-          {t("clear")}
         </Button>
       </ActionBar>
       <Grid columns={{ initial: "minmax(0, 1fr)", md: "26rem minmax(0, 1fr)" }} gap="5" width="100%" align="start">
@@ -103,75 +105,87 @@ const TLSAnalysisPage = memo(() => {
             dropLabel={t("drop")}
           />
           {error ? (
-            <Text size="2" color="red">
-              {error}
-            </Text>
+            <Callout.Root color="red" variant="surface" role="alert">
+              <Callout.Icon>
+                <TriangleAlertIcon size={16} />
+              </Callout.Icon>
+              <Callout.Text size="2">{error}</Callout.Text>
+            </Callout.Root>
           ) : null}
         </Flex>
 
-        <Box className={styles.sheet} minWidth="0">
-            <Box className={`${styles.corner} ${styles.cornerTl}`} />
-            <Box className={`${styles.corner} ${styles.cornerTr}`} />
-            <Box className={`${styles.corner} ${styles.cornerBl}`} />
-            <Box className={`${styles.corner} ${styles.cornerBr}`} />
-            <Container width="100%" maxWidth="100%" px="5">
-              <Section py="5">
-                <Flex direction="column" gap="4">
-                  <Box className={styles.hairline}>
-                    <Section pt="0" pb="3">
-                      <Flex align="center" justify="between" gap="3">
-                        <Text className={styles.kicker}>{t("specimen")}</Text>
-                        {specimen ? (
-                          <Badge color={valid ? "green" : "red"} variant="outline">
-                            {valid ? t("validStamp") : t("invalidStamp")}
-                          </Badge>
-                        ) : (
-                          <Text className={styles.kicker}>{t("awaiting")}</Text>
-                        )}
-                      </Flex>
-                    </Section>
-                  </Box>
-                  {specimen ? (
-                    <Flex direction="column" gap="4">
-                      <Heading as="h2" size="6" className={styles.subject}>
-                        {specimen.certificate.commonName || t("na")}
-                      </Heading>
-                      <Grid asChild columns={{ initial: "1", sm: "2" }} gap="4" className={styles.meta}>
-                        <dl>
-                        {fields.map((field) => (
-                          <Flex key={field.key} direction="column" className={styles.metaItem}>
-                            <dt>{field.label}</dt>
-                            <dd>{field.value}</dd>
-                          </Flex>
-                        ))}
-                        </dl>
-                      </Grid>
-                      {specimen.certificate.allDomains?.length ? (
-                        <Box className={styles.sansHairline}>
-                          <Section pt="4" pb="0">
-                            <Flex gap="2" wrap="wrap">
-                              {specimen.certificate.allDomains.map((domain) => (
-                                <Badge key={domain} variant="outline" color="gray">
-                                  {domain}
-                                </Badge>
-                              ))}
-                            </Flex>
-                          </Section>
-                        </Box>
-                      ) : null}
-                    </Flex>
-                  ) : (
-                    <Box className={styles.vacant}>
-                      <span className={styles.watermark}>{t("watermark")}</span>
-                      <Text size="2" color="gray">
-                        {t("emptyResult")}
-                      </Text>
-                    </Box>
-                  )}
+        <Card size="3" variant="classic" className={styles.sheet} data-valid={specimen ? String(valid) : undefined}>
+          <Box className={styles.corners} aria-hidden="true" />
+          <Flex direction="column" gap="5" ref={resultRef}>
+            <Section size="1" pt="0" pb="3" className={styles.hairline}>
+              <Flex align="center" justify="between" gap="3">
+                <Text size="1" weight="medium" color="gray" className={styles.kicker}>
+                  {t("specimen")}
+                </Text>
+                {specimen ? (
+                  <Badge size="2" color={valid ? "green" : "red"} variant="surface" radius="full">
+                    {valid ? <CheckedIcon size={12} /> : <TriangleAlertIcon size={12} />}
+                    {valid ? t("validStamp") : t("invalidStamp")}
+                  </Badge>
+                ) : (
+                  <Text size="1" color="gray" className={styles.kicker}>
+                    {t("awaiting")}
+                  </Text>
+                )}
+              </Flex>
+            </Section>
+            {specimen ? (
+              <>
+                <Flex direction={{ initial: "column", sm: "row" }} align={{ initial: "start", sm: "end" }} justify="between" gap="4" data-reveal>
+                  <Flex direction="column" gap="1" minWidth="0">
+                    <Text size="1" weight="medium" color="gray" className={styles.kicker}>
+                      {t("result.domain")}
+                    </Text>
+                    <Heading as="h2" size="7" weight="bold" className={styles.subject}>
+                      {specimen.certificate.commonName || t("na")}
+                    </Heading>
+                  </Flex>
+                  <Flex direction="column" align={{ initial: "start", sm: "end" }} gap="1" flexShrink="0">
+                    <Text size="1" weight="medium" color="gray" className={styles.kicker}>
+                      {t("result.daysRemaining")}
+                    </Text>
+                    <Text size="8" weight="bold" color={valid ? undefined : "red"} className={styles.days}>
+                      {specimen.summary.daysRemaining ?? t("na")}
+                    </Text>
+                  </Flex>
                 </Flex>
+                <DataList.Root orientation={{ initial: "vertical", sm: "horizontal" }} size="2" data-reveal>
+                  {fields.map((field) => (
+                    <DataList.Item key={field.key}>
+                      <DataList.Label minWidth="9rem">{field.label}</DataList.Label>
+                      <DataList.Value className={styles.mono}>{field.value}</DataList.Value>
+                    </DataList.Item>
+                  ))}
+                </DataList.Root>
+                {specimen.certificate.allDomains?.length ? (
+                  <Section size="1" pt="4" pb="0" className={styles.sans} data-reveal>
+                    <Flex gap="2" wrap="wrap">
+                      {specimen.certificate.allDomains.map((domain) => (
+                        <Badge key={domain} variant="surface" color="gray" radius="full" className={styles.mono}>
+                          {domain}
+                        </Badge>
+                      ))}
+                    </Flex>
+                  </Section>
+                ) : null}
+              </>
+            ) : (
+              <Section size="1" py="9" className={styles.vacant}>
+                <Box className={styles.watermark} aria-hidden="true">
+                  {t("watermark")}
+                </Box>
+                <Text as="p" size="2" color="gray">
+                  {t("emptyResult")}
+                </Text>
               </Section>
-            </Container>
-        </Box>
+            )}
+          </Flex>
+        </Card>
       </Grid>
     </PageFrame>
   );

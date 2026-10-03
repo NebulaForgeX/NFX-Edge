@@ -16,7 +16,9 @@
     "emptyHint": "Ajoutez l'identifiant Namecheap.com, la clé API et l'IP autorisée.",
     "missing": "Ce compte API est introuvable.",
     "detailHint": "Vérifiez la clé, consultez le solde, puis ouvrez la liste des domaines ou le SSL.",
-    "back": "Retour au compte"
+    "back": "Retour au compte",
+    "production": "Production",
+    "sandbox": "Bac à sable"
   },
   "credential": {
     "title": "Compte API",
@@ -40,7 +42,12 @@
     "verifiedAt": "Dernière vérification : {{at}}",
     "verifiedAtShort": "Dernière vérification",
     "confirmDeleteTitle": "Supprimer le compte Namecheap",
-    "confirmDeleteMessage": "Retirer cette clé API du compte Edge ?"
+    "confirmDeleteMessage": "Retirer cette clé API du compte Edge ?",
+    "connection": "Connexion",
+    "manage": "Gérer",
+    "shortcuts": "Ouvrir",
+    "lastError": "Dernière erreur",
+    "outbound": "IPv4 sortante d’Edge"
   },
   "balances": {
     "title": "Solde",

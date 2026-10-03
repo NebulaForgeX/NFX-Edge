@@ -1,17 +1,26 @@
-.hairline {
-  border-bottom: 1px solid var(--gray-6);
+.stamp {
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-icon);
+  background: var(--accent-a3);
+  box-shadow: inset 0 0 0 1px var(--accent-a5);
+  color: var(--accent-11);
+}
+
+.path {
+  font-family: var(--code-font-family);
 }
 
 .sheet {
   max-height: min(60vh, 32rem);
-  overflow: auto;
-  border: 1px solid var(--gray-6);
-  border-radius: var(--radius-3);
-  background: var(--color-panel-solid);
+  border-radius: var(--radius-4);
+  background: var(--gray-a2);
+  box-shadow: inset 0 0 0 1px var(--gray-a5);
 }
 
 .pem {
-  margin: 0;
+  font-family: var(--code-font-family);
   color: var(--gray-12);
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }

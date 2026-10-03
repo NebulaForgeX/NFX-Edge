@@ -2,7 +2,7 @@ import { UploadIcon } from "nfx-ui/icons";
 import type { ChangeEvent, DragEvent } from "react";
 
 import { useRef, useState } from "react";
-import { Box, Button, Container, Flex, Grid, Section, Text, TextArea } from "@radix-ui/themes";
+import { Box, Button, Code, Container, Flex, Grid, Section, Text, TextArea } from "@radix-ui/themes";
 
 import styles from "./s.module.css";
 
@@ -70,6 +70,8 @@ export default function PemSheet({
 
   return (
     <Box
+      height="100%"
+      minHeight="0"
       className={styles.sheet}
       data-drag={dragging ? "true" : "false"}
       data-invalid={error ? "true" : undefined}
@@ -84,23 +86,28 @@ export default function PemSheet({
       <Box className={`${styles.corner} ${styles.cornerTr}`} />
       <Box className={`${styles.corner} ${styles.cornerBl}`} />
       <Box className={`${styles.corner} ${styles.cornerBr}`} />
-      <Container width="100%" maxWidth="none" className={styles.sheetInset} >
-        <Section className={styles.sheetPad}>
-          <Grid className={styles.sheetGrid}>
-            <Section className={styles.head}>
-              <Flex align="baseline" justify="between" gap="3">
-                <Flex align="baseline" className={styles.labelRow}>
-                  <Text as="label" htmlFor={id} className={styles.label}>
-                    {label}
+      <Container width="100%" maxWidth="none" height="100%" minHeight="0" px="4">
+        <Section size="1" py="4" height="100%" minHeight="0">
+          <Grid rows="auto minmax(10rem, 1fr) auto" gap="3" height="100%" minHeight="0">
+            <Flex align="baseline" justify="between" gap="3">
+              <Flex align="baseline" gap="2">
+                <Text as="label" htmlFor={id} size="1" weight="bold" className={styles.label}>
+                  {label}
+                </Text>
+                {optional ? (
+                  <Text size="1" color="gray">
+                    {optionalLabel}
                   </Text>
-                  {optional ? <Text className={styles.optional}>{optionalLabel}</Text> : null}
-                </Flex>
-                <span className={styles.kind}>{kind}</span>
+                ) : null}
               </Flex>
-            </Section>
+              <Code size="1" variant="ghost">
+                {kind}
+              </Code>
+            </Flex>
             <TextArea
               id={id}
-              size="3"
+              size="2"
+              variant="surface"
               rows={rows}
               value={value}
               placeholder={placeholder}
@@ -109,16 +116,16 @@ export default function PemSheet({
               onBlur={onBlur}
               onChange={(event) => onChange(event.target.value)}
             />
-            <Section className={styles.foot}>
+            <Section size="1" pt="3" pb="0" className={styles.foot}>
               <Flex align="center" gap="3">
                 <input ref={inputRef} type="file" accept={accept} className={styles.file} onChange={onFile} />
                 <Button type="button" size="1" variant="outline" onClick={() => inputRef.current?.click()}>
                   <UploadIcon size={14} />
                   {browseLabel}
                 </Button>
-                <Box className={styles.meta}>
-                  <span>{fileName || dropLabel}</span>
-                </Box>
+                <Text size="1" color="gray" truncate className={styles.meta}>
+                  {fileName || dropLabel}
+                </Text>
               </Flex>
             </Section>
           </Grid>

@@ -1,0 +1,17 @@
+.step {
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-thumb);
+  background: var(--accent-9);
+  color: var(--accent-contrast);
+  box-shadow: 0 0 0 var(--space-1) var(--accent-a3);
+  font-variant-numeric: tabular-nums;
+}
+
+.hint {
+  max-width: 60ch;
+}
+
+.footer {
+  border-top: 1px solid var(--gray-a4);
+}

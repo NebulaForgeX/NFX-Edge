@@ -1,8 +1,8 @@
-import { DownloadIcon, FileDescriptionIcon, StackIcon, TrashIcon } from "nfx-ui/icons";
+import { ArrowNarrowLeftIcon, DownloadIcon, FileDescriptionIcon, StackIcon, TrashIcon, TriangleAlertIcon } from "nfx-ui/icons";
 import { memo } from "react";
-import { Box, Button, Container, Flex, Grid, Link, Section, Text } from "@radix-ui/themes";
+import { Badge, Button, Flex, Grid, IconButton, Link, Text, Tooltip } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
-import { ActionBar, EmptyState, PageHeader } from "@/components";
+import { ActionBar, DataTable, EmptyState, PageHeader, StatCard } from "@/components";
 import { useSearchParams } from "react-router";
 import type { Nilable } from "nfx-ui/types";
 import { safeOr, safeStringable } from "nfx-ui/utils";
@@ -114,15 +114,36 @@ const FileFolderPage = memo(() => {
     }
   };
 
+  const backButton = (
+    <Button variant="outline" color="gray" onClick={handleBack}>
+      <ArrowNarrowLeftIcon size={16} />
+      {t("back")}
+    </Button>
+  );
+
   return (
     <PageFrame>
-      <PageHeader icon={StackIcon} index={t("index")} title={t("title")} description={t("subtitle")} />
+      <PageHeader
+        icon={StackIcon}
+        index={t("index")}
+        title={t("title")}
+        description={t("subtitle")}
+        actions={
+          <Button variant="outline" color="gray" onClick={() => void handleExportAll()} loading={exportMutation.isPending}>
+            <DownloadIcon size={16} />
+            {t("exportAll")}
+          </Button>
+        }
+      />
       <ActionBar
         status={
-          <Flex asChild align="center" gap="2" wrap="wrap" className={styles.crumbs}>
+          <Flex asChild align="center" gap="1" wrap="wrap" minWidth="0">
             <nav aria-label={t("path")}>
               <Link
+                size="2"
+                weight="medium"
                 href={ROUTES.FILE_FOLDER}
+                className={styles.crumb}
                 onClick={(e) => {
                   e.preventDefault();
                   goPath("");
@@ -132,11 +153,19 @@ const FileFolderPage = memo(() => {
               </Link>
               {currentPath.map((segment, i) => {
                 const path = currentPath.slice(0, i + 1).join("/");
+                const last = i === currentPath.length - 1;
                 return (
-                  <Flex key={path} align="center" gap="2">
-                    <Text color="gray">/</Text>
+                  <Flex key={path} align="center" gap="1">
+                    <Text size="2" color="gray">
+                      /
+                    </Text>
                     <Link
+                      size="2"
+                      weight={last ? "bold" : "medium"}
+                      color={last ? "gray" : undefined}
+                      highContrast={last}
                       href={`${ROUTES.FILE_FOLDER}?path=${encodeURIComponent(path)}`}
+                      className={styles.crumb}
                       onClick={(e) => {
                         e.preventDefault();
                         goPath(path);
@@ -151,88 +180,72 @@ const FileFolderPage = memo(() => {
           </Flex>
         }
       >
-        <Button variant="outline" onClick={() => void handleExportAll()} loading={exportMutation.isPending}>
-          {t("exportAll")}
-        </Button>
-        <Button variant="ghost" onClick={handleBack}>
-          {t("back")}
-        </Button>
+        {backButton}
       </ActionBar>
-
-      <Grid columns={{ initial: "1", lg: "minmax(0, 1fr) 14rem" }} gap="6" align="start">
-      {isLoading ? (
-        <EmptyState icon={StackIcon} title={t("loading")} />
-      ) : error ? (
-        <EmptyState icon={StackIcon} title={error} />
-      ) : items.length === 0 ? (
-        <EmptyState icon={StackIcon} title={t("empty")} action={<Button onClick={handleBack}>{t("back")}</Button>} />
-      ) : (
-        <Box className={styles.list}>
-          <ul className={styles.listReset}>
-              {items.map((item) => (
-                <li key={item.path} className={styles.row}>
-                  <Container width="100%" maxWidth="100%" px="3">
-                    <Section py="3">
-                      <Grid
-                        columns={{ initial: "1.6rem minmax(0, 1fr) auto", sm: "1.6rem minmax(0, 1fr) 4.5rem 5.5rem minmax(8rem, auto) auto" }}
-                        gap="3"
-                        align="center"
-                        width="100%"
-                      >
-                        <button type="button" className={styles.markButton} tabIndex={-1} onClick={() => handleItemClick(item)}>
-                          <Flex align="center" className={styles.mark}>
-                            {item.type === "directory" ? <StackIcon size={16} /> : <FileDescriptionIcon size={16} />}
-                          </Flex>
-                        </button>
-                        <button type="button" className={styles.nameButton} onClick={() => handleItemClick(item)}>
-                          {item.name}
-                        </button>
-                        <Text size="1" color="gray" className={styles.meta}>
-                          {item.type === "directory" ? t("folder") : t("file")}
-                        </Text>
-                        <span className={styles.meta}>{item.type === "file" ? formatSize(item.size) : "—"}</span>
-                        <span className={styles.meta}>{formatDate(item.modified)}</span>
-                        <Flex gap="2" onClick={(e) => e.stopPropagation()}>
-                          {item.type === "file" ? (
-                            <Button size="1" variant="outline" onClick={() => void handleDownload(item)}>
-                              <DownloadIcon size={14} />
-                            </Button>
-                          ) : null}
-                          <Button size="1" variant="outline" color="red" onClick={() => handleDelete(item)}>
-                            <TrashIcon size={14} />
-                          </Button>
-                        </Flex>
-                      </Grid>
-                    </Section>
-                  </Container>
-                </li>
-              ))}
-            </ul>
-        </Box>
-      )}
-      <Section size="1" py="4" className={styles.side}>
-        <Container size="2" px="4" width="100%">
-          <Flex direction="column" gap="4">
-            <Flex direction="column" gap="1">
-              <Text size="1" color="gray">
-                {t("folder")}
-              </Text>
-              <Text size="7" className={styles.count}>
-                {folderCount}
-              </Text>
-            </Flex>
-            <Flex direction="column" gap="1">
-              <Text size="1" color="gray">
-                {t("file")}
-              </Text>
-              <Text size="4" className={styles.count}>
-                {items.length - folderCount}
-              </Text>
-            </Flex>
-          </Flex>
-        </Container>
-      </Section>
+      <Grid columns={{ initial: "1", sm: "2" }} gap="4">
+        <StatCard icon={StackIcon} label={t("folders")} value={folderCount} tone="accent" />
+        <StatCard icon={FileDescriptionIcon} label={t("files")} value={items.length - folderCount} tone="gray" />
       </Grid>
+      {error ? (
+        <EmptyState icon={TriangleAlertIcon} title={error} action={backButton} />
+      ) : (
+        <DataTable
+          emptyIcon={StackIcon}
+          empty={t("empty")}
+          emptyAction={backButton}
+          loading={isLoading}
+          rows={items}
+          rowKey={(item) => item.path}
+          onRowClick={handleItemClick}
+          columns={[
+            {
+              key: "name",
+              header: t("colName"),
+              render: (item) => (
+                <Flex align="center" gap="3" minWidth="0">
+                  <Flex align="center" justify="center" flexShrink="0" className={styles.mark} data-kind={item.type}>
+                    {item.type === "directory" ? <StackIcon size={14} /> : <FileDescriptionIcon size={14} />}
+                  </Flex>
+                  <Text size="2" weight="medium" truncate>
+                    {item.name}
+                  </Text>
+                </Flex>
+              ),
+            },
+            {
+              key: "type",
+              header: t("colType"),
+              render: (item) => (
+                <Badge variant="surface" radius="full" color={item.type === "directory" ? undefined : "gray"}>
+                  {item.type === "directory" ? t("folder") : t("file")}
+                </Badge>
+              ),
+            },
+            { key: "size", header: t("colSize"), mono: true, render: (item) => (item.type === "file" ? formatSize(item.size) : "—") },
+            { key: "modified", header: t("colModified"), mono: true, render: (item) => formatDate(item.modified) },
+            {
+              key: "actions",
+              header: t("colActions"),
+              render: (item) => (
+                <Flex gap="1" onClick={(e) => e.stopPropagation()}>
+                  {item.type === "file" ? (
+                    <Tooltip content={t("download")}>
+                      <IconButton size="1" variant="ghost" color="gray" aria-label={t("download")} onClick={() => void handleDownload(item)}>
+                        <DownloadIcon size={14} />
+                      </IconButton>
+                    </Tooltip>
+                  ) : null}
+                  <Tooltip content={t("delete")}>
+                    <IconButton size="1" variant="ghost" color="red" aria-label={t("delete")} onClick={() => handleDelete(item)}>
+                      <TrashIcon size={14} />
+                    </IconButton>
+                  </Tooltip>
+                </Flex>
+              ),
+            },
+          ]}
+        />
+      )}
     </PageFrame>
   );
 });

@@ -20,10 +20,10 @@ const EmptyState = ({ icon, title, description, action }: EmptyStateProps) => {
           <Flex direction="column" align="center" justify="center" gap="3">
             {icon ? (
               <Flex align="center" justify="center" className={styles.stamp}>
-                <AnimatedIcon icon={icon} size={20} />
+                <AnimatedIcon icon={icon} size={22} />
               </Flex>
             ) : null}
-            <Heading as="h3" size="4" align="center" className={styles.title}>
+            <Heading as="h3" size="4" weight="bold" align="center" className={styles.title}>
               {title}
             </Heading>
             {description ? (

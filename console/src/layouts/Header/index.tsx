@@ -62,7 +62,7 @@ function Header() {
                 <Container size="4" width="100%" maxWidth="100%" px="3">
                   <Section size="1" py="2">
                     <Flex align="center" justify="between" gap="3">
-                      <Logo variant="glassSquare" size="small" title={<Text className={styles.brandWord}>{APP_NAME}</Text>} subtitle="Edge" />
+                      <Logo variant="glassSquare" size="small" title={APP_NAME} subtitle="Edge" />
 
                       <Flex align="center" gap="2" flexShrink="0">
                         <IconButton
@@ -83,14 +83,14 @@ function Header() {
                             <DropdownMenu.Trigger>
                               <Button variant="outline" color="gray" highContrast>
                                 <Avatar size="1" radius="full" src={avatarImageId ? buildImageUrl(avatarImageId) : undefined} fallback={initial} />
-                                <Text size="2" truncate className={styles.nameLimit}>
+                                <Text size="2" truncate className={styles.name}>
                                   {displayName}
                                 </Text>
                               </Button>
                             </DropdownMenu.Trigger>
                             <DropdownMenu.Content align="end" sideOffset={8} size="2" className={styles.accountMenu}>
                               <DropdownMenu.Label>
-                                <Text size="1" color="gray" truncate className={styles.menuNameLimit}>
+                                <Text size="1" color="gray" truncate>
                                   {displayName}
                                 </Text>
                               </DropdownMenu.Label>

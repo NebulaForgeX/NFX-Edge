@@ -1,7 +1,3 @@
 .fullHeight {
-  flex: 1 1 auto;
   align-self: stretch;
-  min-height: 0;
-  width: 100%;
-  height: 100%;
 }

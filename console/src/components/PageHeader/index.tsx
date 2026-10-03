@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Flex, Heading, Section, Text } from "@radix-ui/themes";
+import { Badge, Box, Flex, Heading, Section, Text } from "@radix-ui/themes";
 import { AnimatedIcon, type AnimatedIconComponent } from "nfx-ui/icons";
 
 import styles from "./s.module.css";
@@ -17,19 +17,21 @@ export type PageHeaderProps = {
 export default function PageHeader({ icon, title, description, actions, index, density = "panel" }: PageHeaderProps) {
   const compact = density === "panel";
   return (
-    <Section size="1" pb="5" width="100%" className={styles.hairline}>
-      <Flex direction="column" gap="4">
-        <Flex align="start" gap="4" minWidth="0">
-          <Flex align="center" justify="center" className={styles.stamp}>
-            <AnimatedIcon icon={icon} size={compact ? 15 : 18} />
+    <Section size="1" pt="2" pb="5" width="100%" className={styles.hairline}>
+      <Flex direction={{ initial: "column", md: "row" }} align={{ initial: "start", md: "end" }} justify="between" gap="4">
+        <Flex align="center" gap="4" minWidth="0">
+          <Flex align="center" justify="center" flexShrink="0" className={compact ? styles.stamp : styles.stampLarge}>
+            <AnimatedIcon icon={icon} size={compact ? 20 : 24} />
           </Flex>
-          <Flex direction="column" gap="2" minWidth="0">
+          <Flex direction="column" gap="1" minWidth="0">
             {index ? (
-              <Text as="span" size="1" className={styles.index}>
-                {index}
-              </Text>
+              <Box>
+                <Badge variant="surface" radius="full" size="1">
+                  {index}
+                </Badge>
+              </Box>
             ) : null}
-            <Heading as="h1" size="7" className={styles.title}>
+            <Heading as="h1" size={compact ? "7" : "8"} weight="bold" trim="both" truncate>
               {title}
             </Heading>
             {description ? (
@@ -40,7 +42,7 @@ export default function PageHeader({ icon, title, description, actions, index, d
           </Flex>
         </Flex>
         {actions ? (
-          <Flex gap="2" wrap="wrap" align="center">
+          <Flex gap="2" wrap="wrap" align="center" flexShrink="0">
             {actions}
           </Flex>
         ) : null}

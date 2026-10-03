@@ -1,8 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Box, Container, Flex, Section } from "@radix-ui/themes";
-
-import styles from "./s.module.css";
+import { Card, Flex } from "@radix-ui/themes";
 
 type ActionBarProps = {
   status?: ReactNode;
@@ -11,19 +9,15 @@ type ActionBarProps = {
 
 export default function ActionBar({ status, children }: ActionBarProps) {
   return (
-    <Box className={styles.bar}>
-      <Container size="4" width="100%" maxWidth="100%" px="4">
-        <Section size="1" py="3">
-          <Flex align="center" justify="between" gap="3" wrap="wrap">
-            <Flex align="center" gap="2" minWidth="0">
-              {status}
-            </Flex>
-            <Flex align="center" justify="end" gap="2" wrap="wrap">
-              {children}
-            </Flex>
-          </Flex>
-        </Section>
-      </Container>
-    </Box>
+    <Card size="2" variant="classic">
+      <Flex align="center" justify="between" gap="3" wrap="wrap">
+        <Flex align="center" gap="2" minWidth="0">
+          {status}
+        </Flex>
+        <Flex align="center" justify="end" gap="2" wrap="wrap">
+          {children}
+        </Flex>
+      </Flex>
+    </Card>
   );
 }

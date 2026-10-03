@@ -1,7 +1,18 @@
 .shell {
-  border: 1px solid var(--accent-9);
+  box-shadow:
+    inset 0 0 0 1px var(--red-a6),
+    var(--shadow-6);
 }
 
-.hairline {
-  border-bottom: 1px solid var(--gray-6);
+.stamp {
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-icon);
+  background: var(--red-a3);
+  box-shadow: inset 0 0 0 1px var(--red-a5);
+  color: var(--red-11);
+}
+
+.time {
+  font-family: var(--code-font-family);
 }

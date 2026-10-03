@@ -1,39 +1,38 @@
-.shellClip {
-  overflow: hidden;
+.stamp {
+  width: var(--space-8);
+  height: var(--space-8);
+  border-radius: var(--radius-icon);
+  background: var(--accent-a3);
+  box-shadow: inset 0 0 0 1px var(--accent-a5);
+  color: var(--accent-11);
 }
 
-.shellPy {
-  padding-block: 0;
+.stamp[data-tone="green"] {
+  background: var(--green-a3);
+  box-shadow: inset 0 0 0 1px var(--green-a5);
+  color: var(--green-11);
+}
+
+.stamp[data-tone="red"] {
+  background: var(--red-a3);
+  box-shadow: inset 0 0 0 1px var(--red-a5);
+  color: var(--red-11);
 }
 
 .log {
   max-height: min(48vh, 22rem);
-  width: 100%;
-  overflow-y: auto;
+  border-radius: var(--radius-3);
+  background: var(--gray-a2);
+  box-shadow: inset 0 0 0 1px var(--gray-a4);
 }
 
 .logText {
-  margin: 0;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
   word-break: break-word;
+  font-family: var(--code-font-family);
 }
 
 .shortText {
-  margin: 0;
   overflow-wrap: anywhere;
-}
-
-.ok {
-  width: 100%;
-}
-
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }

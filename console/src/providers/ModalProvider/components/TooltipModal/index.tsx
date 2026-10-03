@@ -1,6 +1,6 @@
 import { TriangleAlertIcon, XIcon } from "nfx-ui/icons";
 import { memo } from "react";
-import { Box, Button, Dialog, Flex, Text } from "@radix-ui/themes";
+import { Callout, Dialog, Flex, IconButton, Inset, Separator, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
 import ModalStore, { useModalStore } from "@/stores/modal";
@@ -24,25 +24,29 @@ const TooltipModal = memo(() => {
         if (!open) handleClose();
       }}
     >
-      <Dialog.Content maxWidth="40rem" className={styles.shell}>
-        <Flex direction="column" gap="3">
+      <Dialog.Content size="3" maxWidth="40rem" className={styles.shell}>
+        <Flex direction="column" gap="4">
           <Flex align="center" justify="between" gap="3">
-            <Flex align="center" gap="2" minWidth="0">
-              <Text color="red">
+            <Flex align="center" gap="3" minWidth="0">
+              <Flex align="center" justify="center" flexShrink="0" className={styles.stamp}>
                 <TriangleAlertIcon size={20} />
-              </Text>
-              <Dialog.Title mb="0" size="2">
+              </Flex>
+              <Dialog.Title mb="0" size="4">
                 {t("error.lastError") || "Last Error"}
               </Dialog.Title>
             </Flex>
-            <Button type="button" variant="ghost" aria-label={t("common.close") || "Close"} onClick={handleClose}>
+            <IconButton type="button" variant="ghost" color="gray" aria-label={t("common.close") || "Close"} onClick={handleClose}>
               <XIcon size={18} />
-            </Button>
+            </IconButton>
           </Flex>
-          <Box className={styles.hairline} />
-          <Dialog.Description size="2">{message}</Dialog.Description>
+          <Inset side="x" clip="padding-box">
+            <Separator size="4" />
+          </Inset>
+          <Callout.Root color="red" variant="surface">
+            <Dialog.Description size="2">{message}</Dialog.Description>
+          </Callout.Root>
           {errorTime ? (
-            <Text size="1" color="gray">
+            <Text size="1" color="gray" className={styles.time}>
               {t("error.errorTime") || "Error Time"}: {new Date(errorTime).toLocaleString()}
             </Text>
           ) : null}

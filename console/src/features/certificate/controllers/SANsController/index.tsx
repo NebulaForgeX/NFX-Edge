@@ -1,8 +1,9 @@
+import { PlusIcon } from "@radix-ui/react-icons";
 import { XIcon } from "nfx-ui/icons";
 import type { CertificateFormSharedValues } from "../../schemas/certificateSchema";
 
 import { memo, useEffect, useRef, useState } from "react";
-import { Box, Button, Container, Flex, IconButton, Section, Text } from "@radix-ui/themes";
+import { Badge, Box, Button, Container, Flex, IconButton, ScrollArea, Section, Text } from "@radix-ui/themes";
 import { Controller, useFormContext, type ControllerRenderProps } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -86,17 +87,22 @@ const SANsController = memo(({ disabled = false, readOnly = false }: SANsControl
   const locked = disabled || readOnly;
 
   return (
-    <Flex direction="column" gap="3">
-      <Text size="2" weight="medium">
-        {t("form.sans")}
-      </Text>
+    <Flex direction="column" gap="2">
+      <Flex align="center" justify="between" gap="2">
+        <Text size="1" weight="medium" color="gray">
+          {t("form.sans")}
+        </Text>
+        <Badge size="1" variant="surface" radius="full">
+          {items.length}
+        </Badge>
+      </Flex>
       <Controller
         name="sans"
         control={control}
         render={({ field }) => (
           <Flex direction="column" gap="3">
             <Flex gap="2" align="end" wrap="wrap">
-              <Flex direction="column" className={styles.inputWrap}>
+              <Box flexGrow="1" minWidth="12rem">
                 <Input
                   ref={inputRef}
                   value={inputValue}
@@ -113,54 +119,53 @@ const SANsController = memo(({ disabled = false, readOnly = false }: SANsControl
                   placeholder={t("form.sansPlaceholder")}
                   disabled={locked}
                 />
-              </Flex>
+              </Box>
               {!locked ? (
-                <Button type="button" variant="outline" onClick={() => commitPrefix(field)}>
+                <Button type="button" variant="outline" color="gray" onClick={() => commitPrefix(field)}>
+                  <PlusIcon />
                   {t("form.sansAdd")}
                 </Button>
               ) : null}
             </Flex>
-            <Box className={styles.items}>
-              {items.length > 0 ? (
-                <Flex direction="column">
-                  {items.map((item, index) => (
-                    <Box key={`${item}-${index}`} className={styles.item}>
-                      <Container width="100%" maxWidth="none" px="3" >
-                        <Section py="2">
-                          <Flex align="center" justify="between" gap="2">
-                            <span className={styles.itemText}>{item}</span>
-                            {!locked && (
-                              <IconButton
-                                type="button"
-                                variant="ghost"
-                                size="1"
-                                className={styles.removeButton}
-                                onClick={() => {
-                                  const newItems = handleRemoveItem(index, items);
-                                  setItems(newItems);
-                                  field.onChange(newItems);
-                                }}
-                                title={t("form.sansRemove")}
-                              >
-                                <XIcon size={14} />
-                              </IconButton>
-                            )}
-                          </Flex>
-                        </Section>
-                      </Container>
-                    </Box>
-                  ))}
-                </Flex>
-              ) : (
-                <Container width="100%" maxWidth="none" px="3" >
-                  <Section py="4">
-                    <Text size="2" color="gray" align="center">
+            <ScrollArea type="auto" scrollbars="vertical" className={styles.items}>
+              <Container size="4" px="3">
+                <Section size="1" py="3">
+                  {items.length > 0 ? (
+                    <Flex wrap="wrap" gap="2">
+                      {items.map((item, index) => (
+                        <Badge key={`${item}-${index}`} size="2" variant="surface" color="gray" highContrast className={styles.chip}>
+                          <Text size="1" className={styles.chipText}>
+                            {item}
+                          </Text>
+                          {!locked && (
+                            <IconButton
+                              type="button"
+                              variant="ghost"
+                              color="gray"
+                              size="1"
+                              radius="full"
+                              aria-label={t("form.sansRemove")}
+                              title={t("form.sansRemove")}
+                              onClick={() => {
+                                const newItems = handleRemoveItem(index, items);
+                                setItems(newItems);
+                                field.onChange(newItems);
+                              }}
+                            >
+                              <XIcon size={12} />
+                            </IconButton>
+                          )}
+                        </Badge>
+                      ))}
+                    </Flex>
+                  ) : (
+                    <Text as="p" size="2" color="gray" align="center">
                       {readOnly ? t("form.sansReadOnly") : t("form.sansHelp")}
                     </Text>
-                  </Section>
-                </Container>
-              )}
-            </Box>
+                  )}
+                </Section>
+              </Container>
+            </ScrollArea>
           </Flex>
         )}
       />

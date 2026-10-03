@@ -25,8 +25,8 @@ import styles from "./s.module.css";
 function LedgerField({ n, children }: { n: string; children: ReactNode }) {
   return (
     <Section size="1" mb="4" pt="0" pb="0">
-      <Grid columns="2.2rem 1fr" gap="2">
-        <Section size="1" pt="6px" pb="0">
+      <Grid columns="var(--space-7) 1fr" gap="2">
+        <Section size="1" pt="2" pb="0">
           <span className={styles.fieldNum}>{n}</span>
         </Section>
         {children}

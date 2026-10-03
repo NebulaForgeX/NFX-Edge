@@ -1,97 +1,17 @@
-.section {
-  position: relative;
-  border: 1px solid var(--gray-6);
-  background: var(--color-background);
+.stamp {
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-chip);
+  background: var(--accent-a3);
+  color: var(--accent-11);
 }
 
-.sectionInset.sectionInset {
-  padding-inline: 1.2rem;
-}
-
-.sectionPad.sectionPad {
-  padding-top: 1.15rem;
-  padding-bottom: 1rem;
-}
-
-.title.title {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.titleText {
-  margin: 0;
-  font-size: 11px;
-  font-weight: 650;
-  text-transform: uppercase;
-  color: var(--gray-10);
-}
-
-.infoItem {
-  min-width: 0;
-  gap: 0.3rem;
-}
-
-.infoItem label {
-  font-size: 10px;
-  font-weight: 650;
-  text-transform: uppercase;
-  color: var(--gray-10);
-}
-
-.infoItem span {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 13px;
-  color: var(--gray-12);
+.value {
+  font-family: var(--code-font-family);
   overflow-wrap: anywhere;
 }
 
-.error.error {
-  padding-top: 0;
-  padding-bottom: 0;
-  border: 1px solid var(--accent-8);
-}
-
-.errorInset.errorInset {
-  padding-inline: 1rem;
-}
-
-.errorPad.errorPad {
-  padding-block: 0.9rem;
-}
-
-.errorHeader.errorHeader {
-  margin-bottom: 0.5rem;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.errorHeaderRow {
-  gap: 0.5rem;
-}
-
-.errorHeaderRow label {
-  font-size: 10px;
-  font-weight: 650;
-  text-transform: uppercase;
-  color: var(--accent-11);
-}
-
-.errorIcon {
-  flex-shrink: 0;
-  color: var(--accent-11);
-}
-
-.errorMessage {
-  margin: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 12px;
-}
-
-.errorTimeText {
-  margin: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 12px;
-  color: var(--gray-10);
+.mono {
+  font-family: var(--code-font-family);
+  overflow-wrap: anywhere;
 }

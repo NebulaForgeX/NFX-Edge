@@ -1,26 +1,35 @@
-
 .shell {
+  position: relative;
   background: var(--color-background);
   color: var(--gray-12);
 }
 
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(56rem 28rem at 88% -8%, var(--accent-a4), transparent 70%),
+    radial-gradient(40rem 26rem at 8% 18%, var(--accent-a2), transparent 70%),
+    radial-gradient(circle at 1px 1px, var(--gray-a4) 1px, transparent 0) 0 0 / var(--space-5) var(--space-5);
+  mask-image: linear-gradient(to bottom, black 0%, black 35%, transparent 90%);
+}
+
 .proSidebar :global(.ps-sidebar-root) {
-  border: 0;
-  height: 100dvh;
-  flex-shrink: 0;
   position: sticky;
   top: 0;
-  margin: 0;
   z-index: 200;
+  flex-shrink: 0;
+  height: 100dvh;
+  border: 0;
   overflow: visible;
 }
 
 .proSidebar :global(.ps-sidebar-root.ps-broken) {
-  height: 100dvh;
   position: fixed;
-  margin: 0;
   top: 0;
   bottom: 0;
+  height: 100dvh;
 }
 
 .proSidebar :global(.ps-sidebar-root.ps-broken.ps-toggled) {
@@ -28,17 +37,22 @@
 }
 
 .proSidebar :global(.ps-sidebar-container) {
-  background: transparent;
   height: 100%;
   overflow: visible;
+  background: none;
+}
+
+.proSidebar :global(.ps-sidebar-backdrop) {
+  background: var(--color-overlay);
+  opacity: 1;
 }
 
 .sidebar {
-  height: 100%;
-  min-height: 0;
-  font-family: Arial, "Noto Sans SC", sans-serif;
-  background: var(--color-panel-solid);
-  border-right: 1px solid var(--gray-a4);
+  background: var(--color-panel);
+  backdrop-filter: var(--backdrop-filter-panel);
+  box-shadow:
+    inset -1px 0 0 var(--gray-a5),
+    var(--shadow-3);
 }
 
 .headerRule {
@@ -46,47 +60,41 @@
 }
 
 .accountCard:global(.rt-BaseButton) {
-  appearance: none;
-  display: flex;
-  align-items: center;
   width: 100%;
+  height: auto;
+  margin: 0;
   padding: 0;
-  border: 0;
-  font: inherit;
-  color: inherit;
+  justify-content: flex-start;
   text-align: left;
-  cursor: pointer;
-  background: transparent;
-  border-radius: var(--radius-3);
+  color: inherit;
+  background: none;
   box-shadow: none;
 }
 
 .accountCard:global(.rt-BaseButton):focus-visible {
   outline: 2px solid var(--accent-8);
-  outline-offset: 5px;
+  outline-offset: var(--space-1);
+}
+
+.avatar {
+  box-shadow:
+    0 0 0 2px var(--color-panel-solid),
+    0 0 0 3px var(--accent-a6);
+  transition: box-shadow 200ms ease;
+}
+
+.accountCard:global(.rt-BaseButton):hover .avatar {
+  box-shadow:
+    0 0 0 2px var(--color-panel-solid),
+    0 0 0 3px var(--accent-9);
+}
+
+.accountRole {
+  text-transform: uppercase;
 }
 
 .accountCard:global(.rt-BaseButton):hover .accountName {
   color: var(--accent-11);
-}
-
-.accountRole {
-  color: var(--gray-11);
-  font-size: 11px;
-  line-height: 16px;
-  text-transform: uppercase;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.accountName {
-  font-size: 15px;
-  line-height: 21px;
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .menuArea {
@@ -101,109 +109,102 @@
 }
 
 .sectionLabel {
-  color: var(--gray-11);
   text-transform: uppercase;
-  font-size: 11px;
-  line-height: 16px;
-  font-weight: 400;
 }
 
-.sectionTitleIcon {
-  display: none;
+.sectionIcon {
+  color: var(--gray-a9);
 }
 
 .toggle:global(.rt-IconButton) {
-  position: absolute !important;
-  right: -34px !important;
-  top: 30px !important;
-  width: 26px !important;
-  height: 26px !important;
-  border: 1px solid var(--gray-a5) !important;
-  border-radius: var(--radius-2) !important;
-  background: var(--color-panel-solid) !important;
-  color: var(--gray-11) !important;
+  position: absolute;
+  top: var(--space-6);
+  right: calc(var(--space-4) * -1 - var(--space-3));
   z-index: 2;
+  border-radius: var(--radius-thumb);
+  background: var(--color-panel-solid);
+  box-shadow:
+    inset 0 0 0 1px var(--gray-a6),
+    var(--shadow-2);
+  color: var(--gray-11);
+  transition:
+    color 150ms ease,
+    transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .toggle:global(.rt-IconButton):hover {
-  background: var(--gray-3) !important;
-  color: var(--gray-12) !important;
+  color: var(--accent-11);
+  transform: scale(1.08);
 }
 
 .logout:global(.rt-BaseButton) {
   width: 100%;
-  height: 40px !important;
-  padding: 0 !important;
-  justify-content: flex-start !important;
-  background: transparent !important;
-  color: var(--gray-12) !important;
-  font-size: 15px !important;
-  font-weight: 400 !important;
-  border-radius: var(--radius-chip) !important;
-  box-shadow: none !important;
+  height: var(--space-7);
+  margin: 0;
+  padding: 0 var(--space-3);
+  justify-content: flex-start;
+  border-radius: var(--radius-chip);
+  color: var(--gray-11);
+  font-size: var(--font-size-2);
 }
 
 .logout:global(.rt-BaseButton)[data-collapsed="true"] {
-  width: 40px;
-  height: 40px !important;
+  width: var(--space-7);
   margin-inline: auto;
-  padding: 0 !important;
-  justify-content: center !important;
-  border-radius: var(--radius-3) !important;
+  padding: 0;
+  justify-content: center;
 }
 
 .logout:global(.rt-BaseButton):hover:not(:disabled) {
-  background: var(--gray-a3) !important;
+  background: var(--red-a3);
+  color: var(--red-11);
 }
 
 .mobileToggle:global(.rt-IconButton) {
   position: sticky;
   top: var(--space-3);
   z-index: 10;
-  margin: var(--space-3);
+  background: var(--color-panel);
+  backdrop-filter: var(--backdrop-filter-panel);
   box-shadow: var(--shadow-3);
-  background: var(--color-panel-solid) !important;
-  color: var(--gray-12) !important;
 }
 
 .content {
-  background: var(--color-background);
   overflow-x: hidden;
 }
 
+.footer {
+  border-top: 1px solid var(--gray-a4);
+}
+
+/* react-pro-sidebar menu buttons */
+
 .menuArea :global(.ps-menu-button) {
-  height: 40px;
-  margin: 6px 0;
+  position: relative;
+  isolation: isolate;
+  height: var(--space-7);
+  margin: var(--space-1) 0;
+  padding: 0 var(--space-3);
   border-radius: var(--radius-chip);
-  padding-left: 10px;
-  padding-right: 10px;
-  font-size: 15px;
-  font-weight: 400;
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-regular);
   color: var(--gray-11);
   background-color: transparent;
-  transition: background-color 150ms ease, color 150ms ease;
-}
-
-.menuArea :global(.ps-submenu-content .ps-menu-button) {
-  height: 34px;
-  margin: 3px 0 3px 32px;
-  padding-left: 11px;
-  font-size: 14px;
-}
-
-.menuArea :global(.ps-menu-button.ps-active) {
-  color: var(--accent-11);
-  background-color: var(--accent-a3);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
 }
 
 .menuArea :global(.ps-menu-button:hover) {
-  background-color: var(--gray-a3) !important;
-  color: var(--gray-12) !important;
+  background-color: var(--gray-a3);
+  color: var(--gray-12);
 }
 
+.menuArea :global(.ps-menu-button.ps-active),
 .menuArea :global(.ps-menu-button.ps-active:hover) {
-  background-color: var(--accent-a3) !important;
-  color: var(--accent-11) !important;
+  background-color: transparent;
+  color: var(--accent-11);
+  font-weight: var(--font-weight-medium);
 }
 
 .menuArea :global(.ps-menu-button:focus-visible) {
@@ -212,11 +213,35 @@
 }
 
 .menuArea :global(.ps-menu-icon) {
-  width: 20px;
-  min-width: 20px;
-  height: 20px;
-  margin-right: 10px;
+  width: var(--space-5);
+  min-width: var(--space-5);
+  height: var(--space-5);
+  margin-right: var(--space-3);
   color: inherit;
+}
+
+.menuArea :global(.ps-menu-label .rt-Text),
+.footer :global(.ps-menu-label .rt-Text) {
+  font: inherit;
+}
+
+.menuArea :global(.ps-submenu-root.ps-open > .ps-menu-button) {
+  color: var(--gray-12);
+}
+
+.menuArea :global(.ps-submenu-root > .ps-menu-button.ps-active) {
+  color: var(--accent-11);
+}
+
+.menuArea :global(.ps-submenu-content) {
+  border: 0;
+}
+
+.menuArea :global(.ps-submenu-content .ps-menu-button) {
+  height: calc(var(--space-6) + var(--space-1));
+  margin: var(--space-1) 0 var(--space-1) var(--space-6);
+  padding-left: var(--space-3);
+  font-size: var(--font-size-2);
 }
 
 .menuArea :global(.ps-submenu-content .ps-menu-icon) {
@@ -224,8 +249,93 @@
 }
 
 .menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content) {
-  background-color: transparent;
   padding: 0;
+  background-color: transparent;
+}
+
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul) {
+  padding: 0 0 var(--space-2);
+}
+
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-root:not(.ps-open) > .ps-submenu-content) {
+  visibility: hidden;
+}
+
+/* Submenu tree: one continuous trunk; the active branch is drawn in accent. */
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root)::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--space-1) * -1);
+  bottom: calc(var(--space-1) * -1);
+  left: calc(var(--space-5) - var(--space-1) / 2);
+  width: 1px;
+  background: var(--gray-a6);
+  pointer-events: none;
+}
+
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root)::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - var(--space-2));
+  left: calc(var(--space-5) - var(--space-1) / 2);
+  width: calc(var(--space-3) - 1px);
+  height: var(--space-2);
+  border-left: 1px solid var(--gray-a6);
+  border-bottom: 1px solid var(--gray-a6);
+  border-bottom-left-radius: var(--radius-3);
+  pointer-events: none;
+}
+
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:last-child)::before {
+  bottom: calc(50% + var(--space-2));
+}
+
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(~ .ps-menuitem-root > .ps-menu-button.ps-active))::before {
+  background: var(--accent-9);
+}
+
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::before {
+  bottom: calc(50% + var(--space-2));
+  background: var(--accent-9);
+}
+
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::after {
+  border-color: var(--accent-9);
+}
+
+/* Collapsed rail */
+
+.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul) {
+  padding: 0;
+}
+
+.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button) {
+  width: var(--space-7);
+  margin: var(--space-1) auto;
+  padding: 0;
+  justify-content: center;
+}
+
+.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-icon) {
+  margin: 0;
+}
+
+.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-label),
+.menuArea[data-collapsed="true"] :global(.ps-submenu-expand-icon) {
+  display: none;
+}
+
+.footer[data-collapsed="true"] :global(.ps-menu-button) {
+  justify-content: center;
+  padding: 0;
+}
+
+.footer[data-collapsed="true"] :global(.ps-menu-icon) {
+  margin: 0;
+}
+
+.footer[data-collapsed="true"] :global(.ps-menu-label) {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -233,120 +343,4 @@
     transition-duration: 0ms !important;
     animation-duration: 0ms !important;
   }
-}
-
-
-.menuArea :global(.ps-menu-label .rt-Text),
-.footer :global(.ps-menu-label .rt-Text) {
-  font: inherit;
-}
-.menuArea :global(.ps-menu-button.ps-active .ps-menu-label) {
-  font-weight: 500;
-}
-.menuArea :global(.ps-submenu-root.ps-open > .ps-menu-button) {
-  background: var(--gray-a3);
-  color: var(--gray-12);
-}
-.menuArea :global(.ps-submenu-content) {
-  border: 0;
-}
-/* One continuous trunk. Only the final branch terminates the trunk before its bend.
-   Opaque tokens prevent overlapping segments from becoming a darker double stroke. */
-.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root)::before {
-  content: "";
-  position: absolute;
-  left: 21px;
-  top: -3px;
-  bottom: -3px;
-  width: 1px;
-  background: var(--gray-5);
-  pointer-events: none;
-}
-.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root)::after {
-  content: "";
-  position: absolute;
-  left: 21px;
-  top: calc(50% - 8px);
-  width: 11px;
-  height: 8px;
-  border-left: 1px solid var(--gray-5);
-  border-bottom: 1px solid var(--gray-5);
-  border-bottom-left-radius: 8px;
-  pointer-events: none;
-}
-.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:last-child)::before {
-  bottom: calc(50% + 8px);
-}
-.menuArea :global(.ps-submenu-content .ps-menu-button) {
-  position: relative;
-}
-.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul) {
-  padding: 0;
-}
-.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button) {
-  width: 40px;
-  height: 40px;
-  margin: 4px auto;
-  padding: 0;
-  justify-content: center;
-  border-radius: var(--radius-3);
-}
-.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-icon) {
-  margin: 0;
-}
-.menuArea[data-collapsed="true"] :global(.ps-menu-root > ul > .ps-menuitem-root > .ps-menu-button > .ps-menu-label),
-.menuArea[data-collapsed="true"] :global(.ps-submenu-expand-icon) {
-  display: none;
-}
-.menuArea[data-collapsed="true"] :global(.ps-submenu-content) {
-  border: 1px solid var(--gray-a5);
-}
-.menuArea[data-collapsed="true"] :global(.ps-submenu-content .ps-menu-label) {
-  display: block;
-}
-
-.footer[data-collapsed="true"] :global(.ps-menu-button) {
-  justify-content: center;
-  padding: 0;
-}
-.footer[data-collapsed="true"] :global(.ps-menu-icon) {
-  margin: 0;
-}
-.footer[data-collapsed="true"] :global(.ps-menu-label) {
-  display: none;
-}
-
-.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul) {
-  padding: 1px 0 7px;
-}
-.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-root:not(.ps-open) > .ps-submenu-content) {
-  visibility: hidden;
-}
-
-.menuArea :global(.ps-submenu-root > .ps-menu-button.ps-active) {
-  background: var(--accent-a3);
-  color: var(--accent-11);
-}
-
-/* Highlight only the route from the parent down to the current child. */
-.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(~ .ps-menuitem-root > .ps-menu-button.ps-active))::before {
-  background: var(--accent-9);
-}
-.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::before {
-  background: var(--accent-9);
-  bottom: calc(50% + 8px);
-}
-.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::after {
-  border-color: var(--accent-9);
-}
-/* Continue the neutral trunk below an active child when more siblings follow. */
-.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:not(:last-child) > .ps-menu-button.ps-active)::before {
-  content: "";
-  position: absolute;
-  left: -11px;
-  top: 50%;
-  bottom: -3px;
-  width: 1px;
-  background: var(--gray-5);
-  pointer-events: none;
 }

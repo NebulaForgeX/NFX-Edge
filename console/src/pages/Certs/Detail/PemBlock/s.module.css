@@ -1,0 +1,32 @@
+.stamp {
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-chip);
+  background: var(--accent-a3);
+  color: var(--accent-11);
+}
+
+.kind {
+  text-transform: uppercase;
+}
+
+.scroll {
+  height: min(48vh, calc(var(--space-9) * 6));
+  border-radius: var(--radius-3);
+  background: var(--gray-a2);
+  box-shadow: inset 0 0 0 1px var(--gray-a4);
+}
+
+.pem {
+  margin: 0;
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-1);
+  line-height: var(--line-height-2);
+  color: var(--gray-12);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.pem[data-muted="true"] {
+  color: var(--gray-11);
+}

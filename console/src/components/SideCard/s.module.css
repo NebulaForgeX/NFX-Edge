@@ -1,0 +1,18 @@
+.side {
+  position: sticky;
+  top: var(--space-5);
+}
+
+.stamp {
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-icon);
+  background: var(--accent-a3);
+  box-shadow: inset 0 0 0 1px var(--accent-a5);
+  color: var(--accent-11);
+}
+
+.caption {
+  font-family: var(--code-font-family);
+  overflow-wrap: anywhere;
+}

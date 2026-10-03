@@ -10,10 +10,9 @@
   "ttl": "TTL",
   "ttlAutomatic": "Automatic",
   "mxPref": "MX pref",
-  "emailType": "Email type: {{type}}",
-  "ourDns": "Namecheap DNS: {{value}}",
-  "expires": "Expires {{at}}",
-  "locked": "Locked {{value}}",
+  "ourDns": "Namecheap DNS",
+  "expires": "Expires",
+  "locked": "Locked",
   "applyCert": "Apply certificate",
   "applyHost": "Apply {{host}}",
   "applyClickHint": "Select a row; the left button applies that host. With multiple selected, the last click is the CN and the rest are SANs. The right button always applies the apex domain. You can also patch address / TTL / MX together.",
@@ -33,5 +32,10 @@
   "confirmDeleteMessage": "Remove {{type}} {{host}}? Namecheap setHosts replaces the full host list.",
   "notOurDns": "This domain is not using Namecheap DNS",
   "notOurDnsHint": "Host records can only be edited when the domain uses Namecheap nameservers.",
-  "index": "05 — Namecheap"
+  "index": "05 — Namecheap",
+  "records": "Host records",
+  "profile": "Domain profile",
+  "patchTitle": "Patch selected",
+  "yes": "Yes",
+  "no": "No"
 }

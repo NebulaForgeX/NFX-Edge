@@ -1,8 +1,8 @@
-import { Check, RefreshCw, Save } from "lucide-react";
+import { CheckedIcon, RefreshIcon, SaveIcon } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 
 import { useEffect, useState } from "react";
-import { Badge, Box, Button, Container, Flex, Grid, Heading, RadioCards, SegmentedControl, Switch, Text, TextField, Theme } from "@radix-ui/themes";
+import { Badge, Box, Button, Card, Container, Flex, Grid, Heading, RadioCards, Section, SegmentedControl, Switch, Text, TextField, Theme } from "@radix-ui/themes";
 import { APP_NAME } from "nfx-ui/config";
 import { AccentColorEnum, AppearanceEnum, GrayColorEnum, LanguageEnum, PanelBackgroundEnum, RadiusEnum, ScalingEnum, ThemeFontFamilyEnum } from "nfx-ui/enums";
 import { useBaseLabel, useSyncPreference } from "nfx-ui/hooks";
@@ -20,8 +20,6 @@ import {
   THEME_FONT_FAMILY_VALUES,
 } from "nfx-ui/themes";
 import { useTranslation } from "react-i18next";
-
-import { LucideIcon } from "@/components";
 
 import styles from "./s.module.css";
 
@@ -54,14 +52,16 @@ function toDraft(pref: ResolvedThemePreference): ResolvedThemePreference {
 
 function Tile({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <Flex direction="column" gap="4">
-      <Text size="2" weight="bold">
-        {title}
-      </Text>
-      <Flex direction="column" gap="4" flexGrow="1" align="start">
-        {children}
+    <Card size="3" variant="surface">
+      <Flex direction="column" gap="4">
+        <Text size="1" weight="bold" color="gray" className={styles.kicker}>
+          {title}
+        </Text>
+        <Flex direction="column" gap="4" flexGrow="1" align="start">
+          {children}
+        </Flex>
       </Flex>
-    </Flex>
+    </Card>
   );
 }
 
@@ -91,8 +91,8 @@ export default function ThemeSettings() {
   const previewAppearance = resolveRadixAppearance(draft.appearance);
 
   return (
-    <Flex direction="column" gap="6">
-      <Grid columns="1" gap="6" width="100%">
+    <Flex direction="column" gap="5">
+      <Grid columns={{ initial: "1", md: "2" }} gap="4" width="100%" align="start">
         <Tile title={t("labels.colorAndAppearance")}>
           <Flex direction="column" gap="2" width="100%" align="start">
             <Text size="1" weight="medium" color="gray">
@@ -128,7 +128,7 @@ export default function ThemeSettings() {
                     data-active={active ? "true" : "false"}
                     style={{ background: swatchVar(c) }}
                   >
-                    {active ? <LucideIcon icon={Check} size={12} color="var(--accent-contrast)" /> : null}
+                    {active ? <CheckedIcon size={12} className={styles.swatchCheck} /> : null}
                   </Button>
                 );
               })}
@@ -154,7 +154,7 @@ export default function ThemeSettings() {
                     data-active={active ? "true" : "false"}
                     style={{ background: swatchVar(c) }}
                   >
-                    {active ? <LucideIcon icon={Check} size={12} color="var(--accent-contrast)" /> : null}
+                    {active ? <CheckedIcon size={12} className={styles.swatchCheck} /> : null}
                   </Button>
                 );
               })}
@@ -232,7 +232,9 @@ export default function ThemeSettings() {
             hasBackground
             className={styles.previewTheme}
           >
-            <Box>
+            <Box className={styles.previewSurface}>
+              <Container size="4" px="4">
+                <Section size="1" py="4">
               <Flex direction="column" gap="3">
                 <Flex align="center" justify="between">
                   <Heading size="4">{APP_NAME}</Heading>
@@ -240,7 +242,7 @@ export default function ThemeSettings() {
                 </Flex>
                 <Flex gap="2" wrap="wrap">
                   <Button size="2">{t("labels.previewSolid")}</Button>
-                  <Button size="2" variant="outline">
+                  <Button size="2" variant="outline" color="gray">
                     {t("labels.previewSoft")}
                   </Button>
                 </Flex>
@@ -250,6 +252,8 @@ export default function ThemeSettings() {
                   <Text size="2">{t("labels.notifications")}</Text>
                 </Flex>
               </Flex>
+                </Section>
+              </Container>
             </Box>
           </Theme>
         </Tile>
@@ -281,7 +285,7 @@ export default function ThemeSettings() {
             </Container>
           ) : null}
           <Button type="button" variant="outline" color="gray" size="2" onClick={() => setDraft(toDraft(themePreference))} disabled={!dirty || saving}>
-            <LucideIcon icon={RefreshCw} size={14} />
+            <RefreshIcon size={14} />
             {t("actions.reset")}
           </Button>
           <Button
@@ -297,7 +301,7 @@ export default function ThemeSettings() {
               }
             }}
           >
-            <LucideIcon icon={Save} size={14} />
+            <SaveIcon size={14} />
             {t("actions.saveTheme")}
           </Button>
         </Flex>

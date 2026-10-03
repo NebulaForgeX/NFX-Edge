@@ -4,6 +4,5 @@
   min-height: 100dvh;
   width: 100%;
   overflow: clip;
-  background: var(--color-background);
   color: var(--gray-12);
 }

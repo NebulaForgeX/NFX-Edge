@@ -14,18 +14,24 @@
   min-width: 0;
 }
 
-.pane {
-  flex: 1 1 0;
-  min-width: 0;
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-2);
+  color: var(--gray-11);
 }
 
 .listFrame {
-  border: 1px solid var(--gray-a5);
+  overflow: hidden;
+  border-radius: var(--radius-4);
+  background: var(--color-panel);
+  backdrop-filter: var(--backdrop-filter-panel);
+  box-shadow:
+    inset 0 0 0 1px var(--gray-a5),
+    var(--shadow-1);
 }
 
 .listScroll {
   max-height: min(40rem, 56vh);
-  overflow: auto;
 }
 
 .item {
@@ -46,36 +52,44 @@
   color: inherit;
   font: inherit;
   text-align: left;
+  transition: background-color 160ms ease;
 }
 
 .pick:hover {
-  background: color-mix(in oklab, var(--accent-9) 5%, transparent);
+  background: var(--accent-a2);
 }
 
-.actionRule {
-  border-top: 1px solid var(--gray-a5);
+.pick:focus-visible {
+  outline: 2px solid var(--focus-8);
+  outline-offset: -2px;
 }
 
-.hint {
-  font-size: 0.8rem;
-  color: var(--gray-11);
+.pickIcon {
+  color: var(--gray-9);
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
 }
 
-.field {
-  flex: 1 1 11rem;
-  min-width: 9rem;
+.pick:hover .pickIcon {
+  color: var(--accent-11);
+  transform: scale(1.15);
 }
 
-.grow {
-  flex: 1 1 auto;
-  min-width: 0;
+.check {
+  flex-shrink: 0;
+  color: var(--accent-11);
 }
 
-.hostLine {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.8rem;
+.mono {
+  font-family: var(--code-font-family);
 }
 
 .changed {
-  color: var(--accent-9);
+  font-family: var(--code-font-family);
+  color: var(--accent-11);
+}
+
+.footer {
+  border-top: 1px solid var(--gray-a4);
 }

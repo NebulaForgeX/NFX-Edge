@@ -31,7 +31,7 @@
 }
 
 .glowFill {
-  background: color-mix(in oklab, var(--accent-9) 14%, var(--color-background));
+  background: var(--accent-3);
 }
 
 .glowHit {
@@ -62,34 +62,34 @@
 }
 
 .artType {
-  color: color-mix(in oklab, var(--accent-9) 88%, var(--gray-12));
+  color: var(--accent-11);
 }
 
 
 
 .orbit {
   fill: none;
-  stroke: color-mix(in oklab, var(--accent-9) 28%, var(--gray-a6));
+  stroke: var(--accent-a6);
   stroke-width: 1.25;
   stroke-dasharray: 4 6;
 }
 
 .orbitSoft {
   fill: none;
-  stroke: color-mix(in oklab, var(--accent-9) 18%, var(--gray-a5));
+  stroke: var(--accent-a5);
   stroke-width: 1;
   stroke-dasharray: 2 8;
 }
 
 .blob {
-  fill: color-mix(in oklab, var(--accent-9) 16%, var(--color-panel-solid));
-  stroke: color-mix(in oklab, var(--accent-9) 40%, var(--gray-a6));
+  fill: var(--accent-3);
+  stroke: var(--accent-a8);
   stroke-width: 1.5;
 }
 
 .blobMuted {
-  fill: color-mix(in oklab, var(--accent-9) 10%, var(--color-panel-solid));
-  stroke: color-mix(in oklab, var(--gray-11) 35%, var(--accent-9));
+  fill: var(--accent-2);
+  stroke: var(--accent-10);
   stroke-width: 1.25;
 }
 

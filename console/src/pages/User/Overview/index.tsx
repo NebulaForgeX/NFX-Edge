@@ -1,21 +1,23 @@
-import { LayoutDashboardIcon, ShieldCheck } from "nfx-ui/icons";
+import { ClockIcon, LayoutDashboardIcon, ShieldCheck, UserPlusIcon } from "nfx-ui/icons";
 import { memo, useMemo } from "react";
-import { Box, Button, Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
-import { PageFrame } from "@/layouts";
-import { ActionBar, DataTable, PageHeader, Suspense } from "@/components";
+import { Badge, Button, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 
-import { useCertificateList, useCertificateTime } from "@/hooks";
-import { ROUTES } from "@/navigations";
+import { DataTable, PageHeader, StatCard, Suspense } from "@/components";
 import { routerEventEmitter } from "@/events/router";
+import { useCertificateList, useCertificateTime } from "@/hooks";
+import { PageFrame } from "@/layouts";
+import { ROUTES } from "@/navigations";
 import type { CertificateInfo } from "@/types";
-
-import styles from "./s.module.css";
 
 function ExpiringRowLabel({ cert }: { cert: CertificateInfo }) {
   const timeInfo = useCertificateTime(cert);
-  return <Text size="2">{timeInfo.label}</Text>;
+  return (
+    <Badge color={timeInfo.color} variant="surface" radius="full">
+      {timeInfo.label}
+    </Badge>
+  );
 }
 
 const DashboardBody = memo(() => {
@@ -33,32 +35,19 @@ const DashboardBody = memo(() => {
   return (
     <Flex direction="column" gap="5">
       <Grid columns={{ initial: "1", sm: "2" }} gap="4" width="100%">
-        <Box className={styles.stamp}>
-          <Container width="100%" maxWidth="100%" px="4">
-            <Section py="4">
-              <Flex direction="column" gap="2">
-                <span className={styles.stampKey}>{t("dashboard.totalCerts")}</span>
-                <span className={styles.stampVal}>{certificates.length}</span>
-              </Flex>
-            </Section>
-          </Container>
-        </Box>
-        <Box className={styles.stamp}>
-          <Container width="100%" maxWidth="100%" px="4">
-            <Section py="4">
-              <Flex direction="column" gap="2">
-                <span className={styles.stampKey}>{t("dashboard.expiringSoon")}</span>
-                <span className={styles.stampWarn}>{expiring.length}</span>
-              </Flex>
-            </Section>
-          </Container>
-        </Box>
+        <StatCard icon={ShieldCheck} label={t("dashboard.totalCerts")} value={certificates.length} tone="accent" />
+        <StatCard icon={ClockIcon} label={t("dashboard.expiringSoon")} value={expiring.length} tone={expiring.length ? "amber" : "green"} />
       </Grid>
 
       <Flex direction="column" gap="3">
-        <Text as="p" className={styles.ledgerTitleText}>
-          {t("dashboard.expiringTable")}
-        </Text>
+        <Flex align="center" justify="between" gap="3">
+          <Heading as="h3" size="3" weight="bold">
+            {t("dashboard.expiringTable")}
+          </Heading>
+          <Text size="2" color="gray">
+            {expiring.length}
+          </Text>
+        </Flex>
         <DataTable
           emptyIcon={ShieldCheck}
           empty={t("dashboard.noExpiring")}
@@ -69,7 +58,15 @@ const DashboardBody = memo(() => {
             routerEventEmitter.navigate({ to: ROUTES.CERT_DETAIL.replace(":certificateId", encodeURIComponent(row.id)) });
           }}
           columns={[
-            { key: "domain", header: t("dashboard.colDomain") },
+            {
+              key: "domain",
+              header: t("dashboard.colDomain"),
+              render: (row) => (
+                <Text size="2" weight="medium">
+                  {row.domain}
+                </Text>
+              ),
+            },
             { key: "issuer", header: t("dashboard.colIssuer"), render: (row) => row.issuer || "—", mono: true },
             { key: "notAfter", header: t("dashboard.colExpiry"), render: (row) => row.notAfter || "—", mono: true },
             { key: "status", header: t("dashboard.colStatus"), render: (row) => <ExpiringRowLabel cert={row} /> },
@@ -87,12 +84,20 @@ const DashboardPage = memo(() => {
 
   return (
     <PageFrame>
-      <PageHeader icon={LayoutDashboardIcon} index={t("dashboard.index")} title={t("title")} description={t("subtitle")} />
-      <ActionBar>
-        <Button asChild>
-          <Link to={ROUTES.CERT_ADD}>{t("dashboard.addCert")}</Link>
-        </Button>
-      </ActionBar>
+      <PageHeader
+        icon={LayoutDashboardIcon}
+        index={t("dashboard.index")}
+        title={t("title")}
+        description={t("subtitle")}
+        actions={
+          <Button asChild>
+            <Link to={ROUTES.CERT_ADD}>
+              <UserPlusIcon size={16} />
+              {t("dashboard.addCert")}
+            </Link>
+          </Button>
+        }
+      />
       <Suspense>
         <DashboardBody />
       </Suspense>

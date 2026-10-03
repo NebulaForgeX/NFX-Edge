@@ -1,11 +1,18 @@
 .tile {
   position: relative;
-  width: 160px;
-  height: 120px;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
-  border-radius: var(--radius-3);
-  border: 1px solid var(--gray-a5);
-  background: var(--gray-3);
+  border-radius: var(--radius-4);
+  background: var(--gray-a3);
+  box-shadow:
+    inset 0 0 0 1px var(--gray-a5),
+    var(--shadow-2);
+}
+
+.tile[data-failed="true"] {
+  box-shadow:
+    inset 0 0 0 1px var(--red-a7),
+    var(--shadow-2);
 }
 
 .tileImage {
@@ -15,34 +22,34 @@
   object-fit: cover;
 }
 
-.orderBadge.orderBadge {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  width: auto;
-  padding-inline: 6px;
-  border-radius: var(--radius-2);
-  background: color-mix(in oklab, var(--gray-12) 70%, transparent);
-  color: var(--gray-1);
-  line-height: 1.4;
-}
-
 .tileActions {
   z-index: 1;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.tile:hover .tileActions,
+.tile:focus-within .tileActions {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .tileActions {
+    opacity: 1;
+  }
 }
 
 .busyOverlay {
   position: absolute;
   inset: 0;
-  background: color-mix(in oklab, var(--gray-1) 45%, transparent);
-  color: var(--gray-12);
+  background: var(--color-overlay);
+  backdrop-filter: blur(var(--space-1));
 }
 
 .failedOverlay {
   position: absolute;
   inset: 0;
-  background: color-mix(in oklab, var(--accent-9) 35%, transparent);
-  color: var(--gray-1);
+  background: var(--red-a6);
 }
 
 .hiddenInput {

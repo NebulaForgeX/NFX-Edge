@@ -1,8 +1,8 @@
-import { RouterIcon } from "nfx-ui/icons";
+import { ArrowNarrowLeftIcon, PenIcon, RouterIcon } from "nfx-ui/icons";
 import { memo } from "react";
-import { Button, Container, Flex, Grid, Section, Text } from "@radix-ui/themes";
+import { Button, Grid, Text } from "@radix-ui/themes";
 import { PageFrame } from "@/layouts";
-import { ActionBar, EmptyState, PageHeader } from "@/components";
+import { ActionBar, EmptyState, PageHeader, SideCard } from "@/components";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 
@@ -13,7 +13,6 @@ import { getCommandMessage } from "@/utils";
 
 import CredentialForm from "../../CredentialForm";
 
-import styles from "./s.module.css";
 
 const NamecheapEditPage = memo(() => {
   const { t } = useTranslation("dns");
@@ -37,7 +36,7 @@ const NamecheapEditPage = memo(() => {
           icon={RouterIcon}
           title={t("accounts.missing")}
           action={
-            <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_OVERVIEW)}>
+            <Button variant="outline" color="gray" onClick={() => navigate(ROUTES.NAMECHEAP_OVERVIEW)}>
               {t("accounts.back")}
             </Button>
           }
@@ -50,11 +49,12 @@ const NamecheapEditPage = memo(() => {
     <PageFrame>
       <PageHeader icon={RouterIcon} index={t("index")} title={t("credential.edit")} description={t("credential.pageHint")} />
       <ActionBar>
-        <Button variant="outline" onClick={() => navigate(ROUTES.NAMECHEAP_OVERVIEW)}>
+        <Button variant="outline" color="gray" onClick={() => navigate(ROUTES.NAMECHEAP_DETAIL.replace(":credentialId", credentialId))}>
+          <ArrowNarrowLeftIcon size={16} />
           {t("accounts.back")}
         </Button>
       </ActionBar>
-      <Grid columns={{ initial: "1", lg: "minmax(0, 1fr) 18rem" }} gap="6" align="start">
+      <Grid columns={{ initial: "1", lg: "minmax(0, 1fr) 18rem" }} gap="5" align="start">
         <CredentialForm
           initial={{
             label: credential.label,
@@ -73,16 +73,11 @@ const NamecheapEditPage = memo(() => {
             }
           }}
         />
-        <Section size="1" py="4" className={styles.side}>
-          <Container size="2" px="4" width="100%">
-            <Flex direction="column" gap="2">
-              <Text size="1" color="gray">
-                {credential.apiUser}
-              </Text>
-              <Text size="2">{t("credential.pageHint")}</Text>
-            </Flex>
-          </Container>
-        </Section>
+        <SideCard icon={PenIcon} title={credential.label || credential.apiUser} caption={credential.apiUser}>
+          <Text size="2" color="gray">
+            {t("credential.pageHint")}
+          </Text>
+        </SideCard>
       </Grid>
     </PageFrame>
   );

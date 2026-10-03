@@ -1,9 +1,8 @@
-import { PenIcon } from "nfx-ui/icons";
+import { ArrowNarrowLeftIcon, PenIcon, UploadIcon } from "nfx-ui/icons";
 import type { ReactNode } from "react";
 
-import { Upload } from "lucide-react";
 import { useRef, useState } from "react";
-import { Avatar, Box, Button, Dialog, Flex, Grid, Section, Select, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Avatar, Button, Dialog, Flex, Grid, Section, Select, Text, TextArea, TextField } from "@radix-ui/themes";
 import { LanguageEnum } from "nfx-ui/enums";
 import { systemEventEmitter } from "nfx-ui/events";
 import { useConfirmImageUpload, useConfirmProfileAvatar, useCurrentProfile, useDeleteImage, usePatchProfile, usePrepareImageUpload } from "nfx-ui/hooks";
@@ -12,7 +11,7 @@ import type { Profile } from "nfx-ui/types";
 import { Controller, type Control, type FieldPath } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { ActionBar, EmptyState, LucideIcon, PageHeader } from "@/components";
+import { ActionBar, EmptyState, FormSection, PageHeader } from "@/components";
 import { routerEventEmitter } from "@/events/router";
 import { PageFrame } from "@/layouts";
 import { ROUTES } from "@/navigations";
@@ -85,31 +84,27 @@ function AvatarSection() {
   const src = previewUrl || (currentAvatarId ? buildImageUrl(currentAvatarId) : undefined);
 
   return (
-    <Box className={styles.hairline}>
-      <Section size="1" py="5">
-        <Flex direction="column" gap="4">
-          <Text className={styles.kicker}>{t("avatar.title")}</Text>
-          <Text as="p" size="2" className={styles.lede}>
-            {t("avatar.hint")}
-          </Text>
-          <Flex align="center" justify="between" gap="4" wrap="wrap">
-            <Flex align="center" gap="4" minWidth="0">
-              <Flex flexShrink="0" className={styles.portrait}>
-                <Avatar size="5" radius="none" src={src} fallback={initial} />
-              </Flex>
-              <Text size="2" color="gray">
-                {t("avatar.pickHint")}
-              </Text>
-            </Flex>
-            <Flex gap="2" wrap="wrap" align="center">
-              <Button size="2" variant="outline" disabled={busy} onClick={() => fileRef.current?.click()}>
-                <LucideIcon icon={Upload} size={14} />
-                {busy ? t("avatar.uploading") : t("avatar.choose")}
-              </Button>
-              <Button size="2" disabled={!pendingImageId || busy} onClick={() => void handleConfirm()}>
-                {confirmUpload.isPending ? t("avatar.confirming") : t("avatar.confirm")}
-              </Button>
-            </Flex>
+    <FormSection
+      step={1}
+      title={t("avatar.title")}
+      hint={t("avatar.hint")}
+      footer={
+        <>
+          <Button size="2" variant="outline" color="gray" loading={busy} onClick={() => fileRef.current?.click()}>
+            <UploadIcon size={14} />
+            {t("avatar.choose")}
+          </Button>
+          <Button size="2" disabled={!pendingImageId || busy} loading={confirmUpload.isPending} onClick={() => void handleConfirm()}>
+            {t("avatar.confirm")}
+          </Button>
+        </>
+      }
+    >
+          <Flex align="center" gap="4" minWidth="0">
+            <Avatar size="6" radius="full" src={src} fallback={initial} className={styles.portrait} data-pending={pendingImageId ? "true" : undefined} />
+            <Text size="2" color="gray">
+              {t("avatar.pickHint")}
+            </Text>
           </Flex>
           <input
             ref={fileRef}
@@ -122,9 +117,7 @@ function AvatarSection() {
               e.target.value = "";
             }}
           />
-        </Flex>
-      </Section>
-    </Box>
+    </FormSection>
   );
 }
 
@@ -140,8 +133,8 @@ function genderLabel(t: (key: string) => string, value: string) {
 
 function Field({ label, children, error }: { label: string; children: ReactNode; error?: string }) {
   return (
-    <Flex direction="column" gap="1">
-      <Text size="1" color="gray">
+    <Flex direction="column" gap="1" minWidth="0">
+      <Text size="1" weight="medium" color="gray">
         {label}
       </Text>
       {children}
@@ -215,10 +208,10 @@ function BirthdayField({ value, onChange }: { value: string; onChange: (value: s
                 </Field>
               </Grid>
               <Flex justify="end" gap="2">
-                <Button variant="outline" onClick={() => { onChange(""); setOpen(false); }}>
+                <Button variant="outline" color="gray" onClick={() => { onChange(""); setOpen(false); }}>
                   {t("datePicker.clear")}
                 </Button>
-                <Button variant="outline" onClick={() => setOpen(false)}>
+                <Button variant="outline" color="gray" onClick={() => setOpen(false)}>
                   {t("datePicker.cancel")}
                 </Button>
                 <Button
@@ -251,11 +244,7 @@ function ProfileForm({ profile }: { profile: Profile.Response.ProfileBase }) {
 
   return (
     <>
-      <Box className={styles.hairline}>
-        <Section size="1" py="5">
-          <Flex direction="column" gap="4">
-            <Text className={styles.kicker}>{t("sections.identity.title")}</Text>
-            <Text as="p" size="2" className={styles.lede}>{t("sections.identity.description")}</Text>
+      <FormSection step={3} title={t("sections.identity.title")} hint={t("sections.identity.description")}>
             <Grid columns={{ initial: "1", sm: "2" }} gap="4">
               <Field label={t("labels.displayName")}><TextControl name="displayName" control={form.control} /></Field>
               <Field label={t("labels.profileLanguage")}>
@@ -277,14 +266,8 @@ function ProfileForm({ profile }: { profile: Profile.Response.ProfileBase }) {
               <Field label={t("labels.firstName")}><TextControl name="firstName" control={form.control} /></Field>
               <Field label={t("labels.lastName")}><TextControl name="lastName" control={form.control} /></Field>
             </Grid>
-          </Flex>
-        </Section>
-      </Box>
-      <Box className={styles.hairline}>
-        <Section size="1" py="5">
-          <Flex direction="column" gap="4">
-            <Text className={styles.kicker}>{t("sections.place.title")}</Text>
-            <Text as="p" size="2" className={styles.lede}>{t("sections.place.description")}</Text>
+      </FormSection>
+      <FormSection step={4} title={t("sections.place.title")} hint={t("sections.place.description")}>
             <Grid columns={{ initial: "1", sm: "2" }} gap="4">
               <Field label={t("labels.city")}><TextControl name="city" control={form.control} /></Field>
               <Field label={t("labels.country")}><TextControl name="country" control={form.control} /></Field>
@@ -308,14 +291,25 @@ function ProfileForm({ profile }: { profile: Profile.Response.ProfileBase }) {
                 <TextControl name="website" control={form.control} />
               </Field>
             </Grid>
-          </Flex>
-        </Section>
-      </Box>
-      <Box className={styles.hairline}>
-        <Section size="1" py="5">
-          <Flex direction="column" gap="4">
-            <Text className={styles.kicker}>{t("sections.personal.title")}</Text>
-            <Text as="p" size="2" className={styles.lede}>{t("sections.personal.description")}</Text>
+      </FormSection>
+      <FormSection
+        step={5}
+        title={t("sections.personal.title")}
+        hint={t("sections.personal.description")}
+        footer={
+          <Button
+            size="2"
+            loading={patch.isPending}
+            onClick={form.handleSubmit((values) => {
+              const body = buildProfilePatch(profile, values);
+              if (isEmptyPatch(body)) return;
+              patch.mutate(body);
+            })}
+          >
+            {t("actions.saveChanges")}
+          </Button>
+        }
+      >
             <Grid columns={{ initial: "1", sm: "2" }} gap="4">
               <Field label={t("labels.gender")}>
                 <Controller
@@ -341,22 +335,7 @@ function ProfileForm({ profile }: { profile: Profile.Response.ProfileBase }) {
             <Field label={t("labels.bio")}>
               <Controller name="bio" control={form.control} render={({ field }) => <TextArea size="2" rows={5} value={field.value} onChange={field.onChange} />} />
             </Field>
-            <Flex justify="end">
-              <Button
-                size="2"
-                loading={patch.isPending}
-                onClick={form.handleSubmit((values) => {
-                  const body = buildProfilePatch(profile, values);
-                  if (isEmptyPatch(body)) return;
-                  patch.mutate(body);
-                })}
-              >
-                {t("actions.saveChanges")}
-              </Button>
-            </Flex>
-          </Flex>
-        </Section>
-      </Box>
+      </FormSection>
     </>
   );
 }
@@ -369,18 +348,13 @@ export default function ProfileEditPage() {
     <PageFrame>
       <PageHeader icon={PenIcon} index={t("index")} title={t("title")} description={t("description")} />
       <ActionBar>
-        <Button size="2" variant="outline" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
+        <Button size="2" variant="outline" color="gray" onClick={() => routerEventEmitter.navigate({ to: ROUTES.USER_PROFILE_OVERVIEW })}>
+          <ArrowNarrowLeftIcon size={16} />
           {t("actions.openProfile")}
         </Button>
       </ActionBar>
       <AvatarSection />
-      {profile ? (
-        <Box className={styles.hairline}>
-          <Section size="1" py="5">
-            <BackgroundGallery profile={profile} />
-          </Section>
-        </Box>
-      ) : null}
+      {profile ? <BackgroundGallery profile={profile} /> : null}
       {profile ? <ProfileForm profile={profile} /> : (
         <EmptyState
           icon={PenIcon}

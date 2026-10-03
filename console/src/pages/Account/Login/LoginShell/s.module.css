@@ -1,4 +1,6 @@
 .page {
+  width: 100%;
+  max-width: 100%;
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
@@ -7,7 +9,7 @@
 }
 
 .rail {
-  border-bottom: 1px solid var(--gray-6);
+  border-bottom: 1px solid var(--gray-a6);
   background: var(--color-background);
 }
 
@@ -19,13 +21,18 @@
 }
 
 .body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 0;
   overflow: hidden;
 }
 
 .protocol {
-  border-right: 1px solid var(--gray-6);
-  background: var(--color-panel-solid);
+  border-right: 1px solid var(--gray-a6);
+  background: var(--color-panel);
+  backdrop-filter: var(--backdrop-filter-panel);
+  -webkit-backdrop-filter: var(--backdrop-filter-panel);
 }
 
 .stretch {
@@ -34,6 +41,8 @@
 }
 
 .stage {
+  width: 100%;
+  max-width: 100%;
   height: 100%;
   min-width: 0;
   min-height: 0;
@@ -41,8 +50,13 @@
 }
 
 .sheet {
-  border: 1px solid var(--gray-6);
-  background: var(--color-background);
+  max-width: 100%;
+  min-width: 0;
+  border-radius: var(--radius-4);
+  background: var(--color-panel);
+  box-shadow:
+    inset 0 0 0 1px var(--gray-a5),
+    var(--shadow-3);
 }
 
 .cornerTl,
@@ -51,64 +65,65 @@
 .cornerBr {
   pointer-events: none;
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: var(--space-4);
+  height: var(--space-4);
   border-color: var(--accent-9);
   border-style: solid;
 }
 
 .cornerTl {
-  top: 8px;
-  left: 8px;
+  top: var(--space-2);
+  left: var(--space-2);
   border-width: 2px 0 0 2px;
 }
 
 .cornerTr {
-  top: 8px;
-  right: 8px;
+  top: var(--space-2);
+  right: var(--space-2);
   border-width: 2px 2px 0 0;
 }
 
 .cornerBl {
-  bottom: 8px;
-  left: 8px;
+  bottom: var(--space-2);
+  left: var(--space-2);
   border-width: 0 0 2px 2px;
 }
 
 .cornerBr {
-  bottom: 8px;
-  right: 8px;
+  bottom: var(--space-2);
+  right: var(--space-2);
   border-width: 0 2px 2px 0;
 }
 
 .sheetTop {
-  border-bottom: 1px solid var(--gray-6);
+  border-bottom: 1px solid var(--gray-a6);
 }
 
 .sheetKind {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-1);
   text-transform: uppercase;
   color: var(--accent-9);
 }
 
 .sheetTopMeta {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-1);
   text-transform: uppercase;
   color: var(--gray-11);
 }
 
 .pemKey {
-  font-size: 10px;
+  font-size: var(--font-size-1);
+  letter-spacing: var(--letter-spacing-1);
   text-transform: uppercase;
   color: var(--gray-10);
 }
 
 .pemVal {
   overflow: hidden;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 13px;
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-2);
   line-height: 1.4;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -118,23 +133,27 @@
 .pemBody {
   margin: 0;
   width: 100%;
+  max-width: 100%;
   height: 100%;
+  min-width: 0;
   min-height: 0;
   overflow: hidden;
   column-count: 2;
-  column-gap: 1.75rem;
+  column-gap: var(--space-6);
   column-fill: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-1);
   line-height: 1.65;
   color: var(--gray-11);
-  white-space: pre;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-all;
 }
 
 .sheetFoot {
-  border-top: 1px dashed var(--gray-6);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
+  border-top: 1px dashed var(--gray-a6);
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-1);
   color: var(--gray-11);
 }
 
@@ -144,16 +163,16 @@
 
 .watermark {
   position: absolute;
-  right: 1.25rem;
-  bottom: 3.2rem;
+  right: var(--space-5);
+  bottom: var(--space-8);
   z-index: 1;
   pointer-events: none;
   user-select: none;
   font-family: var(--heading-font-family), sans-serif;
   font-size: clamp(4.5rem, 11vw, 9.5rem);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   line-height: 0.78;
-  color: color-mix(in oklab, var(--accent-9) 16%, transparent);
+  color: var(--accent-a4);
 }
 
 .protocol[data-narrow="true"] {
@@ -161,8 +180,8 @@
 }
 
 .pemSummaryText {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-1);
   text-transform: uppercase;
   color: var(--gray-11);
 }

@@ -1,8 +1,9 @@
 .side {
-  border: 1px solid var(--gray-6);
-  background: var(--color-panel-solid);
+  position: sticky;
+  top: var(--space-5);
 }
 
-.sideRule {
-  border-top: 1px solid var(--gray-6);
+.countdown {
+  font-family: var(--code-font-family);
+  font-variant-numeric: tabular-nums;
 }

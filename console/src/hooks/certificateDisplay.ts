@@ -1,114 +1,38 @@
-import { useMemo, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import type { CertificateInfo } from "@/types";
-import { CertificateStatusEnum } from "@/enums";
+import type { BadgeProps } from "@radix-ui/themes";
 
-export interface CertificateStatusInfo {
-  label: string;
-  bgColor: string;
-  textColor: string;
-}
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import type { CertificateInfo } from "@/types";
 
 export interface CertificateTimeInfo {
   label: string;
-  bgColor: string;
-  textColor: string;
+  color: NonNullable<BadgeProps["color"]>;
 }
-
-export const useCertificateListAccent = (cert: CertificateInfo | undefined): string => {
-  return useMemo(() => {
-    if (!cert) {
-      return "var(--color-border-4)";
-    }
-    if (cert.status === CertificateStatusEnum.FAIL) {
-      return "var(--color-danger)";
-    }
-    if (cert.status === CertificateStatusEnum.PROCESS) {
-      return "var(--color-primary)";
-    }
-    const isExpired = !cert.isValid || (cert.daysRemaining !== undefined && cert.daysRemaining <= 0);
-    if (isExpired) {
-      return "var(--color-danger)";
-    }
-    if (cert.daysRemaining !== undefined) {
-      const days = cert.daysRemaining;
-      if (days >= 0 && days < 7) {
-        return "var(--color-warning)";
-      }
-      if (days >= 7) {
-        return "var(--color-primary)";
-      }
-    }
-    return "var(--color-primary)";
-  }, [cert]);
-};
-
-export const useCertificateStatus = (cert: CertificateInfo | undefined): string => {
-  const statusColor = useMemo(() => {
-    if (!cert || !cert.status) {
-      return "var(--color-fg)";
-    }
-    if (cert.status === CertificateStatusEnum.SUCCESS) {
-      return "var(--color-success)";
-    }
-    if (cert.status === CertificateStatusEnum.FAIL) {
-      return "var(--color-danger)";
-    }
-    return "var(--color-fg)";
-  }, [cert]);
-  return statusColor;
-};
 
 export const useCertificateTime = (cert: CertificateInfo | undefined): CertificateTimeInfo => {
   const { t } = useTranslation("certCheck");
 
-  const timeInfo = useMemo(() => {
+  return useMemo(() => {
     if (!cert) {
-      return {
-        label: t("status.valid"),
-        bgColor: "var(--color-bg-4)",
-        textColor: "var(--color-fg-text)",
-      };
+      return { label: t("status.valid"), color: "gray" };
     }
 
     const isExpired = !cert.isValid || (cert.daysRemaining !== undefined && cert.daysRemaining <= 0);
-
     if (isExpired) {
-      return {
-        label: t("status.expired"),
-        bgColor: "var(--color-danger-light)",
-        textColor: "var(--color-danger)",
-      };
+      return { label: t("status.expired"), color: "red" };
     }
 
     if (cert.daysRemaining !== undefined) {
       const days = cert.daysRemaining;
-
-      if (days >= 0 && days < 7) {
-        return {
-          label: `${t("status.expiringSoon")} (${t("status.remainingDays", { days })})`,
-          bgColor: "var(--color-warning-light)",
-          textColor: "var(--color-warning)",
-        };
+      if (days < 7) {
+        return { label: `${t("status.expiringSoon")} · ${t("status.remainingDays", { days })}`, color: "amber" };
       }
-
-      if (days >= 7) {
-        return {
-          label: `${t("status.valid")} (${t("status.remainingDays", { days })})`,
-          bgColor: "color-mix(in srgb, var(--color-primary) 16%, var(--color-bg-2))",
-          textColor: "var(--color-primary)",
-        };
-      }
+      return { label: t("status.remainingDays", { days }), color: days <= 30 ? "amber" : "green" };
     }
 
-    return {
-      label: t("status.valid"),
-      bgColor: "color-mix(in srgb, var(--color-primary) 16%, var(--color-bg-2))",
-      textColor: "var(--color-primary)",
-    };
+    return { label: t("status.valid"), color: "green" };
   }, [cert, t]);
-
-  return timeInfo;
 };
 
 export const useCertificateCountdown = (notAfter?: string): { countdown: string; isExpired: boolean } => {

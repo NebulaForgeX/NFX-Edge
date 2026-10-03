@@ -3,6 +3,7 @@ import type { MenuItemProps, SubMenuProps } from "react-pro-sidebar";
 
 import { createContext, isValidElement, useContext, useEffect, useRef, useState } from "react";
 import { Box, IconButton, Popover, Section, Tooltip } from "@radix-ui/themes";
+import { motion } from "motion/react";
 import { Menu, MenuItem as ProMenuItem, SubMenu as ProSubMenu } from "react-pro-sidebar";
 
 import styles from "./s.module.css";
@@ -25,18 +26,37 @@ function MenuDot() {
   return <Box className={styles.menuDot} />;
 }
 
+function ActivePill() {
+  return <motion.span layoutId="sidebar-active-pill" className={styles.activePill} transition={{ type: "spring", stiffness: 520, damping: 42 }} aria-hidden />;
+}
+
 export function MenuItem(props: MenuItemProps) {
   const collapsed = useContext(CollapsedContext);
   const nested = useContext(NestedContext);
   const label = labelText(props.children);
   const hasUnread = nested && isValidElement<{ showDot?: boolean }>(props.icon) && props.icon.props.showDot;
+  const inFlyout = collapsed && nested;
+  const pill = props.active && !inFlyout ? <ActivePill /> : null;
   const item = (
     <ProMenuItem
       {...props}
+      icon={
+        nested ? (
+          props.icon
+        ) : (
+          <>
+            {pill}
+            {props.icon}
+          </>
+        )
+      }
       suffix={props.suffix ?? (hasUnread ? <MenuDot /> : undefined)}
       aria-label={props["aria-label"] ?? label}
       aria-current={props.active ? "page" : undefined}
-    />
+    >
+      {nested ? pill : null}
+      {props.children}
+    </ProMenuItem>
   );
   return collapsed && !nested ? (
     <Tooltip content={label} side="right" sideOffset={14} delayDuration={150}>
@@ -69,6 +89,8 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
             ref={trigger}
             type="button"
             variant="ghost"
+            my="1"
+            mx="auto"
             className={styles.triggerHit}
             data-state={state}
             aria-label={labelText(label)}
@@ -109,7 +131,7 @@ function CollapsedSubMenu({ children, label, icon, active }: SubMenuProps) {
           }}
         >
           <Box className={styles.flyout}>
-            <Section size="1" py="5px">
+            <Section size="1" py="1">
               <NestedContext.Provider value={true}>
                 <Menu
                   onClick={(event) => {

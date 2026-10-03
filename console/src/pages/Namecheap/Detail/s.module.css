@@ -1,23 +1,18 @@
-.panel {
-  border: 1px solid var(--gray-6);
-  background: var(--color-panel-solid);
-}
-
-.sideRule {
-  border-top: 1px solid var(--gray-6);
-}
-
-.balance {
-  font-variant-numeric: tabular-nums;
-}
-
-.errFrame {
-  overflow-wrap: anywhere;
-  border: 1px solid color-mix(in oklab, var(--accent-8) 55%, var(--gray-6));
-  background: var(--color-background);
+.stamp {
+  width: var(--space-6);
+  height: var(--space-6);
+  border-radius: var(--radius-icon);
+  background: var(--accent-a3);
   color: var(--accent-11);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 12px;
-  line-height: 1.5;
+}
+
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-2);
+}
+
+.mono {
+  font-family: var(--code-font-family);
+  overflow-wrap: anywhere;
   white-space: pre-wrap;
 }

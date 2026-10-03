@@ -1,5 +1,16 @@
-.side {
-  background: var(--color-panel-solid);
-  border: 1px solid var(--gray-6);
-  border-radius: var(--radius-3);
+.stamp {
+  width: var(--space-7);
+  height: var(--space-7);
+  border-radius: var(--radius-icon);
+  background: var(--gray-a3);
+  color: var(--gray-11);
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+.stamp[data-active="true"] {
+  background: var(--accent-a3);
+  box-shadow: inset 0 0 0 1px var(--accent-a5);
+  color: var(--accent-11);
 }

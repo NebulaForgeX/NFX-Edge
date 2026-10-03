@@ -16,7 +16,9 @@
     "emptyHint": "添加 Namecheap.com 登录名、API Key 和白名单 IP。",
     "missing": "找不到该 API 账号。",
     "detailHint": "先校验密钥、查看余额，再进入域名列表或 SSL。",
-    "back": "返回账号"
+    "back": "返回账号",
+    "production": "生产",
+    "sandbox": "沙盒"
   },
   "credential": {
     "title": "API 账号",
@@ -40,7 +42,12 @@
     "verifiedAt": "上次校验：{{at}}",
     "verifiedAtShort": "上次校验",
     "confirmDeleteTitle": "删除 Namecheap 账号",
-    "confirmDeleteMessage": "从当前 Edge 账号移除这个 API Key？"
+    "confirmDeleteMessage": "从当前 Edge 账号移除这个 API Key？",
+    "connection": "连接",
+    "manage": "管理",
+    "shortcuts": "打开",
+    "lastError": "最近错误",
+    "outbound": "Edge 出口 IPv4"
   },
   "balances": {
     "title": "余额",

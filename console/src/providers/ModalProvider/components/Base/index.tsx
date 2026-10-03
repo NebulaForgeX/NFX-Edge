@@ -1,17 +1,15 @@
-import { Check, Info, X, type LucideIcon as LucideGlyph } from "lucide-react";
-import { CheckIcon } from "@radix-ui/react-icons";
-import { Box, Button, Container, Dialog, Flex, Section, Text } from "@radix-ui/themes";
+import { CheckedIcon, InfoCircleIcon, XIcon, type AnimatedIconComponent } from "nfx-ui/icons";
+import { Button, Dialog, Flex, ScrollArea, VisuallyHidden } from "@radix-ui/themes";
 import { useTranslation } from "react-i18next";
 
-import { LucideIcon } from "@/components";
 import { hideModal, useModalStore } from "@/stores/modal";
 
 import styles from "./s.module.css";
 
-const TYPE_CONFIG: Record<string, { icon: LucideGlyph; color: "green" | "red" | "blue" }> = {
-  success: { icon: Check, color: "green" },
-  error: { icon: X, color: "red" },
-  info: { icon: Info, color: "blue" },
+const TYPE_CONFIG: Record<string, { icon: AnimatedIconComponent; tone: "green" | "red" | "accent" }> = {
+  success: { icon: CheckedIcon, tone: "green" },
+  error: { icon: XIcon, tone: "red" },
+  info: { icon: InfoCircleIcon, tone: "accent" },
 };
 
 function isLongMessage(message: string | undefined): boolean {
@@ -38,43 +36,43 @@ const Base = () => {
   };
 
   const config = TYPE_CONFIG[variant] ?? TYPE_CONFIG.info;
+  const Icon = config.icon;
   const long = isLongMessage(message);
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={handleOpenChange}>
-      <Box className={styles.shellClip}><Dialog.Content maxWidth={long ? "40rem" : "26.25rem"} className={styles.shellPy}>
-        <Container width="100%" maxWidth="none" px="5" >
-          <Section py="5">
-            <Flex direction="column" align="center" gap="4" width="100%">
-              <Text color={config.color}>
-                <LucideIcon icon={config.icon} size={28} strokeWidth={1.8} />
-              </Text>
-              {title ? (
-                <Dialog.Title align="center">{title}</Dialog.Title>
-              ) : (
-                <Dialog.Title className={styles.srOnly}>{variant}</Dialog.Title>
-              )}
-              <Box width="100%">
-                {long ? (
-                  <Box className={styles.log}>
-                    <Dialog.Description size="2" color="gray" align="left" className={styles.logText}>
-                      {message || t("noMessage")}
-                    </Dialog.Description>
-                  </Box>
-                ) : (
-                  <Dialog.Description size="2" color="gray" align="center" className={styles.shortText}>
-                    {message || t("noMessage")}
-                  </Dialog.Description>
-                )}
-              </Box>
-              <Button onClick={handleClose} className={styles.ok}>
-                <CheckIcon />
-                {confirmText || t("ok")}
-              </Button>
-            </Flex>
-          </Section>
-        </Container>
-      </Dialog.Content></Box>
+      <Dialog.Content size="3" maxWidth={long ? "40rem" : "26.25rem"}>
+        <Flex direction="column" align="center" gap="4" width="100%">
+          <Flex align="center" justify="center" className={styles.stamp} data-tone={config.tone}>
+            <Icon size={24} />
+          </Flex>
+          {title ? (
+            <Dialog.Title align="center" mb="0">
+              {title}
+            </Dialog.Title>
+          ) : (
+            <VisuallyHidden>
+              <Dialog.Title>{variant}</Dialog.Title>
+            </VisuallyHidden>
+          )}
+          {long ? (
+            <ScrollArea type="auto" scrollbars="vertical" className={styles.log}>
+              <Dialog.Description size="2" color="gray" align="left" className={styles.logText}>
+                {message || t("noMessage")}
+              </Dialog.Description>
+            </ScrollArea>
+          ) : (
+            <Dialog.Description size="2" color="gray" align="center" className={styles.shortText}>
+              {message || t("noMessage")}
+            </Dialog.Description>
+          )}
+          <Flex direction="column" width="100%">
+            <Button size="3" onClick={handleClose}>
+              {confirmText || t("ok")}
+            </Button>
+          </Flex>
+        </Flex>
+      </Dialog.Content>
     </Dialog.Root>
   );
 };
