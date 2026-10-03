@@ -108,7 +108,7 @@ export default function LoginShell({ children }: { children: ReactNode }) {
                                   <span className={styles.sheetTopMeta}>{t("rail.tls")} · {t("rail.dns")} · {t("rail.file")}</span>
                                 </Flex>
                               </Section>
-                              <Grid className={styles.meta} columns="2" gap="4" width="100%">
+                              <Grid className={styles.meta} columns="repeat(2, minmax(0, 1fr))" gap="4" width="100%">
                                 {FACSIMILE_ROWS.map(([labelKey, valueKey]) => (
                                   <Flex key={labelKey} direction="column" gap="1" minWidth="0">
                                     <span className={styles.pemKey}>{t(labelKey)}</span>
