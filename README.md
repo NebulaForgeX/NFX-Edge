@@ -34,7 +34,7 @@ task traefik
 | `/console/nfx-storages` | **10101** |
 | `/console/nfx-documentation` | **10120** |
 
-文档站的公网 Host 是 `identity.nebulaforgex.com`，不是单独的文档域名。
+文档站的公网 Host 是 `docs.nebulaforgex.com`。`https://docs.nebulaforgex.com/` 301 到 `/console/nfx-documentation/`。
 
 跳到端口之后，接口不再经过 Traefik。Identity、Edge、News、Storages 的 secure console nginx 去掉 `/nfx-*` 前缀再转发：Identity auth **10035**、asset **10037**；Edge sites **10113**；News HTTP **10063–10073**；Storages admin/object/iam/notify **10093–10099**。Edge、News、Storages 的 console 同时转发 `/nfx-identity/auth` 和 `/asset`。
 

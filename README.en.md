@@ -34,7 +34,7 @@ The `*.project.yml` glob does **not** copy `tls.yaml`. Copy it with `cp dynamic.
 | `/console/nfx-storages` | **10101** |
 | `/console/nfx-documentation` | **10120** |
 
-Documentation's public Host is `identity.nebulaforgex.com`, not a separate docs domain.
+Documentation's public Host is `docs.nebulaforgex.com`. `https://docs.nebulaforgex.com/` returns 301 to `/console/nfx-documentation/`.
 
 After the redirect, APIs no longer pass through Traefik. The secure console nginx of Identity, Edge, News, and Storages strips `/nfx-*` and forwards: Identity auth **10035**, asset **10037**; Edge sites **10113**; News HTTP **10063–10073**; Storages admin/object/iam/notify **10093–10099**. The Edge, News, and Storages consoles also proxy `/nfx-identity/auth` and `/asset`.
 

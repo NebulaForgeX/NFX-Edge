@@ -10,6 +10,11 @@ http:
         regex: "^https?://[^/]+/console/nfx-documentation/?(.*)"
         replacement: 'http://{{ env "NAS1_IP" }}:10120/console/nfx-documentation/${1}'
         permanent: false
+    documentation-root:
+      redirectRegex:
+        regex: "^https?://[^/]+/?$"
+        replacement: "https://docs.nebulaforgex.com/console/nfx-documentation/"
+        permanent: true
 
   routers:
     documentation-lan:
@@ -20,11 +25,18 @@ http:
       tls: {}
       priority: 25
     documentation-host:
-      rule: "Host(`identity.nebulaforgex.com`) && PathPrefix(`/console/nfx-documentation`)"
+      rule: "Host(`docs.nebulaforgex.com`) && PathPrefix(`/console/nfx-documentation`)"
       entryPoints: [websecure]
       service: documentation-frontend
       tls: {}
       priority: 200
+    documentation-root:
+      rule: "Host(`docs.nebulaforgex.com`) && Path(`/`)"
+      entryPoints: [websecure]
+      middlewares: [documentation-root]
+      service: documentation-frontend
+      tls: {}
+      priority: 210
 
   services:
     documentation-frontend:
