@@ -269,7 +269,7 @@
 }
 
 .menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul) {
-  padding: 0 0 var(--space-2);
+  padding: var(--space-1) 0 var(--space-2);
 }
 
 .menuArea:not([data-collapsed="true"]) :global(.ps-submenu-root:not(.ps-open) > .ps-submenu-content) {
@@ -316,6 +316,19 @@
 
 .menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:has(> .ps-menu-button.ps-active))::after {
   border-color: var(--accent-9);
+}
+
+/* The active row stops its own trunk at the bend. This continues the neutral trunk
+   through the rest of that row, so the line still reaches the next sibling. */
+.menuArea:not([data-collapsed="true"]) :global(.ps-submenu-content > ul > .ps-menuitem-root:not(:last-child) > .ps-menu-button.ps-active)::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--space-5) - var(--space-1) / 2 - var(--space-6));
+  top: 50%;
+  bottom: calc(var(--space-1) * -1);
+  width: 1px;
+  background: var(--gray-a6);
+  pointer-events: none;
 }
 
 /* Collapsed rail */
