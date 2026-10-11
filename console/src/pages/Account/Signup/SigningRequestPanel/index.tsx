@@ -50,9 +50,9 @@ export default function SigningRequestPanel({ email, verified, secured }: Signin
   );
 
   return (
-    <Section ref={rootRef} size="1" py="8" height="100%" className={styles.panel}>
-      <Container size="3" px="8" height="100%">
-        <Flex direction="column" justify="center" gap="5" height="100%">
+    <Section ref={rootRef} size="1" py="8" className={styles.panel}>
+      <Container size="3" px="8">
+        <Flex direction="column" gap="5">
           <Flex align="center" justify="between" gap="4" className="js-csr-row">
             <Text as="span" className={styles.kind}>
               {t("ledger.kicker")}

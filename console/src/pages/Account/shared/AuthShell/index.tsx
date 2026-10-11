@@ -63,17 +63,17 @@ export default function AuthShell({ product, aside, children }: AuthShellProps) 
         </Box>
 
         <Grid columns={{ initial: "minmax(0, 1fr)", md: "minmax(0, 5fr) minmax(0, 7fr)" }} rows="minmax(0, 1fr)" flexGrow="1" minHeight="0" width="100%">
-          <Flex direction="column" minHeight="0" overflow="auto" className={styles.formColumn}>
-            <Flex direction="column" flexGrow="1" className={styles.centered}>
-              <Container size="1" px="6" width="100%">
+          <Flex direction="column" minHeight="0" overflow="auto" className={`${styles.formColumn} ${styles.centered}`}>
+            <Box width="100%">
+              <Container size="1" px="6">
                 <Section size="1" py="7">
                   {children}
                 </Section>
               </Container>
-            </Flex>
+            </Box>
           </Flex>
 
-          <Flex asChild display={{ initial: "none", md: "flex" }} direction="column" minHeight="0" minWidth="0" overflow="hidden" className={`${styles.aside} js-auth-aside`}>
+          <Flex asChild display={{ initial: "none", md: "flex" }} direction="column" minHeight="0" minWidth="0" overflow="auto" className={`${styles.aside} ${styles.centered} js-auth-aside`}>
             <aside aria-hidden>{aside}</aside>
           </Flex>
         </Grid>
