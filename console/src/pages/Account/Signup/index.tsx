@@ -1,7 +1,5 @@
-import type { ReactNode } from "react";
-
 import { AnimatedIcon, ArrowNarrowRightIcon } from "nfx-ui/icons";
-import { Button, Flex, Grid, Heading, Link, Section, Text } from "@radix-ui/themes";
+import { Box, Button, Flex, Grid, Heading, Link, Section, Text } from "@radix-ui/themes";
 import { AuthSignupPlatformEnum, LanguageEnum } from "nfx-ui/enums";
 import { useSendVerificationCode, useSignupWithEmail } from "nfx-ui/hooks";
 import { SignupFormData, useInitSignupForm } from "nfx-ui/schemas";
@@ -9,6 +7,7 @@ import { usePreferenceStore } from "nfx-ui/stores";
 import { FormProvider, SubmitHandler } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { ProgressStepStateEnum } from "@/enums";
 import { routerEventEmitter } from "@/events/router";
 import {
   SignupConfirmPasswordController,
@@ -17,30 +16,24 @@ import {
   SignupRememberController,
   SignupVerificationCodeController,
 } from "@/features/account";
+import { useResendTimer, useSignupProgress } from "@/hooks";
 import { ROUTES } from "@/navigations";
+import AuthShell from "@/pages/Account/shared/AuthShell";
 
-import SignupShell from "./SignupShell";
+import IssueStepper from "./IssueStepper";
+import SigningRequestPanel from "./SigningRequestPanel";
 import styles from "./s.module.css";
 
-function LedgerField({ n, children }: { n: string; children: ReactNode }) {
-  return (
-    <Section size="1" mb="4" pt="0" pb="0">
-      <Grid columns="var(--space-7) 1fr" gap="2">
-        <Section size="1" pt="2" pb="0">
-          <span className={styles.fieldNum}>{n}</span>
-        </Section>
-        {children}
-      </Grid>
-    </Section>
-  );
-}
+const stepState = (done: boolean, active: boolean) => (done ? ProgressStepStateEnum.DONE : active ? ProgressStepStateEnum.ACTIVE : ProgressStepStateEnum.PENDING);
 
 export default function SignupPage() {
   const { t } = useTranslation("pages.Account.Signup");
   const form = useInitSignupForm(t);
   const signup = useSignupWithEmail();
   const sendCode = useSendVerificationCode({ successMsg: t("toasts.sendVerificationCodeSuccess") });
+  const resend = useResendTimer();
   const language = usePreferenceStore((s) => s.language);
+  const { verified, secured, email } = useSignupProgress(form.control);
 
   const onSubmit: SubmitHandler<SignupFormData> = async (data) => {
     await signup.mutateAsync({
@@ -54,83 +47,79 @@ export default function SignupPage() {
     routerEventEmitter.navigate({ to: ROUTES.USER_OVERVIEW, replace: true });
   };
 
-  const email = form.watch("email");
+  const requestCode = () => {
+    if (!email) return;
+    sendCode.mutate({ email, lang: language ?? LanguageEnum.EN }, { onSuccess: () => resend.startTimer() });
+  };
+
+  const steps = [
+    { n: t("steps.verifyNum"), label: t("steps.verify"), hint: t("steps.verifyHint"), state: stepState(verified, true) },
+    { n: t("steps.passphraseNum"), label: t("steps.passphrase"), hint: t("steps.passphraseHint"), state: stepState(secured, verified) },
+    { n: t("steps.issueNum"), label: t("steps.issue"), hint: t("steps.issueHint"), state: stepState(false, secured) },
+  ];
 
   return (
-    <SignupShell>
-      <Section size="1" mb="5" pb="4" pt="0" className={styles.sheetHead}>
-        <Text as="p" size="1" weight="bold" className={styles.kicker}>
-          {t("ledger.kicker")}
-        </Text>
-        <Heading as="h1" size="6">
-          {t("ledger.title")}
-        </Heading>
-        <Text as="p" size="2" color="gray">
-          {t("ledger.subtitle")}
-        </Text>
-      </Section>
+    <AuthShell product={t("rail.product")} aside={<SigningRequestPanel email={email} verified={verified} secured={secured} />}>
+      <Flex direction="column" gap="6" width="100%">
+        <Flex direction="column" gap="2" className="js-auth-item">
+          <Text as="span" className={styles.kicker}>
+            {t("ledger.kicker")}
+          </Text>
+          <Heading as="h1" size="7" weight="bold" className={styles.title}>
+            {t("ledger.title")}
+          </Heading>
+          <Text as="p" size="2" color="gray" className={styles.lede}>
+            {t("ledger.subtitle")}
+          </Text>
+        </Flex>
 
-      <FormProvider {...form}>
-        <form noValidate onSubmit={form.handleSubmit(onSubmit)}>
-          <LedgerField n={t("steps.verifyNum")}>
-            <SignupEmailController helperText={t("emailHint")} />
-          </LedgerField>
+        <Box className="js-auth-item">
+          <IssueStepper steps={steps} ariaLabel={t("steps.aria")} />
+        </Box>
 
-          <LedgerField n={t("steps.verifyNum")}>
-            <Flex direction="column" gap="2">
-              <SignupVerificationCodeController />
-              <Button
-                type="button"
-                size="3"
-                variant="outline"
-                loading={sendCode.isPending}
-                disabled={!email}
-                onClick={() =>
-                  email &&
-                  sendCode.mutate({
-                    email,
-                    lang: language ?? LanguageEnum.EN,
-                  })
+        <FormProvider {...form}>
+          <Flex asChild direction="column" gap="4" className="js-auth-item">
+            <form noValidate onSubmit={form.handleSubmit(onSubmit)}>
+              <SignupEmailController helperText={t("emailHint")} />
+              <SignupVerificationCodeController
+                action={
+                  <Button type="button" size="3" variant="outline" loading={sendCode.isPending} disabled={!email || !resend.canResend} onClick={requestCode} className={styles.sendCode}>
+                    {resend.canResend ? t("sendCode") : `${resend.timeLeft}s`}
+                  </Button>
                 }
-              >
-                {t("sendCode")}
-              </Button>
-            </Flex>
-          </LedgerField>
-
-          <LedgerField n={t("steps.passphraseNum")}>
-            <SignupPasswordController />
-          </LedgerField>
-
-          <LedgerField n={t("steps.passphraseNum")}>
-            <SignupConfirmPasswordController />
-          </LedgerField>
-
-          <LedgerField n={t("steps.issueNum")}>
-            <Flex direction="column" gap="3">
+              />
+              <Grid columns="2" gap="3">
+                <SignupPasswordController />
+                <SignupConfirmPasswordController />
+              </Grid>
               <SignupRememberController />
-              <Button type="submit" size="3" loading={signup.isPending}>
+              <Button type="submit" size="3" loading={signup.isPending} className={styles.submit}>
                 {t("submit")}
                 <AnimatedIcon icon={ArrowNarrowRightIcon} size={16} />
               </Button>
-            </Flex>
-          </LedgerField>
-        </form>
-      </FormProvider>
+            </form>
+          </Flex>
+        </FormProvider>
 
-      <Text as="p" size="2" color="gray">
-        {t("hasAccount")}{" "}
-        <Link
-          href={ROUTES.LOGIN}
-          size="2"
-          onClick={(e) => {
-            e.preventDefault();
-            routerEventEmitter.navigate({ to: ROUTES.LOGIN });
-          }}
-        >
-          {t("signIn")}
-        </Link>
-      </Text>
-    </SignupShell>
+        <Section size="1" pt="4" pb="0" className={`${styles.foot} js-auth-item`}>
+          <Flex align="center" justify="between" gap="3">
+            <Text as="p" size="2" color="gray">
+              {t("hasAccount")}
+            </Text>
+            <Link
+              href={ROUTES.LOGIN}
+              size="2"
+              weight="medium"
+              onClick={(e) => {
+                e.preventDefault();
+                routerEventEmitter.navigate({ to: ROUTES.LOGIN });
+              }}
+            >
+              {t("signIn")}
+            </Link>
+          </Flex>
+        </Section>
+      </Flex>
+    </AuthShell>
   );
 }

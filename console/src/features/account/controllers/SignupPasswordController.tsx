@@ -24,7 +24,7 @@ const SignupPasswordController = () => {
           </Text>
           <TextField.Root {...field} id={field.name} size="3" type={visible ? "text" : "password"} placeholder={t("passwordPlaceholder")} autoComplete="new-password">
             <TextField.Slot side="right">
-              <IconButton type="button" variant="ghost" size="1" color="gray" aria-label={t("passwordLabel")} onClick={() => setVisible((v) => !v)}>
+              <IconButton type="button" variant="surface" size="1" color="gray" aria-label={t("passwordLabel")} onClick={() => setVisible((v) => !v)}>
                 <AnimatedIcon icon={visible ? EyeOffIcon : EyeIcon} size={14} />
               </IconButton>
             </TextField.Slot>
@@ -63,7 +63,7 @@ const SignupConfirmPasswordController = ({ label, placeholder }: SignupConfirmPa
           </Text>
           <TextField.Root {...field} id={field.name} size="3" type={visible ? "text" : "password"} placeholder={placeholder ?? t("confirmPlaceholder")} autoComplete="new-password">
             <TextField.Slot side="right">
-              <IconButton type="button" variant="ghost" size="1" color="gray" aria-label={label ?? t("confirmLabel")} onClick={() => setVisible((v) => !v)}>
+              <IconButton type="button" variant="surface" size="1" color="gray" aria-label={label ?? t("confirmLabel")} onClick={() => setVisible((v) => !v)}>
                 <AnimatedIcon icon={visible ? EyeOffIcon : EyeIcon} size={14} />
               </IconButton>
             </TextField.Slot>

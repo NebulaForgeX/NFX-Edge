@@ -1,0 +1,41 @@
+.page {
+  width: 100%;
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  background: var(--color-background);
+  color: var(--gray-12);
+}
+
+.rail {
+  border-bottom: 1px solid var(--gray-a6);
+  background: var(--color-background);
+}
+
+.product {
+  font-family: var(--heading-font-family), sans-serif;
+  font-size: var(--font-size-2);
+  text-transform: uppercase;
+  color: var(--accent-9);
+}
+
+.formColumn {
+  background: var(--color-background);
+}
+
+/* `safe` keeps the top reachable when the form is taller than the column. */
+.centered {
+  justify-content: safe center;
+}
+
+.aside {
+  position: relative;
+  border-left: 1px solid var(--gray-a6);
+  background-color: var(--color-panel-solid);
+  background-image:
+    linear-gradient(var(--gray-a3) 1px, transparent 1px),
+    linear-gradient(90deg, var(--gray-a3) 1px, transparent 1px);
+  background-size: var(--space-6) var(--space-6);
+  background-position: -1px -1px;
+}

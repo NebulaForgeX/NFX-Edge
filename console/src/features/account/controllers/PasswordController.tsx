@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { AnimatedIcon, EyeIcon, EyeOffIcon } from "nfx-ui/icons";
 
 import { useState } from "react";
@@ -7,9 +8,12 @@ import { useTranslation } from "react-i18next";
 
 type LoginSecretFields = { password: string };
 
-export type LoginPasswordControllerProps = Record<string, never>;
+export type LoginPasswordControllerProps = {
+  /** Rendered at the end of the label row (e.g. a field index). */
+  labelAside?: ReactNode;
+};
 
-const LoginPasswordController = () => {
+const LoginPasswordController = ({ labelAside }: LoginPasswordControllerProps) => {
   const { t } = useTranslation("pages.Account.Login");
   const { control } = useFormContext<LoginSecretFields>();
   const [visible, setVisible] = useState(false);
@@ -20,9 +24,12 @@ const LoginPasswordController = () => {
       control={control}
       render={({ field, fieldState }) => (
         <Flex direction="column" gap="1" width="100%">
-          <Text as="label" size="2" weight="medium" htmlFor="login-password">
-            {t("form.passwordLabel")}
-          </Text>
+          <Flex align="baseline" justify="between" gap="3">
+            <Text as="label" size="2" weight="medium" htmlFor="login-password">
+              {t("form.passwordLabel")}
+            </Text>
+            {labelAside}
+          </Flex>
           <TextField.Root
             {...field}
             id="login-password"
@@ -34,7 +41,7 @@ const LoginPasswordController = () => {
             <TextField.Slot side="right">
               <IconButton
                 type="button"
-                variant="ghost"
+                variant="surface"
                 size="1"
                 color="gray"
                 aria-label={visible ? t("form.hidePassword") : t("form.showPassword")}

@@ -1,0 +1,44 @@
+.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  min-width: 0;
+}
+
+.bar {
+  height: 2px;
+  overflow: hidden;
+  border-radius: var(--radius-thumb);
+  background: var(--gray-a5);
+}
+
+.fill {
+  height: 100%;
+  background: var(--accent-9);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.num {
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-1);
+  font-variant-numeric: tabular-nums;
+  color: var(--gray-10);
+}
+
+.label {
+  color: var(--gray-11);
+}
+
+.step[data-state="active"] .num,
+.step[data-state="done"] .num {
+  color: var(--accent-11);
+}
+
+.step[data-state="active"] .label,
+.step[data-state="done"] .label {
+  color: var(--gray-12);
+}

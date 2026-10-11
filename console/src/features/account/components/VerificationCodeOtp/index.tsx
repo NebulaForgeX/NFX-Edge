@@ -54,7 +54,7 @@ export function VerificationCodeOtp({
   };
 
   return (
-    <OneTimePasswordField.Root value={code} onValueChange={handleValueChange} validationType="alphanumeric" disabled={disabled} name={name}>
+    <OneTimePasswordField.Root className={styles.root} value={code} onValueChange={handleValueChange} validationType="alphanumeric" disabled={disabled} name={name}>
       <Flex
         gap="2"
         width="100%"

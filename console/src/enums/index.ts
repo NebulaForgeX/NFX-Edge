@@ -3,6 +3,8 @@ export { CertificateStatus, CertificateStatusEnum, DEFAULT_CERTIFICATE_STATUS, C
 export { CertificateIssuer, CertificateIssuerEnum, DEFAULT_CERTIFICATE_ISSUER, CERTIFICATE_ISSUER_VALUES } from "./CertificateIssuerEnum";
 export { FileItemType, FileItemTypeEnum, DEFAULT_FILE_ITEM_TYPE, FILE_ITEM_TYPE_VALUES } from "./FileItemTypeEnum";
 export { FileStore, FileStoreEnum, DEFAULT_FILE_STORE, FILE_STORE_VALUES } from "./FileStoreEnum";
+export { LoginChannel, LoginChannelEnum, DEFAULT_LOGIN_CHANNEL, LOGIN_CHANNEL_VALUES } from "./LoginChannelEnum";
+export { ProgressStepState, ProgressStepStateEnum, DEFAULT_PROGRESS_STEP_STATE, PROGRESS_STEP_STATE_VALUES } from "./ProgressStepStateEnum";
 export { NamecheapHostType, NamecheapHostTypeEnum, DEFAULT_NAMECHEAP_HOST_TYPE, NAMECHEAP_HOST_TYPE_VALUES } from "./NamecheapHostTypeEnum";
 export {
   NamecheapBulkHostAction,
