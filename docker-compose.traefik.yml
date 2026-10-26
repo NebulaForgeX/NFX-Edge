@@ -13,6 +13,7 @@ services:
     environment:
       NAS1_IP: ${NAS1_IP}
       NAS2_IP: ${NAS2_IP}
+      KALI_IP: ${KALI_IP}
     ports:
       - "80:80"
       - "443:443"

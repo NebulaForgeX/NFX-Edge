@@ -1,0 +1,20 @@
+# Copy this file to dynamic/<name>.project.yml and fill the domains.
+# TLS passthrough: Traefik forwards matching SNI hosts to another host's :443 without decrypting.
+# The upstream Traefik must present its own certificate. Remove the live file to stop forwarding.
+#
+#   '{{ env "UPSTREAM_IP" }}:443'   add UPSTREAM_IP to .env and docker-compose.traefik.yml environment
+
+tcp:
+  routers:
+    passthrough-router:
+      rule: "HostSNI(`example.com`) || HostSNI(`*.example.com`)"
+      entryPoints:
+        - websecure
+      service: passthrough-service
+      tls:
+        passthrough: true
+  services:
+    passthrough-service:
+      loadBalancer:
+        servers:
+          - address: '{{ env "UPSTREAM_IP" }}:443'
