@@ -1,4 +1,4 @@
-# Static sites. Not NFX product blocks. Containers publish 10400 and 10401.
+# Static sites. Not NFX product blocks. Containers publish 10400, 10401, and 10402.
 
 http:
   middlewares:
@@ -12,6 +12,12 @@ http:
         regex: "^https://www\\.timetablecraft\\.com/(.*)"
         replacement: "https://timetablecraft.com/${1}"
         permanent: true
+    pulsoicon-www-to-apex:
+      redirectRegex:
+        regex: "^https://www\\.pulsoicon\\.com/(.*)"
+        replacement: "https://pulsoicon.com/${1}"
+        permanent: true
+
     nebulaforgex-www-to-apex:
       redirectRegex:
         regex: "^https://www\\.nebulaforgex\\.com/(.*)"
@@ -22,6 +28,12 @@ http:
       redirectRegex:
         regex: "^https?://[^/]+/aquawork\\.ca/?(.*)"
         replacement: 'http://{{ env "NAS1_IP" }}:10400/${1}'
+        permanent: false
+
+    lan-pulsoicon-to-port:
+      redirectRegex:
+        regex: "^https?://[^/]+/pulsoicon\\.com/?(.*)"
+        replacement: 'http://{{ env "NAS1_IP" }}:10402/${1}'
         permanent: false
 
     lan-timetablecraft-to-port:
@@ -57,6 +69,19 @@ http:
       service: www-timetablecraft-svc
       tls: {}
       priority: 200
+    www-pulsoicon-www:
+      rule: "Host(`www.pulsoicon.com`)"
+      entryPoints: [websecure]
+      middlewares: [pulsoicon-www-to-apex]
+      service: www-pulsoicon-svc
+      tls: {}
+      priority: 200
+    www-pulsoicon:
+      rule: "Host(`pulsoicon.com`)"
+      entryPoints: [websecure]
+      service: www-pulsoicon-svc
+      tls: {}
+      priority: 200
     www-nebulaforgex-www:
       rule: "Host(`www.nebulaforgex.com`)"
       entryPoints: [websecure]
@@ -70,6 +95,14 @@ http:
       entryPoints: [websecure]
       middlewares: [lan-aquawork-to-port]
       service: www-aquawork-svc
+      tls: {}
+      priority: 100
+
+    lan-pulsoicon:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/pulsoicon.com`)'
+      entryPoints: [websecure]
+      middlewares: [lan-pulsoicon-to-port]
+      service: www-pulsoicon-svc
       tls: {}
       priority: 100
 
@@ -91,6 +124,11 @@ http:
       loadBalancer:
         servers:
           - url: 'http://{{ env "NAS1_IP" }}:10401'
+
+    www-pulsoicon-svc:
+      loadBalancer:
+        servers:
+          - url: 'http://{{ env "NAS1_IP" }}:10402'
 
     www-nebulaforgex-svc:
       loadBalancer:

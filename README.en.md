@@ -45,7 +45,7 @@ After the redirect, APIs no longer pass through Traefik. The secure console ngin
 - `/nfx-news/{source,news,crawl,report,notify,mcp}` drops `/nfx-news`
 - `/nfx-storages/{admin,object,iam,notify}` drops `/nfx-storages`. S3 is Host `s3.nebulaforgex.com` with no strip. The secure backend is **10091**
 - ACME `/.well-known/acme-challenge` is in `edge.project.yml` on the `web` entrypoint, so the 80→443 redirect does not swallow it. It hits sites secure HTTP **10113**
-- Static sites: `aquawork.ca` → **10400**, `timetablecraft.com` → **10401**
+- Static sites: `aquawork.ca` → **10400**, `timetablecraft.com` → **10401**, `pulsoicon.com` → **10402**
 
 ## sites-base (certificates / DNS / files)
 
