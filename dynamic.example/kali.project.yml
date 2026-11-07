@@ -1,4 +1,4 @@
-# Copy this file to dynamic/<name>.project.yml and fill the domains.
+# Copy this file to dynamic/<name>.project.yml and replace example.com with your domain.
 # TLS passthrough: Traefik forwards matching SNI hosts to another host's :443 without decrypting.
 # The upstream Traefik must present its own certificate. Remove the live file to stop forwarding.
 #

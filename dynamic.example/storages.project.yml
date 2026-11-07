@@ -1,5 +1,5 @@
 # Secure /nfx-storages and /console/nfx-storages → 10091–10101.
-# Public Host s3.nebulaforgex.com stays on the secure S3 port.
+# Public Host s3.example.com stays on the secure S3 port.
 # Dev /dev/nfx-storages and /dev/console/nfx-storages → 10080–10090, Host(NAS1_IP) only.
 
 http:
@@ -20,12 +20,12 @@ http:
     storages-console-root:
       redirectRegex:
         regex: "^https?://[^/]+/?$"
-        replacement: "https://storages.nebulaforgex.com/console/nfx-storages/"
+        replacement: "https://storages.example.com/console/nfx-storages/"
         permanent: true
 
   routers:
     storages-s3:
-      rule: "Host(`s3.nebulaforgex.com`)"
+      rule: "Host(`s3.example.com`)"
       entryPoints: [websecure]
       service: storages-s3
       tls: {}
@@ -101,13 +101,13 @@ http:
       tls: {}
       priority: 25
     storages-console-host:
-      rule: "Host(`storages.nebulaforgex.com`) && PathPrefix(`/console/nfx-storages`)"
+      rule: "Host(`storages.example.com`) && PathPrefix(`/console/nfx-storages`)"
       entryPoints: [websecure]
       service: storages-console
       tls: {}
       priority: 200
     storages-console-root:
-      rule: "Host(`storages.nebulaforgex.com`) && Path(`/`)"
+      rule: "Host(`storages.example.com`) && Path(`/`)"
       entryPoints: [websecure]
       middlewares: [storages-console-root]
       service: storages-console

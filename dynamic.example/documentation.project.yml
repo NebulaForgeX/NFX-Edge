@@ -13,7 +13,7 @@ http:
     documentation-root:
       redirectRegex:
         regex: "^https?://[^/]+/?$"
-        replacement: "https://docs.nebulaforgex.com/console/nfx-documentation/"
+        replacement: "https://docs.example.com/console/nfx-documentation/"
         permanent: true
 
   routers:
@@ -25,13 +25,13 @@ http:
       tls: {}
       priority: 25
     documentation-host:
-      rule: "Host(`docs.nebulaforgex.com`) && PathPrefix(`/console/nfx-documentation`)"
+      rule: "Host(`docs.example.com`) && PathPrefix(`/console/nfx-documentation`)"
       entryPoints: [websecure]
       service: documentation-frontend
       tls: {}
       priority: 200
     documentation-root:
-      rule: "Host(`docs.nebulaforgex.com`) && Path(`/`)"
+      rule: "Host(`docs.example.com`) && Path(`/`)"
       entryPoints: [websecure]
       middlewares: [documentation-root]
       service: documentation-frontend

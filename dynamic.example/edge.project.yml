@@ -20,7 +20,7 @@ http:
     edge-console-root:
       redirectRegex:
         regex: "^https?://[^/]+/?$"
-        replacement: "https://edge.nebulaforgex.com/console/nfx-edge/"
+        replacement: "https://edge.example.com/console/nfx-edge/"
         permanent: true
 
   routers:
@@ -51,13 +51,13 @@ http:
       tls: {}
       priority: 25
     edge-console-host:
-      rule: "Host(`edge.nebulaforgex.com`) && PathPrefix(`/console/nfx-edge`)"
+      rule: "Host(`edge.example.com`) && PathPrefix(`/console/nfx-edge`)"
       entryPoints: [websecure]
       service: edge-console
       tls: {}
       priority: 200
     edge-console-root:
-      rule: "Host(`edge.nebulaforgex.com`) && Path(`/`)"
+      rule: "Host(`edge.example.com`) && Path(`/`)"
       entryPoints: [websecure]
       middlewares: [edge-console-root]
       service: edge-console

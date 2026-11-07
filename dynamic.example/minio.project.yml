@@ -4,7 +4,7 @@
 http:
   routers:
     minio-s3:
-      rule: "Host(`minio.nebulaforgex.com`)"
+      rule: "Host(`minio.example.com`)"
       entryPoints: [websecure]
       service: minio-s3-svc
       tls: {}

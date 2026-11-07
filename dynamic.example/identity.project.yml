@@ -1,7 +1,7 @@
 # Both stacks stay in this file.
 # Secure: /console/nfx-identity and /nfx-identity → 10035–10039. Domain and LAN.
 # Dev:    /dev/console/nfx-identity and /dev/nfx-identity → 10030–10034.
-# Dev routers require Host(NAS1_IP). https://identity.nebulaforgex.com/dev/... does not match.
+# Dev routers require Host(NAS1_IP). https://identity.example.com/dev/... does not match.
 
 http:
   middlewares:
@@ -29,7 +29,7 @@ http:
     identity-console-root:
       redirectRegex:
         regex: "^https?://[^/]+/?$"
-        replacement: "https://identity.nebulaforgex.com/console/nfx-identity/"
+        replacement: "https://identity.example.com/console/nfx-identity/"
         permanent: true
 
   routers:
@@ -69,13 +69,13 @@ http:
       tls: {}
       priority: 25
     identity-console-host:
-      rule: "Host(`identity.nebulaforgex.com`) && PathPrefix(`/console/nfx-identity`)"
+      rule: "Host(`identity.example.com`) && PathPrefix(`/console/nfx-identity`)"
       entryPoints: [websecure]
       service: identity-console
       tls: {}
       priority: 200
     identity-console-root:
-      rule: "Host(`identity.nebulaforgex.com`) && Path(`/`)"
+      rule: "Host(`identity.example.com`) && Path(`/`)"
       entryPoints: [websecure]
       middlewares: [identity-console-root]
       service: identity-console

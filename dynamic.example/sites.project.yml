@@ -1,137 +1,79 @@
-# Static sites. Not NFX product blocks. Containers publish 10400, 10401, and 10402.
+# Static sites. Not NFX product blocks. One block per site: www → apex, apex, LAN path.
+# example1.com → 10400, example2.com → 10401. Copy a block for each extra site.
 
 http:
   middlewares:
-    aquawork-www-to-apex:
+    example1-www-to-apex:
       redirectRegex:
-        regex: "^https://www\\.aquawork\\.ca/(.*)"
-        replacement: "https://aquawork.ca/${1}"
+        regex: "^https://www\\.example1\\.com/(.*)"
+        replacement: "https://example1.com/${1}"
         permanent: true
-    timetablecraft-www-to-apex:
+    example2-www-to-apex:
       redirectRegex:
-        regex: "^https://www\\.timetablecraft\\.com/(.*)"
-        replacement: "https://timetablecraft.com/${1}"
-        permanent: true
-    pulsoicon-www-to-apex:
-      redirectRegex:
-        regex: "^https://www\\.pulsoicon\\.com/(.*)"
-        replacement: "https://pulsoicon.com/${1}"
+        regex: "^https://www\\.example2\\.com/(.*)"
+        replacement: "https://example2.com/${1}"
         permanent: true
 
-    nebulaforgex-www-to-apex:
+    lan-example1-to-port:
       redirectRegex:
-        regex: "^https://www\\.nebulaforgex\\.com/(.*)"
-        replacement: "https://nebulaforgex.com/${1}"
-        permanent: true
-
-    lan-aquawork-to-port:
-      redirectRegex:
-        regex: "^https?://[^/]+/aquawork\\.ca/?(.*)"
+        regex: "^https?://[^/]+/example1\\.com/?(.*)"
         replacement: 'http://{{ env "NAS1_IP" }}:10400/${1}'
         permanent: false
-
-    lan-pulsoicon-to-port:
+    lan-example2-to-port:
       redirectRegex:
-        regex: "^https?://[^/]+/pulsoicon\\.com/?(.*)"
-        replacement: 'http://{{ env "NAS1_IP" }}:10402/${1}'
-        permanent: false
-
-    lan-timetablecraft-to-port:
-      redirectRegex:
-        regex: "^https?://[^/]+/timetablecraft\\.com/?(.*)"
+        regex: "^https?://[^/]+/example2\\.com/?(.*)"
         replacement: 'http://{{ env "NAS1_IP" }}:10401/${1}'
         permanent: false
 
   routers:
-    www-aquawork-www:
-      rule: "Host(`www.aquawork.ca`)"
+    www-example1-www:
+      rule: "Host(`www.example1.com`)"
       entryPoints: [websecure]
-      middlewares: [aquawork-www-to-apex]
-      service: www-aquawork-svc
+      middlewares: [example1-www-to-apex]
+      service: www-example1-svc
       tls: {}
       priority: 200
-    www-aquawork:
-      rule: "Host(`aquawork.ca`)"
+    www-example1:
+      rule: "Host(`example1.com`)"
       entryPoints: [websecure]
-      service: www-aquawork-svc
+      service: www-example1-svc
       tls: {}
       priority: 200
-    www-timetablecraft-www:
-      rule: "Host(`www.timetablecraft.com`)"
+    www-example2-www:
+      rule: "Host(`www.example2.com`)"
       entryPoints: [websecure]
-      middlewares: [timetablecraft-www-to-apex]
-      service: www-timetablecraft-svc
+      middlewares: [example2-www-to-apex]
+      service: www-example2-svc
       tls: {}
       priority: 200
-    www-timetablecraft:
-      rule: "Host(`timetablecraft.com`)"
+    www-example2:
+      rule: "Host(`example2.com`)"
       entryPoints: [websecure]
-      service: www-timetablecraft-svc
-      tls: {}
-      priority: 200
-    www-pulsoicon-www:
-      rule: "Host(`www.pulsoicon.com`)"
-      entryPoints: [websecure]
-      middlewares: [pulsoicon-www-to-apex]
-      service: www-pulsoicon-svc
-      tls: {}
-      priority: 200
-    www-pulsoicon:
-      rule: "Host(`pulsoicon.com`)"
-      entryPoints: [websecure]
-      service: www-pulsoicon-svc
-      tls: {}
-      priority: 200
-    www-nebulaforgex-www:
-      rule: "Host(`www.nebulaforgex.com`)"
-      entryPoints: [websecure]
-      middlewares: [nebulaforgex-www-to-apex]
-      service: www-nebulaforgex-svc
+      service: www-example2-svc
       tls: {}
       priority: 200
 
-    lan-aquawork:
-      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/aquawork.ca`)'
+    lan-example1:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/example1.com`)'
       entryPoints: [websecure]
-      middlewares: [lan-aquawork-to-port]
-      service: www-aquawork-svc
+      middlewares: [lan-example1-to-port]
+      service: www-example1-svc
       tls: {}
       priority: 100
-
-    lan-pulsoicon:
-      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/pulsoicon.com`)'
+    lan-example2:
+      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/example2.com`)'
       entryPoints: [websecure]
-      middlewares: [lan-pulsoicon-to-port]
-      service: www-pulsoicon-svc
-      tls: {}
-      priority: 100
-
-    lan-timetablecraft:
-      rule: 'Host(`{{ env "NAS1_IP" }}`) && PathPrefix(`/timetablecraft.com`)'
-      entryPoints: [websecure]
-      middlewares: [lan-timetablecraft-to-port]
-      service: www-timetablecraft-svc
+      middlewares: [lan-example2-to-port]
+      service: www-example2-svc
       tls: {}
       priority: 100
 
   services:
-    www-aquawork-svc:
+    www-example1-svc:
       loadBalancer:
         servers:
           - url: 'http://{{ env "NAS1_IP" }}:10400'
-
-    www-timetablecraft-svc:
+    www-example2-svc:
       loadBalancer:
         servers:
           - url: 'http://{{ env "NAS1_IP" }}:10401'
-
-    www-pulsoicon-svc:
-      loadBalancer:
-        servers:
-          - url: 'http://{{ env "NAS1_IP" }}:10402'
-
-    www-nebulaforgex-svc:
-      loadBalancer:
-        servers:
-          - url: 'http://{{ env "NAS1_IP" }}:10401'
-

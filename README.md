@@ -45,7 +45,7 @@ task traefik
 - `/nfx-news/{source,news,crawl,report,notify,mcp}` 去掉 `/nfx-news`
 - `/nfx-storages/{admin,object,iam,notify}` 去掉 `/nfx-storages`。S3 是 Host `s3.nebulaforgex.com`，不 strip，secure 后端 **10091**
 - ACME `/.well-known/acme-challenge` 在 `edge.project.yml`，走 `web` 入口，不跟随 80→443 重定向，打到 sites 的 secure HTTP **10113**
-- 静态站：`aquawork.ca` → **10400**，`timetablecraft.com` → **10401**，`pulsoicon.com` → **10402**
+- 静态站：`aquawork.ca` → **10400**，`timetablecraft.com` → **10401**，`pulsoicon.com` → **10402**，`citypulso.com` → **10405**（`www` 301 到裸域）
 
 ## sites-base（证书 / DNS / 文件）
 

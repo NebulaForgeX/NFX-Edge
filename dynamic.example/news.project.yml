@@ -19,7 +19,7 @@ http:
     news-console-root:
       redirectRegex:
         regex: "^https?://[^/]+/?$"
-        replacement: "https://news.nebulaforgex.com/console/nfx-news/"
+        replacement: "https://news.example.com/console/nfx-news/"
         permanent: true
 
   routers:
@@ -115,13 +115,13 @@ http:
       tls: {}
       priority: 25
     news-console-host:
-      rule: "Host(`news.nebulaforgex.com`) && PathPrefix(`/console/nfx-news`)"
+      rule: "Host(`news.example.com`) && PathPrefix(`/console/nfx-news`)"
       entryPoints: [websecure]
       service: news-console
       tls: {}
       priority: 200
     news-console-root:
-      rule: "Host(`news.nebulaforgex.com`) && Path(`/`)"
+      rule: "Host(`news.example.com`) && Path(`/`)"
       entryPoints: [websecure]
       middlewares: [news-console-root]
       service: news-console
