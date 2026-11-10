@@ -200,6 +200,15 @@ type ReplaceDraft = {
 
 const emptyReplace = (): ReplaceDraft => ({ from: "", to: "" });
 
+type CopyRuleDraft = {
+  type: string;
+  hosts: string;
+};
+
+const emptyCopyRule = (): CopyRuleDraft => ({ type: NamecheapHostTypeEnum.A, hosts: "" });
+
+const splitHosts = (value: string) => value.split(/[\s,，]+/).filter(Boolean);
+
 function AffectedPane({
   items,
   side,
@@ -297,6 +306,10 @@ const NamecheapDomainsBulkPage = memo(() => {
   const [patchAddressSelf, setPatchAddressSelf] = useState(false);
   const [adds, setAdds] = useState<AddDraft[]>(() => [emptyAdd()]);
   const [replaces, setReplaces] = useState<ReplaceDraft[]>(() => [emptyReplace()]);
+  const [copySource, setCopySource] = useState("");
+  const [copyRules, setCopyRules] = useState<CopyRuleDraft[]>(() => [emptyCopyRule()]);
+  const [copyOverwrite, setCopyOverwrite] = useState(false);
+  const [copyRewrite, setCopyRewrite] = useState(true);
   const [review, setReview] = useState<NamecheapBulkHostItem[]>([]);
 
   useGSAP(
@@ -318,6 +331,7 @@ const NamecheapDomainsBulkPage = memo(() => {
   });
   const isUpdate = action === NamecheapBulkHostActionEnum.UPDATE;
   const isReplace = action === NamecheapBulkHostActionEnum.REPLACE;
+  const isCopy = action === NamecheapBulkHostActionEnum.COPY;
   const isAdd = action === NamecheapBulkHostActionEnum.ADD;
   const isDelete = action === NamecheapBulkHostActionEnum.DELETE;
   const hostTypeOnly = isDelete || isReplace;
@@ -348,7 +362,11 @@ const NamecheapDomainsBulkPage = memo(() => {
   const replaceReady = completeReplaces.length > 0;
   const replaceSummary = completeReplaces.map((row) => `${row.from}→${row.to}`).join(" · ");
   const filterReady = !isNamecheapBulkFilterAll(filterHost) || !isNamecheapBulkFilterAll(filterType);
-  const actionReady = isUpdate ? updateReady : isReplace ? replaceReady : isAdd ? addReady : filterReady;
+  const completeCopyRules = copyRules.map((row) => ({ type: row.type, hosts: splitHosts(row.hosts) })).filter((row) => row.type);
+  const copyReady = Boolean(copySource) && completeCopyRules.length > 0;
+  const copySummary = completeCopyRules.map((row) => `${row.type} ${row.hosts.length ? row.hosts.join(",") : t("bulk.any")}`).join(" · ");
+  const sourceOptions = domains.map((row) => ({ value: row.name, label: row.name }));
+  const actionReady = isUpdate ? updateReady : isReplace ? replaceReady : isCopy ? copyReady : isAdd ? addReady : filterReady;
   const canPreview = selected.length > 0 && !preview.isPending && actionReady;
   const affectedCount = review.reduce((sum, item) => sum + (item.changes?.length ?? 0), 0);
   const canSubmit = stage === 2 && affectedCount > 0 && !bulk.isPending;
@@ -371,6 +389,13 @@ const NamecheapDomainsBulkPage = memo(() => {
     .join(" · ");
 
   const buildRequest = (): BulkNamecheapHostRequest => {
+    if (isCopy) {
+      return {
+        action,
+        domains: selected,
+        copy: { source: copySource, rules: completeCopyRules, overwrite: copyOverwrite, rewriteDomain: copyRewrite },
+      };
+    }
     if (isAdd) {
       return { action, domains: selected, adds: completeAdds };
     }
@@ -419,6 +444,16 @@ const NamecheapDomainsBulkPage = memo(() => {
 
   const appendReplace = () => setReplaces((current) => [...current, emptyReplace()]);
 
+  const patchCopyRule = (index: number, next: Partial<CopyRuleDraft>) => {
+    setCopyRules((current) => current.map((row, i) => (i === index ? { ...row, ...next } : row)));
+  };
+
+  const appendCopyRule = () => setCopyRules((current) => [...current, emptyCopyRule()]);
+
+  const removeCopyRule = (index: number) => {
+    setCopyRules((current) => (current.length === 1 ? current : current.filter((_, i) => i !== index)));
+  };
+
   const removeReplace = (index: number) => {
     setReplaces((current) => (current.length === 1 ? current : current.filter((_, i) => i !== index)));
   };
@@ -442,16 +477,22 @@ const NamecheapDomainsBulkPage = memo(() => {
 
   const goBack = () => setStage(1);
 
+  const confirmMessage = () => {
+    const filter = filterSummary || t("bulk.anyRecord");
+    if (isDelete) return t("bulk.confirmDelete", { count: selected.length, filter });
+    if (isUpdate) return t("bulk.confirmUpdate", { count: selected.length, filter, patch: patchSummary });
+    if (isReplace) return t("bulk.confirmReplace", { count: selected.length, filter, pairs: replaceSummary });
+    if (isCopy) {
+      const mode = copyOverwrite ? t("bulk.copyModeOverwrite") : t("bulk.copyModeMerge");
+      return t("bulk.confirmCopy", { count: selected.length, source: copySource, rules: copySummary, mode });
+    }
+    return t("bulk.confirmAdd", { count: selected.length, hosts: addSummary });
+  };
+
   const submit = () => {
     showConfirm({
       title: t("bulk.confirmTitle"),
-      message: isDelete
-        ? t("bulk.confirmDelete", { count: selected.length, filter: filterSummary || t("bulk.anyRecord") })
-        : isUpdate
-          ? t("bulk.confirmUpdate", { count: selected.length, filter: filterSummary || t("bulk.anyRecord"), patch: patchSummary })
-          : isReplace
-            ? t("bulk.confirmReplace", { count: selected.length, filter: filterSummary || t("bulk.anyRecord"), pairs: replaceSummary })
-            : t("bulk.confirmAdd", { count: selected.length, hosts: addSummary }),
+      message: confirmMessage(),
       confirmText: t("bulk.submit"),
       cancelText: t("bulk.cancel"),
       onConfirm: () => {
@@ -607,6 +648,7 @@ const NamecheapDomainsBulkPage = memo(() => {
                   <Tabs.List>
                     <Tabs.Trigger value={NamecheapBulkHostActionEnum.UPDATE}>{t("bulk.actionUpdate")}</Tabs.Trigger>
                     <Tabs.Trigger value={NamecheapBulkHostActionEnum.REPLACE}>{t("bulk.actionReplace")}</Tabs.Trigger>
+                    <Tabs.Trigger value={NamecheapBulkHostActionEnum.COPY}>{t("bulk.actionCopy")}</Tabs.Trigger>
                     <Tabs.Trigger value={NamecheapBulkHostActionEnum.ADD}>{t("bulk.actionAdd")}</Tabs.Trigger>
                     <Tabs.Trigger value={NamecheapBulkHostActionEnum.DELETE}>{t("bulk.actionDelete")}</Tabs.Trigger>
                   </Tabs.List>
@@ -690,6 +732,56 @@ const NamecheapDomainsBulkPage = memo(() => {
                             <PlusIcon />
                             {t("bulk.replaceRow")}
                           </Button>
+                        </Flex>
+                      </Flex>
+                    </Tabs.Content>
+                    <Tabs.Content value={NamecheapBulkHostActionEnum.COPY}>
+                      <Flex direction="column" gap="3">
+                        <Text size="2" color="gray">
+                          {t("bulk.copyHint")}
+                        </Text>
+                        <Grid columns={{ initial: "1", sm: "2" }} gap="3" width="100%">
+                          <Field label={t("bulk.copySource")}>
+                            <Dropdown size="2" options={sourceOptions} value={copySource} placeholder={t("bulk.copySourcePlaceholder")} onChange={setCopySource} />
+                          </Field>
+                        </Grid>
+                        <Text size="1" weight="bold" className={styles.kicker}>
+                          {t("bulk.copyRules")}
+                        </Text>
+                        {copyRules.map((row, index) => (
+                          <Grid key={`copy-${index}`} columns={{ initial: "1", sm: "minmax(0, 1fr) minmax(0, 3fr) auto" }} gap="3" width="100%" align="end">
+                            <Field label={t("bulk.type")}>
+                              <Dropdown size="2" options={typeFilterOptions} value={row.type} onChange={(type) => patchCopyRule(index, { type })} />
+                            </Field>
+                            <Field label={t("bulk.copyHosts")}>
+                              <Input size="2" value={row.hosts} placeholder={t("bulk.copyHostsPlaceholder")} onChange={(event) => patchCopyRule(index, { hosts: event.target.value })} />
+                            </Field>
+                            <Tooltip content={t("bulk.remove")}>
+                              <IconButton type="button" size="2" variant="soft" color="red" aria-label={t("bulk.remove")} disabled={copyRules.length === 1} onClick={() => removeCopyRule(index)}>
+                                <XIcon size={14} />
+                              </IconButton>
+                            </Tooltip>
+                          </Grid>
+                        ))}
+                        <Flex>
+                          <Button type="button" size="1" variant="outline" color="gray" onClick={appendCopyRule}>
+                            <PlusIcon />
+                            {t("bulk.copyRow")}
+                          </Button>
+                        </Flex>
+                        <Flex direction="column" gap="2">
+                          <Text as="label" size="2">
+                            <Flex gap="2" align="center">
+                              <Checkbox checked={copyOverwrite} onCheckedChange={(value) => setCopyOverwrite(value === true)} />
+                              {t("bulk.copyOverwrite")}
+                            </Flex>
+                          </Text>
+                          <Text as="label" size="2">
+                            <Flex gap="2" align="center">
+                              <Checkbox checked={copyRewrite} onCheckedChange={(value) => setCopyRewrite(value === true)} />
+                              {t("bulk.copyRewrite")}
+                            </Flex>
+                          </Text>
                         </Flex>
                       </Flex>
                     </Tabs.Content>

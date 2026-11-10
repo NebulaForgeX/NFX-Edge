@@ -41,11 +41,24 @@ type HostReplaceDTO struct {
 	To   string `json:"to"`
 }
 
+type HostCopyRuleDTO struct {
+	Type  string   `json:"type"`
+	Hosts []string `json:"hosts"`
+}
+
+type HostCopyDTO struct {
+	Source        string            `json:"source"`
+	Rules         []HostCopyRuleDTO `json:"rules"`
+	Overwrite     bool              `json:"overwrite"`
+	RewriteDomain bool              `json:"rewrite_domain"`
+}
+
 type HostBulkRequestDTO struct {
 	Action   string           `json:"action"`
 	Domains  []string         `json:"domains"`
 	Filter   HostMatchDTO     `json:"filter"`
 	Patch    HostPatchDTO     `json:"patch"`
 	Replaces []HostReplaceDTO `json:"replaces"`
+	Copy     HostCopyDTO      `json:"copy"`
 	Adds     []HostAddDTO     `json:"adds"`
 }

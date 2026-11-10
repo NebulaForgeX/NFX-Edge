@@ -54,11 +54,24 @@ export interface BulkNamecheapHostReplace {
   to: string;
 }
 
+export interface BulkNamecheapHostCopyRule {
+  type: string;
+  hosts: string[];
+}
+
+export interface BulkNamecheapHostCopy {
+  source: string;
+  rules: BulkNamecheapHostCopyRule[];
+  overwrite: boolean;
+  rewriteDomain: boolean;
+}
+
 export interface BulkNamecheapHostRequest {
   action: string;
   domains: string[];
   filter?: BulkNamecheapHostMatch;
   patch?: BulkNamecheapHostPatch;
   replaces?: BulkNamecheapHostReplace[];
+  copy?: BulkNamecheapHostCopy;
   adds?: BulkNamecheapHostAdd[];
 }

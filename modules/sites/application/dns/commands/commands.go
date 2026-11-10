@@ -61,6 +61,18 @@ type BulkHostReplace struct {
 	To   string
 }
 
+type BulkHostCopyRule struct {
+	Type  string
+	Hosts []string
+}
+
+type BulkHostCopy struct {
+	Source        string
+	Rules         []BulkHostCopyRule
+	Overwrite     bool
+	RewriteDomain bool
+}
+
 type BulkHostCmd struct {
 	AccountID    uuid.UUID
 	CredentialID uuid.UUID
@@ -69,5 +81,6 @@ type BulkHostCmd struct {
 	Filter       BulkHostFilter
 	Patch        BulkHostPatch
 	Replaces     []BulkHostReplace
+	Copy         BulkHostCopy
 	Adds         []BulkHostAdd
 }

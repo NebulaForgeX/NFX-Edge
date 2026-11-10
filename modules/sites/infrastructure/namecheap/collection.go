@@ -39,6 +39,18 @@ type HostReplace struct {
 	To   string
 }
 
+type HostCopyRule struct {
+	Type  string
+	Hosts []string
+}
+
+type HostCopy struct {
+	Source        string
+	Records       []Host
+	Overwrite     bool
+	RewriteDomain bool
+}
+
 type HostChange struct {
 	Before *Host
 	After  *Host
@@ -56,6 +68,7 @@ type HostCollectionSpec struct {
 	Filter   HostFilter
 	Patch    HostPatch
 	Replaces []HostReplace
+	Copy     HostCopy
 	Adds     []HostAdd
 }
 
@@ -225,6 +238,184 @@ func resolveAddress(domain, address string, self bool) (string, error) {
 	return next, nil
 }
 
+// Empty Hosts means every host of that type; Type "all" means every type.
+func (r HostCopyRule) match(host Host) bool {
+	if !isCollectionAll(r.Type) && !strings.EqualFold(host.Type, strings.TrimSpace(r.Type)) {
+		return false
+	}
+	if len(r.Hosts) == 0 {
+		return true
+	}
+	for _, name := range r.Hosts {
+		if strings.EqualFold(host.Name, namecheapx.NormalizeHost(name)) {
+			return true
+		}
+	}
+	return false
+}
+
+func (c *Client) CopySourceHosts(ctx context.Context, cred Credentials, domain string, rules []HostCopyRule) ([]Host, error) {
+	current, err := c.GetHosts(ctx, cred, domain)
+	if err != nil {
+		return nil, err
+	}
+	if !current.IsOurDNS {
+		return nil, fmt.Errorf("domain %s is not using Namecheap DNS", domain)
+	}
+	out := make([]Host, 0, len(current.Hosts))
+	for _, host := range current.Hosts {
+		for _, rule := range rules {
+			if rule.match(host) {
+				out = append(out, Host{Name: host.Name, Type: host.Type, Address: host.Address, TTL: host.TTL, MXPref: host.MXPref})
+				break
+			}
+		}
+	}
+	return out, nil
+}
+
+func isDomainLabelByte(b byte) bool {
+	return (b >= '0' && b <= '9') || (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z') || b == '-' || b == '_'
+}
+
+// Rewrites from as a whole domain: api.from., mailto:x@from and "include:_spf.from" change,
+// myfrom.com and from.com.au do not.
+func replaceDomainTokens(value, from, to string) string {
+	lower := strings.ToLower(value)
+	needle := strings.ToLower(from)
+	var out strings.Builder
+	last := 0
+	for start := 0; start <= len(lower)-len(needle); {
+		at := strings.Index(lower[start:], needle)
+		if at < 0 {
+			break
+		}
+		at += start
+		end := at + len(needle)
+		leftJoined := at > 0 && isDomainLabelByte(lower[at-1])
+		rightJoined := end < len(lower) && (isDomainLabelByte(lower[end]) || (lower[end] == '.' && end+1 < len(lower) && isDomainLabelByte(lower[end+1])))
+		if leftJoined || rightJoined {
+			start = at + 1
+			continue
+		}
+		out.WriteString(value[last:at])
+		out.WriteString(to)
+		last = end
+		start = end
+	}
+	out.WriteString(value[last:])
+	return out.String()
+}
+
+func sameRecord(a, b Host) bool {
+	return strings.EqualFold(namecheapx.NormalizeHost(a.Name), namecheapx.NormalizeHost(b.Name)) &&
+		strings.EqualFold(strings.TrimSpace(a.Type), strings.TrimSpace(b.Type)) &&
+		strings.TrimSpace(a.Address) == strings.TrimSpace(b.Address) &&
+		namecheapx.NormalizeTTL(a.TTL) == namecheapx.NormalizeTTL(b.TTL) &&
+		strings.TrimSpace(a.MXPref) == strings.TrimSpace(b.MXPref)
+}
+
+func copyRecords(spec HostCopy, domain string) []Host {
+	source := normalizeCollectionDomain(spec.Source)
+	out := make([]Host, 0, len(spec.Records))
+	for _, src := range spec.Records {
+		host := Host{
+			Name:    namecheapx.NormalizeHost(src.Name),
+			Type:    strings.TrimSpace(src.Type),
+			Address: strings.TrimSpace(src.Address),
+			TTL:     namecheapx.NormalizeTTL(src.TTL),
+			MXPref:  strings.TrimSpace(src.MXPref),
+		}
+		if host.MXPref == "" {
+			host.MXPref = "10"
+		}
+		if spec.RewriteDomain {
+			host.Address = replaceDomainTokens(host.Address, source, domain)
+		}
+		out = append(out, host)
+	}
+	return out
+}
+
+func normalizeCollectionDomain(domain string) string {
+	return strings.ToLower(strings.TrimSuffix(strings.TrimSpace(domain), "."))
+}
+
+// Overwrite pairs each removed target record with an added source record of the same host + type,
+// so the review shows them side by side; identical records are left untouched.
+func planCopy(current []Host, records []Host, overwrite bool) ([]Host, []HostChange) {
+	changes := []HostChange{}
+	if !overwrite {
+		next := append([]Host{}, current...)
+		for _, record := range records {
+			exists := false
+			for _, host := range next {
+				if sameRecord(host, record) {
+					exists = true
+					break
+				}
+			}
+			if exists {
+				continue
+			}
+			next = append(next, record)
+			after := record
+			changes = append(changes, HostChange{After: &after})
+		}
+		return next, changes
+	}
+	order := []string{}
+	incoming := map[string][]Host{}
+	for _, record := range records {
+		key := hostIdentity(record.Name, record.Type)
+		if _, ok := incoming[key]; !ok {
+			order = append(order, key)
+		}
+		incoming[key] = append(incoming[key], record)
+	}
+	removed := map[string][]Host{}
+	next := make([]Host, 0, len(current)+len(records))
+	for _, host := range current {
+		key := hostIdentity(host.Name, host.Type)
+		pending, ok := incoming[key]
+		if !ok {
+			next = append(next, host)
+			continue
+		}
+		kept := false
+		for i, record := range pending {
+			if sameRecord(host, record) {
+				incoming[key] = append(pending[:i:i], pending[i+1:]...)
+				kept = true
+				break
+			}
+		}
+		if kept {
+			next = append(next, host)
+			continue
+		}
+		removed[key] = append(removed[key], host)
+	}
+	for _, key := range order {
+		before := removed[key]
+		after := incoming[key]
+		for i := 0; i < len(before) || i < len(after); i++ {
+			change := HostChange{}
+			if i < len(before) {
+				row := before[i]
+				change.Before = &row
+			}
+			if i < len(after) {
+				row := after[i]
+				change.After = &row
+				next = append(next, row)
+			}
+			changes = append(changes, change)
+		}
+	}
+	return next, changes
+}
+
 func (c *Client) PlanHostCollection(ctx context.Context, cred Credentials, domain string, spec HostCollectionSpec) (CollectionOutcome, error) {
 	out := CollectionOutcome{Changes: []HostChange{}}
 	action := strings.ToLower(strings.TrimSpace(spec.Action))
@@ -245,6 +436,15 @@ func (c *Client) PlanHostCollection(ctx context.Context, cred Credentials, domai
 			if !pair.valid() {
 				return out, fmt.Errorf("replace pair %q → %q is invalid", pair.From, pair.To)
 			}
+		}
+	case "copy":
+		source := normalizeCollectionDomain(spec.Copy.Source)
+		if source == "" {
+			return out, fmt.Errorf("copy requires a source domain")
+		}
+		if source == normalizeCollectionDomain(domain) {
+			out.Status = "skipped"
+			return out, nil
 		}
 	case "delete":
 		if !spec.Filter.Specified() {
@@ -304,6 +504,22 @@ func (c *Client) PlanHostCollection(ctx context.Context, cred Credentials, domai
 			return out, nil
 		}
 		out.Status = "updated"
+	case "copy":
+		planned, changes := planCopy(next, copyRecords(spec.Copy, normalizeCollectionDomain(domain)), spec.Copy.Overwrite)
+		out.Changes = changes
+		if len(changes) == 0 {
+			out.Status = "skipped"
+			out.Next = next
+			return out, nil
+		}
+		next = planned
+		out.Status = "added"
+		for _, change := range changes {
+			if change.Before != nil {
+				out.Status = "updated"
+				break
+			}
+		}
 	case "add":
 		existing := make(map[string]struct{}, len(next)+len(spec.Adds))
 		for _, host := range next {

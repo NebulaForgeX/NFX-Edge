@@ -103,7 +103,7 @@ func (s *Service) BulkHosts(ctx context.Context, cmd commands.BulkHostCmd) (*res
 
 func (s *Service) collectBulk(ctx context.Context, cmd commands.BulkHostCmd, commit bool) (*results.BulkHostRO, error) {
 	action := strings.ToLower(strings.TrimSpace(cmd.Action))
-	if action != "update" && action != "add" && action != "delete" && action != "replace" {
+	if action != "update" && action != "add" && action != "delete" && action != "replace" && action != "copy" {
 		return nil, sitesErr.ErrInvalidHostAction
 	}
 	filter := namecheap.HostFilter{
@@ -156,6 +156,24 @@ func (s *Service) collectBulk(ctx context.Context, cmd commands.BulkHostCmd, com
 	if action == "replace" && len(replaces) == 0 {
 		return nil, sitesErr.ErrInvalidHostReplace
 	}
+	copySource := normalizeDomain(cmd.Copy.Source)
+	copyRules := make([]namecheap.HostCopyRule, 0, len(cmd.Copy.Rules))
+	for _, row := range cmd.Copy.Rules {
+		recordType := strings.TrimSpace(row.Type)
+		hosts := make([]string, 0, len(row.Hosts))
+		for _, host := range row.Hosts {
+			if host = strings.TrimSpace(host); host != "" {
+				hosts = append(hosts, host)
+			}
+		}
+		if recordType == "" {
+			return nil, sitesErr.ErrInvalidHostCopy
+		}
+		copyRules = append(copyRules, namecheap.HostCopyRule{Type: recordType, Hosts: hosts})
+	}
+	if action == "copy" && (copySource == "" || len(copyRules) == 0) {
+		return nil, sitesErr.ErrInvalidHostCopy
+	}
 	domains := uniqueDomains(cmd.Domains)
 	if len(domains) == 0 {
 		return nil, sitesErr.ErrInvalidHostCollection
@@ -165,6 +183,14 @@ func (s *Service) collectBulk(ctx context.Context, cmd commands.BulkHostCmd, com
 		return nil, err
 	}
 	spec := namecheap.HostCollectionSpec{Action: action, Filter: filter, Patch: patch, Replaces: replaces, Adds: adds}
+	if action == "copy" {
+		records, err := s.nc.CopySourceHosts(ctx, cred, copySource, copyRules)
+		if err != nil {
+			s.persistNcError(ctx, cmd.CredentialID, err)
+			return nil, mapNamecheap(err)
+		}
+		spec.Copy = namecheap.HostCopy{Source: copySource, Records: records, Overwrite: cmd.Copy.Overwrite, RewriteDomain: cmd.Copy.RewriteDomain}
+	}
 	out := &results.BulkHostRO{Items: make([]results.BulkHostItemRO, 0, len(domains))}
 	for _, domain := range domains {
 		var outcome namecheap.CollectionOutcome
