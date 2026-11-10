@@ -72,6 +72,7 @@
   "NAMECHEAP_API": "échec de l'API Namecheap",
   "NAMECHEAP_CREDENTIAL_NOT_FOUND": "identifiant Namecheap introuvable",
   "NAMECHEAP_CREDENTIAL_REQUIRED": "enregistrez d'abord les identifiants API Namecheap",
+  "NAMECHEAP_RATE_LIMITED": "limite d'appels de l'API Namecheap atteinte (50/minute, 700/heure, 8000/jour) ; patientez quelques minutes puis réessayez",
   "NOT_FOUND": "Introuvable",
   "OPENSEARCH_CONFIG_INVALID": "La configuration OpenSearch est invalide",
   "OPENSEARCH_INTERNAL": "Échec de l'opération OpenSearch",

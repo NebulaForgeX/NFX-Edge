@@ -8,6 +8,7 @@ import (
 	repofactory "nfxedge/modules/sites/infrastructure/repository/factory"
 	credQuery "nfxedge/modules/sites/query/credential"
 	"nfxedge/pkgs/errx"
+	"nfxedge/pkgs/namecheapx"
 	"nfxedge/pkgs/transaction"
 
 	"github.com/google/uuid"
@@ -54,6 +55,9 @@ func mapNamecheap(err error) error {
 	}
 	if e := errx.AsError(err); e != nil {
 		return e
+	}
+	if namecheapx.IsRateLimited(err) {
+		return sitesErr.ErrNamecheapRateLimited.WithCause(err)
 	}
 	return sitesErr.ErrNamecheapAPI.WithMsg(err.Error()).WithCause(err)
 }

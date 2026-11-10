@@ -3,12 +3,17 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { HttpStatusCode, isAxiosError } from "axios";
 
 import { useAuthInv } from "./hooks/useAuthInv";
 import { useDnsInv } from "./hooks/useDnsInv";
 import { useFileInv } from "./hooks/useFileInv";
 import { useQueryInv } from "./hooks/useQueryInv";
 import { useTlsInv } from "./hooks/useTlsInv";
+
+// 429（如 Namecheap 限流）重试只会延长封禁，直接交给用户稍后再试
+const retryUnlessThrottled = (maxRetries: number) => (failureCount: number, error: Error) =>
+  !(isAxiosError(error) && error.response?.status === HttpStatusCode.TooManyRequests) && failureCount < maxRetries;
 
 interface QueryProviderProps {
   children: ReactNode;
@@ -24,7 +29,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
             // 数据在 10 分钟内被认为是新鲜的
             staleTime: 1000 * 60 * 10,
             gcTime: 1000 * 60 * 10,
-            retry: 3,
+            retry: retryUnlessThrottled(3),
             // 窗口重新获得焦点时不重新获取
             refetchOnWindowFocus: false,
             // 网络重新连接时不重新获取
@@ -32,7 +37,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
           },
           mutations: {
             // 失败时重试 1 次
-            retry: 1,
+            retry: retryUnlessThrottled(1),
           },
         },
       }),

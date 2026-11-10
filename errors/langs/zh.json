@@ -72,6 +72,7 @@
   "NAMECHEAP_API": "Namecheap API 调用失败",
   "NAMECHEAP_CREDENTIAL_NOT_FOUND": "找不到 Namecheap 凭证",
   "NAMECHEAP_CREDENTIAL_REQUIRED": "请先保存 Namecheap API 凭证",
+  "NAMECHEAP_RATE_LIMITED": "Namecheap API 调用太频繁（每分钟 50 次、每小时 700 次、每天 8000 次），请等几分钟再试",
   "NOT_FOUND": "未找到",
   "OPENSEARCH_CONFIG_INVALID": "OpenSearch 配置无效",
   "OPENSEARCH_INTERNAL": "OpenSearch 操作失败",

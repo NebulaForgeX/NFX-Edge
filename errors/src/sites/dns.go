@@ -16,6 +16,7 @@ const (
 	CodeInvalidHostCopy             = "INVALID_HOST_COPY"
 	CodeOutboundIPFailed            = "OUTBOUND_IP_FAILED"
 	CodeNamecheapAPI                = "NAMECHEAP_API"
+	CodeNamecheapRateLimited        = "NAMECHEAP_RATE_LIMITED"
 )
 
 var (
@@ -32,6 +33,7 @@ var (
 	ErrInvalidHostCopy             = errx.InvalidArg(CodeInvalidHostCopy, "copy requires a source domain and at least one record type")
 	ErrOutboundIPFailed            = errx.Internal(CodeOutboundIPFailed, "failed to detect outbound IPv4")
 	ErrNamecheapAPI                = errx.FailedPrecond(CodeNamecheapAPI, "Namecheap API failed")
+	ErrNamecheapRateLimited        = errx.TooManyRequests(CodeNamecheapRateLimited, "Namecheap API rate limit reached (50/minute, 700/hour, 8000/day); wait a few minutes and retry")
 )
 
 /*
@@ -99,4 +101,9 @@ var (
 *en<Namecheap API failed>
 *zh<Namecheap API 调用失败>
 *fr<échec de l'API Namecheap>
+
+!NAMECHEAP_RATE_LIMITED
+*en<Namecheap API rate limit reached (50/minute, 700/hour, 8000/day); wait a few minutes and retry>
+*zh<Namecheap API 调用太频繁（每分钟 50 次、每小时 700 次、每天 8000 次），请等几分钟再试>
+*fr<limite d'appels de l'API Namecheap atteinte (50/minute, 700/heure, 8000/jour) ; patientez quelques minutes puis réessayez>
 */

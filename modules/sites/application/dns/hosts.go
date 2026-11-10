@@ -8,6 +8,7 @@ import (
 	"nfxedge/modules/sites/application/dns/commands"
 	"nfxedge/modules/sites/application/dns/results"
 	"nfxedge/modules/sites/infrastructure/namecheap"
+	"nfxedge/pkgs/namecheapx"
 )
 
 func normalizeDomain(domain string) string {
@@ -192,7 +193,12 @@ func (s *Service) collectBulk(ctx context.Context, cmd commands.BulkHostCmd, com
 		spec.Copy = namecheap.HostCopy{Source: copySource, Records: records, Overwrite: cmd.Copy.Overwrite, RewriteDomain: cmd.Copy.RewriteDomain}
 	}
 	out := &results.BulkHostRO{Items: make([]results.BulkHostItemRO, 0, len(domains))}
+	var rateLimited error
 	for _, domain := range domains {
+		if rateLimited != nil {
+			out.Items = append(out.Items, results.BulkHostItemRO{Domain: domain, Status: "failed", Message: rateLimited.Error()})
+			continue
+		}
 		var outcome namecheap.CollectionOutcome
 		var applyErr error
 		if commit {
@@ -205,6 +211,10 @@ func (s *Service) collectBulk(ctx context.Context, cmd commands.BulkHostCmd, com
 			s.persistNcError(ctx, cmd.CredentialID, applyErr)
 			item.Status = "failed"
 			item.Message = applyErr.Error()
+			if namecheapx.IsRateLimited(applyErr) {
+				rateLimited = sitesErr.ErrNamecheapRateLimited
+				item.Message = rateLimited.Error()
+			}
 		}
 		out.Items = append(out.Items, item)
 	}

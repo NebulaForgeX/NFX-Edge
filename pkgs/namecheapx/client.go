@@ -7,28 +7,42 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
 
 	"nfxedge/pkgs/retry"
+
+	"golang.org/x/time/rate"
 )
 
 const (
 	productionAPI = "https://api.namecheap.com/xml.response"
 	sandboxAPI    = "https://api.sandbox.namecheap.com/xml.response"
-	apiMinGap     = time.Second
-	apiRateTries  = 4
+	apiRateTries  = 5
 )
 
+// Namecheap allows 50 calls/minute, 700/hour and 8000/day per API user. The minute bucket
+// stays a little under the cap; hour/day buckets keep half their burst so a quiet hour
+// cannot be spent in one go and still trip the rolling window.
+var apiLimits = []struct {
+	every time.Duration
+	burst int
+}{
+	{every: time.Minute / 48, burst: 1},
+	{every: time.Hour / 700, burst: 350},
+	{every: 24 * time.Hour / 8000, burst: 4000},
+}
+
 type Client struct {
-	http   *http.Client
-	paceMu sync.Mutex
-	last   time.Time
+	http     *http.Client
+	limitsMu sync.Mutex
+	limits   map[string][]*rate.Limiter
 }
 
 func New() *Client {
-	return &Client{http: &http.Client{Timeout: 30 * time.Second}}
+	return &Client{http: &http.Client{Timeout: 30 * time.Second}, limits: map[string][]*rate.Limiter{}}
 }
 
 type apiResponse struct {
@@ -96,14 +110,14 @@ func (c *Client) xmlCall(ctx context.Context, cred Credentials, extra url.Values
 		if dest != nil {
 			*dest = apiResponse{}
 		}
-		if err := c.pace(ctx); err != nil {
+		if err := c.pace(ctx, cred); err != nil {
 			return err
 		}
 		return c.xmlCallOnce(ctx, cred, extra, dest)
 	}, retry.Config{
 		MaxTries:        apiRateTries,
-		InitialInterval: time.Second,
-		MaxInterval:     8 * time.Second,
+		InitialInterval: 5 * time.Second,
+		MaxInterval:     30 * time.Second,
 		Multiplier:      2,
 		ShouldRetry: func(err error, _ uint, _ time.Duration) bool {
 			return IsRateLimited(err)
@@ -111,25 +125,28 @@ func (c *Client) xmlCall(ctx context.Context, cred Credentials, extra url.Values
 	})
 }
 
-func (c *Client) pace(ctx context.Context) error {
-	c.paceMu.Lock()
-	wait := apiMinGap - time.Since(c.last)
-	if wait < 0 {
-		wait = 0
+func (c *Client) limiters(cred Credentials) []*rate.Limiter {
+	key := strings.ToLower(strings.TrimSpace(cred.APIUser)) + "|" + strconv.FormatBool(cred.Sandbox)
+	c.limitsMu.Lock()
+	defer c.limitsMu.Unlock()
+	if found, ok := c.limits[key]; ok {
+		return found
 	}
-	c.last = time.Now().Add(wait)
-	c.paceMu.Unlock()
-	if wait == 0 {
-		return nil
+	out := make([]*rate.Limiter, 0, len(apiLimits))
+	for _, limit := range apiLimits {
+		out = append(out, rate.NewLimiter(rate.Every(limit.every), limit.burst))
 	}
-	timer := time.NewTimer(wait)
-	defer timer.Stop()
-	select {
-	case <-ctx.Done():
-		return ctx.Err()
-	case <-timer.C:
-		return nil
+	c.limits[key] = out
+	return out
+}
+
+func (c *Client) pace(ctx context.Context, cred Credentials) error {
+	for _, limiter := range c.limiters(cred) {
+		if err := limiter.Wait(ctx); err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 func (c *Client) xmlCallOnce(ctx context.Context, cred Credentials, extra url.Values, dest *apiResponse) error {

@@ -72,6 +72,7 @@
   "NAMECHEAP_API": "Namecheap API failed",
   "NAMECHEAP_CREDENTIAL_NOT_FOUND": "namecheap credential not found",
   "NAMECHEAP_CREDENTIAL_REQUIRED": "save Namecheap API credentials first",
+  "NAMECHEAP_RATE_LIMITED": "Namecheap API rate limit reached (50/minute, 700/hour, 8000/day); wait a few minutes and retry",
   "NOT_FOUND": "Not found",
   "OPENSEARCH_CONFIG_INVALID": "OpenSearch config is invalid",
   "OPENSEARCH_INTERNAL": "OpenSearch operation failed",
