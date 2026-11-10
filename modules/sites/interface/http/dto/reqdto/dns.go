@@ -36,10 +36,16 @@ type HostAddDTO struct {
 	AddressSelf bool   `json:"address_self"`
 }
 
+type HostReplaceDTO struct {
+	From string `json:"from"`
+	To   string `json:"to"`
+}
+
 type HostBulkRequestDTO struct {
-	Action  string       `json:"action"`
-	Domains []string     `json:"domains"`
-	Filter  HostMatchDTO `json:"filter"`
-	Patch   HostPatchDTO `json:"patch"`
-	Adds    []HostAddDTO `json:"adds"`
+	Action   string           `json:"action"`
+	Domains  []string         `json:"domains"`
+	Filter   HostMatchDTO     `json:"filter"`
+	Patch    HostPatchDTO     `json:"patch"`
+	Replaces []HostReplaceDTO `json:"replaces"`
+	Adds     []HostAddDTO     `json:"adds"`
 }

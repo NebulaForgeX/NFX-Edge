@@ -49,10 +49,16 @@ export interface BulkNamecheapHostAdd {
   addressSelf?: boolean;
 }
 
+export interface BulkNamecheapHostReplace {
+  from: string;
+  to: string;
+}
+
 export interface BulkNamecheapHostRequest {
   action: string;
   domains: string[];
   filter?: BulkNamecheapHostMatch;
   patch?: BulkNamecheapHostPatch;
+  replaces?: BulkNamecheapHostReplace[];
   adds?: BulkNamecheapHostAdd[];
 }

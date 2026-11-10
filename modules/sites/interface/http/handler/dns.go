@@ -148,6 +148,10 @@ func (h *DNSHandler) bindBulk(c fiber.Ctx) (dnsCommands.BulkHostCmd, error) {
 			AddressSelf: row.AddressSelf,
 		})
 	}
+	replaces := make([]dnsCommands.BulkHostReplace, 0, len(req.Replaces))
+	for _, row := range req.Replaces {
+		replaces = append(replaces, dnsCommands.BulkHostReplace{From: row.From, To: row.To})
+	}
 	return dnsCommands.BulkHostCmd{
 		AccountID: cmd.AccountID, CredentialID: cmd.CredentialID,
 		Action: req.Action, Domains: req.Domains,
@@ -158,7 +162,8 @@ func (h *DNSHandler) bindBulk(c fiber.Ctx) (dnsCommands.BulkHostCmd, error) {
 		Patch: dnsCommands.BulkHostPatch{
 			Address: req.Patch.Address, TTL: req.Patch.TTL, MXPref: req.Patch.MXPref, AddressSelf: req.Patch.AddressSelf,
 		},
-		Adds: adds,
+		Replaces: replaces,
+		Adds:     adds,
 	}, nil
 }
 

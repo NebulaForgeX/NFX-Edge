@@ -12,6 +12,7 @@ const (
 	CodeInvalidHostAction           = "INVALID_HOST_ACTION"
 	CodeInvalidHostFilter           = "INVALID_HOST_FILTER"
 	CodeInvalidHostCollection       = "INVALID_HOST_COLLECTION"
+	CodeInvalidHostReplace          = "INVALID_HOST_REPLACE"
 	CodeOutboundIPFailed            = "OUTBOUND_IP_FAILED"
 	CodeNamecheapAPI                = "NAMECHEAP_API"
 )
@@ -23,9 +24,10 @@ var (
 	ErrInvalidIPv4                 = errx.InvalidArg(CodeInvalidIPv4, "ip must be a valid IPv4 address")
 	ErrInvalidDomain               = errx.InvalidArg(CodeInvalidDomain, "domain is required")
 	ErrInvalidHost                 = errx.InvalidArg(CodeInvalidHost, "host type and address are required")
-	ErrInvalidHostAction           = errx.InvalidArg(CodeInvalidHostAction, "action must be update, add, or delete")
+	ErrInvalidHostAction           = errx.InvalidArg(CodeInvalidHostAction, "action must be update, replace, add, or delete")
 	ErrInvalidHostFilter           = errx.InvalidArg(CodeInvalidHostFilter, "delete requires a host filter")
 	ErrInvalidHostCollection       = errx.InvalidArg(CodeInvalidHostCollection, "select at least one domain")
+	ErrInvalidHostReplace          = errx.InvalidArg(CodeInvalidHostReplace, "each replace pair needs a distinct from and a different to value")
 	ErrOutboundIPFailed            = errx.Internal(CodeOutboundIPFailed, "failed to detect outbound IPv4")
 	ErrNamecheapAPI                = errx.FailedPrecond(CodeNamecheapAPI, "Namecheap API failed")
 )
@@ -62,9 +64,9 @@ var (
 *fr<le type et l'adresse de l'hôte sont requis>
 
 !INVALID_HOST_ACTION
-*en<action must be update, add, or delete>
-*zh<操作必须是更新、添加或删除>
-*fr<l'action doit être update, add ou delete>
+*en<action must be update, replace, add, or delete>
+*zh<操作必须是更新、替换、添加或删除>
+*fr<l'action doit être update, replace, add ou delete>
 
 !INVALID_HOST_FILTER
 *en<delete requires a host filter>
@@ -75,6 +77,11 @@ var (
 *en<select at least one domain>
 *zh<请至少选择一个域名>
 *fr<sélectionnez au moins un domaine>
+
+!INVALID_HOST_REPLACE
+*en<each replace pair needs a distinct from and a different to value>
+*zh<每组替换都要填原值和新值，原值不能重复，新值不能和原值相同>
+*fr<chaque paire de remplacement exige une valeur source unique et une valeur cible différente>
 
 !OUTBOUND_IP_FAILED
 *en<failed to detect outbound IPv4>

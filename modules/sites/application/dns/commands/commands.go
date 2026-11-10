@@ -56,6 +56,11 @@ type BulkHostAdd struct {
 	AddressSelf bool
 }
 
+type BulkHostReplace struct {
+	From string
+	To   string
+}
+
 type BulkHostCmd struct {
 	AccountID    uuid.UUID
 	CredentialID uuid.UUID
@@ -63,5 +68,6 @@ type BulkHostCmd struct {
 	Domains      []string
 	Filter       BulkHostFilter
 	Patch        BulkHostPatch
+	Replaces     []BulkHostReplace
 	Adds         []BulkHostAdd
 }

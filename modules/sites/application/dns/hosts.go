@@ -103,7 +103,7 @@ func (s *Service) BulkHosts(ctx context.Context, cmd commands.BulkHostCmd) (*res
 
 func (s *Service) collectBulk(ctx context.Context, cmd commands.BulkHostCmd, commit bool) (*results.BulkHostRO, error) {
 	action := strings.ToLower(strings.TrimSpace(cmd.Action))
-	if action != "update" && action != "add" && action != "delete" {
+	if action != "update" && action != "add" && action != "delete" && action != "replace" {
 		return nil, sitesErr.ErrInvalidHostAction
 	}
 	filter := namecheap.HostFilter{
@@ -142,6 +142,20 @@ func (s *Service) collectBulk(ctx context.Context, cmd commands.BulkHostCmd, com
 	if action == "delete" && !filter.Specified() {
 		return nil, sitesErr.ErrInvalidHostFilter
 	}
+	replaces := make([]namecheap.HostReplace, 0, len(cmd.Replaces))
+	seenFrom := make(map[string]struct{}, len(cmd.Replaces))
+	for _, row := range cmd.Replaces {
+		pair := namecheap.HostReplace{From: strings.TrimSpace(row.From), To: strings.TrimSpace(row.To)}
+		key := strings.ToLower(pair.From)
+		if _, dup := seenFrom[key]; dup || pair.From == "" || pair.To == "" || strings.EqualFold(pair.From, pair.To) {
+			return nil, sitesErr.ErrInvalidHostReplace
+		}
+		seenFrom[key] = struct{}{}
+		replaces = append(replaces, pair)
+	}
+	if action == "replace" && len(replaces) == 0 {
+		return nil, sitesErr.ErrInvalidHostReplace
+	}
 	domains := uniqueDomains(cmd.Domains)
 	if len(domains) == 0 {
 		return nil, sitesErr.ErrInvalidHostCollection
@@ -150,7 +164,7 @@ func (s *Service) collectBulk(ctx context.Context, cmd commands.BulkHostCmd, com
 	if err != nil {
 		return nil, err
 	}
-	spec := namecheap.HostCollectionSpec{Action: action, Filter: filter, Patch: patch, Adds: adds}
+	spec := namecheap.HostCollectionSpec{Action: action, Filter: filter, Patch: patch, Replaces: replaces, Adds: adds}
 	out := &results.BulkHostRO{Items: make([]results.BulkHostItemRO, 0, len(domains))}
 	for _, domain := range domains {
 		var outcome namecheap.CollectionOutcome

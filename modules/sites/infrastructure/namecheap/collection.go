@@ -34,6 +34,11 @@ type HostAdd struct {
 	AddressSelf bool
 }
 
+type HostReplace struct {
+	From string
+	To   string
+}
+
 type HostChange struct {
 	Before *Host
 	After  *Host
@@ -47,10 +52,11 @@ type CollectionOutcome struct {
 }
 
 type HostCollectionSpec struct {
-	Action string
-	Filter HostFilter
-	Patch  HostPatch
-	Adds   []HostAdd
+	Action   string
+	Filter   HostFilter
+	Patch    HostPatch
+	Replaces []HostReplace
+	Adds     []HostAdd
 }
 
 func isCollectionAll(value string) bool {
@@ -150,6 +156,60 @@ func (p HostPatch) apply(host *Host, domain string) bool {
 	return changed
 }
 
+func (r HostReplace) valid() bool {
+	from := strings.TrimSpace(r.From)
+	to := strings.TrimSpace(r.To)
+	return from != "" && to != "" && !strings.EqualFold(from, to)
+}
+
+// An address token ends at any byte that cannot continue it, so 108.172.51.13 never
+// rewrites 108.172.51.130 and SPF "ip4:<ip>/32" still matches. ':' continues IPv6 only,
+// except the SPF "ip6:" mechanism prefix.
+func isAddressTokenByte(b byte, ipv6 bool) bool {
+	switch {
+	case b >= '0' && b <= '9', b >= 'a' && b <= 'z', b >= 'A' && b <= 'Z', b == '.', b == '-', b == '_':
+		return true
+	case b == ':':
+		return ipv6
+	}
+	return false
+}
+
+// Every pair matches against the original value in one pass, so A→B with B→C never turns A into C.
+func replaceAddressTokens(value string, pairs []HostReplace) (string, bool) {
+	lower := strings.ToLower(value)
+	var out strings.Builder
+	changed := false
+	for i := 0; i < len(value); {
+		hit := false
+		for _, pair := range pairs {
+			needle := strings.ToLower(strings.TrimSpace(pair.From))
+			ipv6 := strings.Contains(needle, ":")
+			end := i + len(needle)
+			if !strings.HasPrefix(lower[i:], needle) {
+				continue
+			}
+			leftJoined := i > 0 && isAddressTokenByte(lower[i-1], ipv6) && !strings.HasSuffix(lower[:i], "ip6:")
+			if leftJoined || (end < len(lower) && isAddressTokenByte(lower[end], ipv6)) {
+				continue
+			}
+			out.WriteString(strings.TrimSpace(pair.To))
+			i = end
+			hit = true
+			changed = true
+			break
+		}
+		if !hit {
+			out.WriteByte(value[i])
+			i++
+		}
+	}
+	if !changed {
+		return value, false
+	}
+	return out.String(), true
+}
+
 func resolveAddress(domain, address string, self bool) (string, error) {
 	if self {
 		next := ApexTarget(domain)
@@ -176,6 +236,15 @@ func (c *Client) PlanHostCollection(ctx context.Context, cred Credentials, domai
 	case "update":
 		if spec.Patch.empty() {
 			return out, fmt.Errorf("at least one patch field is required")
+		}
+	case "replace":
+		if len(spec.Replaces) == 0 {
+			return out, fmt.Errorf("replace requires at least one from/to pair")
+		}
+		for _, pair := range spec.Replaces {
+			if !pair.valid() {
+				return out, fmt.Errorf("replace pair %q → %q is invalid", pair.From, pair.To)
+			}
 		}
 	case "delete":
 		if !spec.Filter.Specified() {
@@ -210,6 +279,26 @@ func (c *Client) PlanHostCollection(ctx context.Context, cred Credentials, domai
 			changed = true
 		}
 		if !changed {
+			out.Status = "skipped"
+			out.Next = next
+			return out, nil
+		}
+		out.Status = "updated"
+	case "replace":
+		for i := range next {
+			if !spec.Filter.match(next[i]) {
+				continue
+			}
+			address, ok := replaceAddressTokens(next[i].Address, spec.Replaces)
+			if !ok {
+				continue
+			}
+			before := next[i]
+			next[i].Address = address
+			after := next[i]
+			out.Changes = append(out.Changes, HostChange{Before: &before, After: &after})
+		}
+		if len(out.Changes) == 0 {
 			out.Status = "skipped"
 			out.Next = next
 			return out, nil

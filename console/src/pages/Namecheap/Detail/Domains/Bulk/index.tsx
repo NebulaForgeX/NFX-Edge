@@ -122,6 +122,32 @@ function FilterFields({
   );
 }
 
+function HostTypeFields({
+  host,
+  type,
+  typeOptions,
+  onHost,
+  onType,
+}: {
+  host: string;
+  type: string;
+  typeOptions: { value: string; label: string }[];
+  onHost: (value: string) => void;
+  onType: (value: string) => void;
+}) {
+  const { t } = useTranslation("dns");
+  return (
+    <Grid columns={{ initial: "1", sm: "2" }} gap="3" width="100%">
+      <Field label={t("bulk.host")}>
+        <Input size="2" value={host} placeholder={t("bulk.any")} onChange={(event) => onHost(event.target.value)} />
+      </Field>
+      <Field label={t("bulk.type")}>
+        <Dropdown size="2" options={typeOptions} value={type} onChange={onType} />
+      </Field>
+    </Grid>
+  );
+}
+
 function HostSnapLine({ snap, empty, ttlAutomatic, mark }: { snap?: NamecheapBulkHostSnap | null; empty: string; ttlAutomatic: string; mark?: boolean }) {
   if (!snap) {
     return (
@@ -166,6 +192,13 @@ const emptyAdd = (): AddDraft => ({
   mxPref: "10",
   addressSelf: false,
 });
+
+type ReplaceDraft = {
+  from: string;
+  to: string;
+};
+
+const emptyReplace = (): ReplaceDraft => ({ from: "", to: "" });
 
 function AffectedPane({
   items,
@@ -263,6 +296,7 @@ const NamecheapDomainsBulkPage = memo(() => {
   const [patchMx, setPatchMx] = useState("");
   const [patchAddressSelf, setPatchAddressSelf] = useState(false);
   const [adds, setAdds] = useState<AddDraft[]>(() => [emptyAdd()]);
+  const [replaces, setReplaces] = useState<ReplaceDraft[]>(() => [emptyReplace()]);
   const [review, setReview] = useState<NamecheapBulkHostItem[]>([]);
 
   useGSAP(
@@ -283,8 +317,10 @@ const NamecheapDomainsBulkPage = memo(() => {
     return row.name.toLowerCase().includes(needle);
   });
   const isUpdate = action === NamecheapBulkHostActionEnum.UPDATE;
+  const isReplace = action === NamecheapBulkHostActionEnum.REPLACE;
   const isAdd = action === NamecheapBulkHostActionEnum.ADD;
   const isDelete = action === NamecheapBulkHostActionEnum.DELETE;
+  const hostTypeOnly = isDelete || isReplace;
 
   const anyOption = { value: NAMECHEAP_BULK_FILTER_ALL, label: t("bulk.any") };
   const typeFilterOptions = [anyOption, ...NAMECHEAP_HOST_TYPE_VALUES.map((value) => ({ value, label: value }))];
@@ -306,17 +342,23 @@ const NamecheapDomainsBulkPage = memo(() => {
     .filter((row) => row.name && row.type && (row.address || row.addressSelf));
   const addReady = completeAdds.length > 0;
   const addSummary = completeAdds.map((row) => `${row.type} ${row.name}${row.addressSelf ? ` ${t("bulk.addressSelfShort")}` : ""}`).join(" · ");
+  const completeReplaces = replaces
+    .map((row) => ({ from: row.from.trim(), to: row.to.trim() }))
+    .filter((row) => row.from && row.to && row.from.toLowerCase() !== row.to.toLowerCase());
+  const replaceReady = completeReplaces.length > 0;
+  const replaceSummary = completeReplaces.map((row) => `${row.from}→${row.to}`).join(" · ");
   const filterReady = !isNamecheapBulkFilterAll(filterHost) || !isNamecheapBulkFilterAll(filterType);
-  const canPreview = selected.length > 0 && !preview.isPending && (isUpdate ? updateReady : isAdd ? addReady : filterReady);
+  const actionReady = isUpdate ? updateReady : isReplace ? replaceReady : isAdd ? addReady : filterReady;
+  const canPreview = selected.length > 0 && !preview.isPending && actionReady;
   const affectedCount = review.reduce((sum, item) => sum + (item.changes?.length ?? 0), 0);
   const canSubmit = stage === 2 && affectedCount > 0 && !bulk.isPending;
 
   const filterSummary = [
     !isNamecheapBulkFilterAll(filterHost) ? `${t("bulk.host")}=${filterHost}` : null,
     !isNamecheapBulkFilterAll(filterType) ? `${t("bulk.type")}=${filterType}` : null,
-    !isDelete && filterAddress.trim() ? `${t("bulk.address")}=${filterAddress.trim()}` : null,
-    !isDelete && !isNamecheapBulkFilterAll(filterTtl) ? `${t("bulk.ttl")}=${filterTtl}` : null,
-    !isDelete && filterMx.trim() ? `${t("bulk.mxPref")}=${filterMx.trim()}` : null,
+    !hostTypeOnly && filterAddress.trim() ? `${t("bulk.address")}=${filterAddress.trim()}` : null,
+    !hostTypeOnly && !isNamecheapBulkFilterAll(filterTtl) ? `${t("bulk.ttl")}=${filterTtl}` : null,
+    !hostTypeOnly && filterMx.trim() ? `${t("bulk.mxPref")}=${filterMx.trim()}` : null,
   ]
     .filter(Boolean)
     .join(" · ");
@@ -332,7 +374,7 @@ const NamecheapDomainsBulkPage = memo(() => {
     if (isAdd) {
       return { action, domains: selected, adds: completeAdds };
     }
-    if (isDelete) {
+    if (hostTypeOnly) {
       return {
         action,
         domains: selected,
@@ -340,6 +382,7 @@ const NamecheapDomainsBulkPage = memo(() => {
           name: isNamecheapBulkFilterAll(filterHost) ? NAMECHEAP_BULK_FILTER_ALL : filterHost.trim(),
           type: filterType,
         },
+        replaces: isReplace ? completeReplaces : undefined,
       };
     }
     return {
@@ -362,6 +405,22 @@ const NamecheapDomainsBulkPage = memo(() => {
 
   const removeDomain = (name: string) => {
     setSelected((current) => current.filter((row) => row !== name));
+  };
+
+  const addAvailable = () => {
+    setSelected((current) => [...current, ...available.map((row) => row.name)]);
+  };
+
+  const clearSelected = () => setSelected([]);
+
+  const patchReplace = (index: number, next: Partial<ReplaceDraft>) => {
+    setReplaces((current) => current.map((row, i) => (i === index ? { ...row, ...next } : row)));
+  };
+
+  const appendReplace = () => setReplaces((current) => [...current, emptyReplace()]);
+
+  const removeReplace = (index: number) => {
+    setReplaces((current) => (current.length === 1 ? current : current.filter((_, i) => i !== index)));
   };
 
   const patchAdd = (index: number, next: Partial<AddDraft>) => {
@@ -390,7 +449,9 @@ const NamecheapDomainsBulkPage = memo(() => {
         ? t("bulk.confirmDelete", { count: selected.length, filter: filterSummary || t("bulk.anyRecord") })
         : isUpdate
           ? t("bulk.confirmUpdate", { count: selected.length, filter: filterSummary || t("bulk.anyRecord"), patch: patchSummary })
-          : t("bulk.confirmAdd", { count: selected.length, hosts: addSummary }),
+          : isReplace
+            ? t("bulk.confirmReplace", { count: selected.length, filter: filterSummary || t("bulk.anyRecord"), pairs: replaceSummary })
+            : t("bulk.confirmAdd", { count: selected.length, hosts: addSummary }),
       confirmText: t("bulk.submit"),
       cancelText: t("bulk.cancel"),
       onConfirm: () => {
@@ -418,9 +479,15 @@ const NamecheapDomainsBulkPage = memo(() => {
     return (
       <Grid columns={{ initial: "1", md: "2" }} gap="4" width="100%" align="start">
         <Flex direction="column" gap="3" minWidth="0">
-          <Text size="1" weight="bold" className={styles.kicker}>
-            {t("bulk.available")}
-          </Text>
+          <Flex align="center" justify="between" gap="2">
+            <Text size="1" weight="bold" className={styles.kicker}>
+              {t("bulk.available")}
+            </Text>
+            <Button type="button" size="1" variant="soft" disabled={available.length === 0} onClick={addAvailable}>
+              <PlusIcon />
+              {t("bulk.selectAll")}
+            </Button>
+          </Flex>
           <Input size="2" value={query} placeholder={t("bulk.search")} onChange={(event) => setQuery(event.target.value)} />
           {available.length === 0 ? (
             <Text size="2" color="gray">
@@ -450,6 +517,10 @@ const NamecheapDomainsBulkPage = memo(() => {
             <Text size="1" weight="bold" className={styles.kicker}>
               {t("bulk.selected", { count: selected.length })}
             </Text>
+            <Button type="button" size="1" variant="soft" color="red" disabled={selected.length === 0} onClick={clearSelected}>
+              <XIcon size={12} />
+              {t("bulk.clearAll")}
+            </Button>
           </Flex>
           {selected.length === 0 ? (
             <EmptyState icon={StackIcon} title={t("bulk.noneSelected")} />
@@ -535,6 +606,7 @@ const NamecheapDomainsBulkPage = memo(() => {
                 <Tabs.Root value={action} onValueChange={(value) => setAction(value as NamecheapBulkHostActionEnum)}>
                   <Tabs.List>
                     <Tabs.Trigger value={NamecheapBulkHostActionEnum.UPDATE}>{t("bulk.actionUpdate")}</Tabs.Trigger>
+                    <Tabs.Trigger value={NamecheapBulkHostActionEnum.REPLACE}>{t("bulk.actionReplace")}</Tabs.Trigger>
                     <Tabs.Trigger value={NamecheapBulkHostActionEnum.ADD}>{t("bulk.actionAdd")}</Tabs.Trigger>
                     <Tabs.Trigger value={NamecheapBulkHostActionEnum.DELETE}>{t("bulk.actionDelete")}</Tabs.Trigger>
                   </Tabs.List>
@@ -584,6 +656,41 @@ const NamecheapDomainsBulkPage = memo(() => {
                             <Input size="2" value={patchMx} placeholder={t("bulk.keep")} onChange={(event) => setPatchMx(event.target.value)} />
                           </Field>
                         </Grid>
+                      </Flex>
+                    </Tabs.Content>
+                    <Tabs.Content value={NamecheapBulkHostActionEnum.REPLACE}>
+                      <Flex direction="column" gap="3">
+                        <Text size="2" color="gray">
+                          {t("bulk.replaceHint")}
+                        </Text>
+                        <Text size="1" weight="bold" className={styles.kicker}>
+                          {t("bulk.filter")}
+                        </Text>
+                        <HostTypeFields host={filterHost} type={filterType} typeOptions={typeFilterOptions} onHost={setFilterHost} onType={setFilterType} />
+                        <Text size="1" weight="bold" className={styles.kicker}>
+                          {t("bulk.patch")}
+                        </Text>
+                        {replaces.map((row, index) => (
+                          <Grid key={`replace-${index}`} columns={{ initial: "1", sm: "minmax(0, 1fr) minmax(0, 1fr) auto" }} gap="3" width="100%" align="end">
+                            <Field label={t("bulk.replaceFrom")}>
+                              <Input size="2" value={row.from} placeholder="108.172.51.130" onChange={(event) => patchReplace(index, { from: event.target.value })} />
+                            </Field>
+                            <Field label={t("bulk.replaceTo")}>
+                              <Input size="2" value={row.to} placeholder="108.172.48.88" onChange={(event) => patchReplace(index, { to: event.target.value })} />
+                            </Field>
+                            <Tooltip content={t("bulk.remove")}>
+                              <IconButton type="button" size="2" variant="soft" color="red" aria-label={t("bulk.remove")} disabled={replaces.length === 1} onClick={() => removeReplace(index)}>
+                                <XIcon size={14} />
+                              </IconButton>
+                            </Tooltip>
+                          </Grid>
+                        ))}
+                        <Flex>
+                          <Button type="button" size="1" variant="outline" color="gray" onClick={appendReplace}>
+                            <PlusIcon />
+                            {t("bulk.replaceRow")}
+                          </Button>
+                        </Flex>
                       </Flex>
                     </Tabs.Content>
                     <Tabs.Content value={NamecheapBulkHostActionEnum.ADD}>
@@ -640,14 +747,7 @@ const NamecheapDomainsBulkPage = memo(() => {
                         <Text size="2" color="gray">
                           {t("bulk.deleteHint")}
                         </Text>
-                        <Grid columns={{ initial: "1", sm: "2" }} gap="3" width="100%">
-                          <Field label={t("bulk.host")}>
-                            <Input size="2" value={filterHost} placeholder={t("bulk.any")} onChange={(event) => setFilterHost(event.target.value)} />
-                          </Field>
-                          <Field label={t("bulk.type")}>
-                            <Dropdown size="2" options={typeFilterOptions} value={filterType} onChange={setFilterType} />
-                          </Field>
-                        </Grid>
+                        <HostTypeFields host={filterHost} type={filterType} typeOptions={typeFilterOptions} onHost={setFilterHost} onType={setFilterType} />
                       </Flex>
                     </Tabs.Content>
                   </Section>

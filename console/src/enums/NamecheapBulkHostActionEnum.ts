@@ -1,5 +1,5 @@
 /**
- * Bulk host collection — update, add (skip if present), or delete matching records.
+ * Bulk host collection — update, replace values (from → to pairs), add (skip if present), or delete matching records.
  */
 import type { Nilable } from "nfx-ui/types";
 
@@ -7,6 +7,7 @@ import { safeEnum } from "nfx-ui/utils";
 
 export enum NamecheapBulkHostActionEnum {
   UPDATE = "update",
+  REPLACE = "replace",
   ADD = "add",
   DELETE = "delete",
 }
